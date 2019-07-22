@@ -1,0 +1,7 @@
+start_zone,end_zone,limit,hurdle
+SDGE,SCE,600,5.71
+SCE,SDGE,600,9.96
+PGE_valley,SCE,4000,5.71
+PGE_bay,PGE_valley,5000,5.71
+SCE,PGE_valley,3000,9.96
+PGE_valley,PGE_bay,5000,0

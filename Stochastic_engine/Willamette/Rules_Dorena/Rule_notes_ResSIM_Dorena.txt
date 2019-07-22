@@ -1,0 +1,43 @@
+Dorena Dam
+
+Top of Dam - 0
+Special Curves DOR:    Linear - induced surcharge falling pool (release average inflow over the last 24h)
+FloodIncrsRate_Dorena:   Step - increasing - var: release
+FloodDcrseRate_Dorena:   Linear - decreasing - var: release
+Max Evacuation Release:  Linear - Maximum - var:pool elevation
+
+Flood Control - 1
+Special Curves DOR:   Linear - induced surcharge falling pool (release average inflow over the last 48h)
+Min Flow from Dorena: step - minimum - var:date 
+FloodDcrseRate_Dorena:  Linear - decreasing - var:release
+FloodIncrsRate_Dorena:   Linear - increasing - var:release
+Max Bankfull Flow - at Goshen:   step - maximum - var:date
+Winter Ops Max Flood Flow DOR:  Linear - Max - var:pool elevation
+
+50% FC Pool - Elev = 247m
+Min Flow from Dorena: step - minimum - var:date 
+FloodDcrseRate_Dorena:  Linear - decreasing - var:release
+FloodIncrsRate_Dorena:   Linear - increasing - var:release
+Max Bankfull Flow - at Goshen:   step - maximum - var:date
+Winter Ops Max Flood Flow DOR:  Linear - Max - var:pool elevation
+Harrisburg 51,000 cfs MaxLinear - Max - var:date
+
+Conservation - 2
+Min Flow from Dorena: step - minimum - var:date 
+Max Con Flow - at Dorena    Step - maximum - var: date
+Daily BiOp Max Rate of Decrease:linear - minimum - var:outflow lagged 24h
+IncrsRamping_Dorena:  Increasing Constant
+Harrisburg 42,500 cfs Max:   Linear - Maximum - var:date
+Min Flow - at Salem
+Min Flow - at Albany by Water Year Type
+
+Buffer - 3
+Min Flow from Dorena: step - minimum - var:date 
+Daily BiOp Max Rate of Decrease:linear - minimum - var:outflow lagged 24h
+
+
+
+Dorena specifics:
+5 RO gates - max capacity - max capacity based on pool elevation and gate setting
+1 spillway -  max capacity based on pool elevation and gate setting
+Release allocation is sequential - 1st RO - 2nd Spillway

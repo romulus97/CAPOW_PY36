@@ -1,0 +1,58 @@
+Hills Creek Dam
+
+Top of Dam - 0
+HCR power max release - Linear - Max - var:pool elevation
+HCR special curves - IRRM - Linear - induced surcharge falling pool (release average inflow over the last 48h)
+HCR min power - Linear - Minimum - var:pool elevation
+Spill during gate tracking - Linear - Minimum - var: special curves min flow and current release (cms)
+*make sure RO flow has min gate*  If RO flow > 0:
+     Min RO Flow - linear - minimum - var: pool elev
+FloodIncrsRate_HillsCrk - Step - increasing - var:release
+FloodDcrsRate_HillsCrk - Linear - decreasing - var:release
+MaxFlow Winter and Conservation - linear - maximum - var: pool elev AND date
+Tandem - HCR and LOP (?? no info with this rule??)
+
+Flood Control - 1
+HCR power max release - Linear - Max - var:pool elevation
+HCR special curves - IRRM - Linear - induced surcharge falling pool (release average inflow over the last 48h)
+HCR min power - Linear - Minimum - var:pool elevation
+Spill during gate tracking - Linear - Minimum - var: special curves min flow and current release (cms)
+*make sure RO flow has min gate*  If RO flow > 0:
+     Min RO Flow - linear - minimum - var: pool elev
+Min Flow - Hills Creek - step - minimum - var:date
+FloodIncrsRate_HillsCrk - Step - increasing - var: release
+FloodDcrsRate_HillsCrk - Linear - decreasing - var:release
+MaxFlow Winter and Conservation - linear - maximum - var: pool elev AND date
+Tandem - HCR and LOP (?? no info with this rule??)
+
+
+Conservation - 2
+HCR power max release - Linear - Max - var:pool elevation
+HCR min power - Linear - Minimum - var:pool elevation
+Min Flow - Hills Creek - step - minimum - var:date
+MaxFlow Winter and Conservation - linear - maximum - var: pool elev AND date
+IncrsRamping_Hills_Crk - Increasing - Constant - 6cms per hour
+Revised Daily BiOP Max Rate of Decrease - linear - minimum - var:outflow lagged 24h
+*make sure RO flow has min gate*  If RO flow > 0:
+     Min RO Flow - linear - minimum - var: pool elev
+Min Flow - at Salem
+Min Flow - at Albany by Water Year Type
+
+Buffer - 3
+HCR power max release - Linear - Max - var:pool elevation
+HCR min power - Linear - Minimum - var:pool elevation
+Min Flow - Hills Creek - step - minimum - var:date
+Revised Daily BiOP Max Rate of Decrease - linear - minimum - var:outflow lagged 24h
+*make sure RO flow has min gate*  If RO flow > 0:
+     Min RO Flow - linear - minimum - var: pool elev
+
+Bottom of Rules - 4
+Low Turbine Flows at low reservoir elevation - linear - specified - var:net inflow
+Low RO Flows When Turbine low - linear - specified - var: net inflow
+
+Hills Creek specifics:
+2 power plant gates - max capacity based on pool elev
+2 RO gates - max capacity - max capacity based on pool elevation and gate setting
+3 spillway gates -  max capacity based on pool elevation and gate setting
+Tailwater elevation - 374m
+Release allocation is sequential - 1st power plant - 2nd RO, 3rd Spillway

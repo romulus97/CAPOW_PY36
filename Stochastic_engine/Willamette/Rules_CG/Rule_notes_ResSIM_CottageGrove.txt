@@ -1,0 +1,42 @@
+Notes on Rules for Cottage Grove Reservoir
+
+Top of Dam - 0
+COT Special Curves:  induced surcharge falling pool (release average inflow over the last 24h)
+FloodDcrseRate_CottGrv:  Linear - decreasing - var:release
+FloodIncrsRate_CottGrv:  Constant - Increasing
+Max Evacuation Release:  Linear - Max - var:pool elevation
+
+Flood Control - 1
+COT Special Curves:  induced surcharge falling pool (release average inflow over the last 24h)
+Min flow from Cottage Grove:  step - minimum - var:date
+FloodDcrseRate_CottGrv:  Linear - decreasing - var:release
+FloodIncrsRate_CottGrv:  Constant - Increasing
+Max Bankfull Flow - at Goshen:    step - maximum - var:date
+Max Evacuation Release:    Linear - Max - var:pool elevation
+
+50% FC Pool - Elev = 237.0m
+Min flow from Cottage Grove:     step - minimum - var:date
+DcrsRamping_CottGrv:     Constant - Decreasing
+IncrsRamping_CottGrv:    Constant - Increasing
+Max Bankfull Flow - at Goshen:   step - maximum - var:date
+Max Evacuation Release:    Linear - Max - var:pool elevation
+Harrisburg 51,000 cfs Max:    Linear - Max - var:date
+
+Conservation - 2
+Min flow from Cottage Grove:   step - minimum - var:date
+Max Con Flow - at Cottage Grove:   step - maximum - var:date
+Maximum Daily rate of increase from WCM:   Linear - maximum var:release lagged 24h
+Daily BiOp Max Rate of Decrease:   Linear - minimum var:release lagged 24h  
+       (Chooses the lesser of 1' per day tailwater change or a 50% reduction in flow per the BiOp.  This rule is for daily time step runs, not hourly time step runs.)
+Harrisburg 42,500 cfs Max: Linear - Max - var:date  
+Min Flow - at Salem:  
+Min Flow - at Albany by Water Year Type
+
+Buffer - 3
+Min flow from Cottage Grove:    step - minimum - var:date
+Daily BiOp Max Rate of Decrease:  Linear - minimum  var:release lagged 24h
+
+Cottage Grove Specifics
+3 RO gates: max capacity based on gate setting and pool elevation
+Spillway:  Max capacity based on Pool elevation
+Outflow sequential:  RO then spillway

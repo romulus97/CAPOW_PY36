@@ -1,0 +1,10 @@
+0,1,2,3,4,5
+Max_Drafting.csv,Min_Daily_MaxD_BiOp.csv,cp_Max_bf_Jefferson_23780423.csv,Min_Daily_MaxD_BiOp.csv,MaxD_Decreasing_Rate_of_Change.csv,Missing
+MaxD_FloodDcrsRate_Fostr.csv,MaxI_Increasing_Rate_of_Change.csv,cp_Max_bf_Waterloo_23785687.csv,Min_Foster_min_for_Buffer_Zone.csv,MaxI_Increasing_Rate_of_Change.csv,Missing
+MaxI_FloodIncrsRate_Fostr.csv,Max_Winter_and_Con.csv,cp_Max_bf_Salem_23791083.csv,Pow_Max_FOS_power_release.csv,Release_10000cfs.csv,Missing
+Pow_Max_FOS_power_release.csv,Spill_Min_Fish_Weir.csv,Min_Daily_MaxD_BiOp.csv,Missing,Spill_Min_Fish_Weir.csv,Missing
+Missing,Pow_Max_FOS_power_release.csv,MaxI_IncrseRampingRate_Fostr.csv,Missing,Pow_Max_FOS_power_release.csv,Missing
+Missing,Missing,Min_ConservFlow_Fostr.csv,Missing,Missing,Missing
+Missing,Missing,Max_Winter_and_Con.csv,Missing,Missing,Missing
+Missing,Missing,Spill_Min_Fish_Weir.csv,Missing,Missing,Missing
+Missing,Missing,Pow_Max_FOS_power_release.csv,Missing,Missing,Missing

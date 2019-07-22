@@ -1,0 +1,54 @@
+Foster Dam
+
+
+Top of Dam - 0
+FOS max power release: Linear - Maximum - var:pool elevation
+Special Curves FOS:  Linear - induced surcharge falling pool (release average inflow over the last 24h)
+FloodIncrsRate_Fostr:  Step - Increasing - var: release
+FloodDcrsRate_Fostr:  Linear - Decreasing - var:release
+Drafting: Linear - Maximum - var:pool elevation
+
+Flood Control - 1
+FOS max power release: Linear - Maximum - var:pool elevation
+Special Curves FOS:  Linear - induced surcharge falling pool (release average inflow over the last 24h)
+Fish Weir Spill:   Linear - Minimum - var:pool elevation
+  Downstream Conditions
+    IF (Exceeding BF Downstream)
+	FOS max power release: Linear - Maximum - var:pool elevation
+	Special Curves FOS:  Linear - induced surcharge falling pool (release average inflow over the last 24h)
+	Release 10,000:  Linear - Specified - var: inflow
+	Increasing Rate of Change: Constant INcreasing
+	Decreasing Rate of Change: Constant Decreasing
+    ELSE (Normal Conditions Downstream)
+	FOS max power release: Linear - Maximum - var:pool elevation
+	Max Flow (Winter and Conservation): Linear - Maximum - var:pool elevation
+	Increasing Rate of Change:  Constant INcreasing
+	Daily Max Rate of Decrease for BiOp: Linear - minimum - var:outflow lagged 24h
+
+
+Conservation - 2
+FOS max power release: Linear - Maximum - var:pool elevation
+Max Flow (Winter and Conservation): Linear - Maximum - var:pool elevation
+Fish Weir Spill:  Linear - Minimum - var:pool elevation
+Green Peter zone
+    IF (Green Peter above buffer zone)
+	MinConservFlow_Fostr:  Step - Minimum - var:Date
+    ELSE (Green Peter in Buffer zone)
+	Foster min for Buffer Zone:  Step - Minimum - var:Date
+IncrseRampingRate_Fostr: Constant Increasing
+Daily Max Rate of Decrease for BiOp:  Linear - minimum - var:outflow lagged 24h 
+Max Bankfull flow - at Salem: Linear - Maximum - var:date
+Max Bankfull Flow - at Waterloo: Linear - Maximum - var:date
+Max Bankfull Flow - at Jefferson: Linear - Maximum - var:date
+
+Buffer - 3
+FOS max power release: Linear - Maximum - var:pool elevation
+Foster min for Buffer Zone:  Step - Minimum - var:Date
+Daily Max Rate of Decrease for BiOp: Linear - minimum - var:outflow lagged 24h
+
+
+Foster Specifics:
+4 spillway gates - max capacity based on pool elevation and gate setting
+2 power plant outlets - max capacity based on pool elev
+Tailwater elevation - 160m
+Release allocation is sequential - 1st power plant - 2nd Spillway

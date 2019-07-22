@@ -1,0 +1,55 @@
+Fall Creek Dam
+
+
+Top of Dam - 0
+FAL special curve for IRRM: Linear - induced surcharge falling pool (release average inflow over the last 24h)
+Spill during gate tracking:  Linear - Minimum - var: special curves min flow and current release (cms)
+FloodDcrseRate_FallCrk:  Linear - decreasing - var:release
+FloodIncrsRate_FallCrk:  Step - increasing - var:release
+
+Flood Control - 1
+FAL special curve for IRRM: Linear - induced surcharge falling pool (release average inflow over the last 24h)
+Spill during gate tracking:  Linear - Minimum - var: special curves min flow and current release (cms)
+Min Conserv Flow@FallCrk:  step - minimum - var:date
+FloodDcrseRate_FallCrk:  Linear - decreasing - var:release
+FloodIncrsRate_FallCrk:  Step - increasing - var:release
+Harrisburg 51,000 cfs Max:   Linear - Max - var:date
+Max Flow (Winter and Conservation):   Linear - Max - var:pool elevation AND Date
+Jasper Max: Linear - Max - var:date
+
+50% FC Pool-  Elev = 243m
+FAL special curve for IRRM:  Linear - induced surcharge falling pool (release average inflow over the last 24h)
+Spill during gate tracking:  Linear - Minimum - var: special curves min flow and current release (cms)
+Min Conserv Flow@FallCrk:  step - minimum - var:date
+FloodDcrseRate_FallCrk:   Linear - decreasing - var:release
+FloodIncrsRate_FallCrk:  Step - increasing - var:release
+Harrisburg 42,500 cfs Max:   Linear - Max - var:date
+Max Flow (Winter and Conservation):   Linear - Max - var:pool elevation
+Jasper Bankfull:  Linear - Max - var:date
+
+Conservation - 2
+Min Conserv Flow@FallCrk:  step - minimum - var:date
+Max Flow (Winter and Conservation):   Linear - Max - var:pool elevation
+IncrsRamping_FallCrk:  Constant Increasing
+Daily BiOp Max Rate of Decrease:   linear - minimum - var:outflow lagged 24h
+Harrisburg 42,500 cfs Max:   Linear - Max - var:date
+Min Flow - at Salem
+Min Flow - at Albany by Water Year Type
+
+Buffer - 3
+Min Conserv Flow@FallCrk:  step - minimum - var:date
+Daily BiOp Max Rate of Decrease:   linear - minimum - var:outflow lagged 24h
+
+
+Hill Creek specifics:
+2 RO gates - max capacity - max capacity based on pool elevation and gate setting
+2 spillway gates -  max capacity based on pool elevation and gate setting
+Release allocation is sequential - 1st RO, 2nd Spillway
+
+
+Notes:
+
+Max_Flow_Winter_and_Conservation.csv: varies with both pool elevation and date.
+    The file is set up with a marker in the first cell that this is dependent on 2 variables     (Date_pool_elev_m).  The rest of the first row contains dummy labels.  The 1st column contains 
+    values for the date.  The 2nd row contains values for pool elevation.  Col 1, row 2 is set to
+    -10 (a numeric value is required, but this row contains the pool elevation values).

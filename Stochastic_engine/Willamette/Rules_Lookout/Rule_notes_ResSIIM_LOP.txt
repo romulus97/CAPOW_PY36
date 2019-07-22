@@ -1,0 +1,70 @@
+Top of Dam
+LOP max power release - Maximum - Linear - var:elevation - applies to Power Plant only!
+LOP special curve IRRM - Induced surcharge (falling pool options defined) -linear
+Spill during gate tracking - Minimum - Linear - var:Min flow - applies to spillway only!!
+FloodDcrsRate_LookP - Step - Decreasing - var:release
+FloodIncrsRate_LookP - Step - Increasing - var:release
+Max Evacuation Release - Maximum - Linear - var: elevation
+No RO use above 900 ft - Step - maximum - var:elevation  - applies to regulated outlet only!!
+ 
+
+Max Pool
+LOP max power release - Maximum - Linear - var:elevation
+LOP special curve IRRS - Induced surcharge (falling pool options defined) -linear
+Spill during gate tracking - Minimum - Linear - var:Min flow
+Harrisburg 70500 cfs Max - Linear - maximum - var:date
+High Q Ramp Down Rates - Step - Decreasing - var:release
+High Q Ramp Up Rates - Step - Increasing - var:release
+No RO use above 900 ft - Step - maximum - var:elevation
+
+
+
+Primary Flood Control
+LOP max power release - Maximum - Linear - var:elevation
+LOP special curve IRRS - Induced surcharge (falling pool options defined) -linear
+Spill during gate tracking - Minimum - Linear - var:Min flow
+Min Flow - at Lookout Point - Minimum - Linear var: date
+Harrisburg 51,000 cfs Max - Maximum - Linear - var:date
+Max Evacuation Release - Maximum - Linear - var: elevation
+Jasper Max - Maximum - Linear - var:date
+High Q Ramp Down Rates - Step - Decreasing - var:release
+High Q Ramp Up Rates - Step - Increasing - var:release
+No RO use above 900 ft - Step - maximum - var:elevation
+
+Secondary Flood Control
+LOP max power release - Maximum - Linear - var:elevation
+LOP special curve IRRS - Induced surcharge (falling pool options defined) -linear
+Spill during gate tracking - Minimum - Linear - var:Min flow
+Min Flow - at Lookout Point - Minimum - Linear var: date
+Harrisburg 42500 cfs Max - Maximum - Linear - var:date
+Max Evacuation Release - Maximum - Linear - var: elevation
+Jasper Bankfull - Maximum - Linear - var:date
+High Q Ramp Down Rates - Step - Decreasing - var:release
+High Q Ramp Up Rates - Step - Increasing - var:release
+No RO use above 900 ft - Step - maximum - var:elevation
+
+Conservation
+LOP max power release - Maximum - Linear - var:elevation
+Min Flow - at Lookout Point - Minimum - Linear var: date
+Harrisburg 42500 cfs Max - Maximum - Linear - var:date
+Max Conserv Flow at LOP - Step - Maximum - Date
+0.5ft Max Ramp up at DEX - Linear - Maximum - var:LOP outflow lagged 24h
+0.5ft Max Ramp Down at DEX - Linear - Maximum - var:LOP outflow lagged 24h.  Note:  (more strict than the 50% BiOP reduction rule)
+Min Flow - at Salem
+Min Flow - at Albany by Water Year Type
+No RO use above 900 ft - Step - maximum - var:elevation
+
+Buffer
+LOP max power release - Maximum - Linear - var:elevation
+Min Flow - at Lookout Point - Minimum - Linear var: date
+0.5ft Max Ramp Down at DEX - Linear - Maximum - var:LOP outflow lagged 24h.  Note:  (more strict than the 50% BiOP reduction rule)
+
+
+
+Lookout particulars:
+
+3 power plant gates - max capacity based on pool elevation
+4 regulated outlets - max capacity based on 1)pool elevation and 2)gate setting
+5 spillway gates - max capacity based on 1)pool elevation and 2)gate setting
+
+Allocation is sequential:  1st - power plant, 2nd - RO, third - Spillway

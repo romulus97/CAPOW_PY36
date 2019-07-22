@@ -1,0 +1,71 @@
+0 - Top of Dam
+   DET max power release - Max: Linear, var: pool_elev_current_value.   Applies only to power plant.
+   Special curves DET - Linear - Falling pool time for Decrease -24h, Falling pool transition elevation - 478.
+   FloodIncrsRate_Detroit - Increasing, Linear, var: release
+   FloodDcrsRate_Detroit - Decreasing, Linear, var:release
+   Max Evacuation Release - Max, Linear, var:  pool_elev_previous value
+   No Lower RO Flow - Max, Step, var: Date    Applies only to lower controlled outlet.
+   No Upper RO flow above 1542ft. - Max, Step, var:pool_elevation current value.  Applies only to upper controlled outlet.
+
+1 - Flood Control
+   DET max power release - Max: Linear, var: pool_elev_current_value.   Applies only to power plant.
+   Special curves DET - Linear - Falling pool time for Decrease -24h, Falling pool transition elevation - 478.
+   Conditional block "Recession Rules"
+     If (Project has initiated special curves) - 
+       	DET max power release - Max: Linear, var: pool_elev_current_value.   Applies only to power plant.
+       	Special curves DET - Linear - Falling pool time for Decrease -24h, Falling pool transition elevation - 478.
+       	FloodDcrsRate_Detroit - Decreasing, Linear, var:release
+       	Max Bankfull flow - at Mehama (COMID - 23785767) - Max, Linear, var: flow at Mehama
+       	Max Bankfull flow - at Jefferson (COMID - 23780423) - Max, Linear, flow at Jefferson
+       	Max Bankfull flow - at Salem - Max, Linear, flow at Salem
+       	Max Evacuation Release - Max, Linear, var:  pool_elev_previous value
+       	Pass Inflow - Min, Linear, var:Detroit inflow, current value
+     Else if (Fall or Winter)
+	DET max power release - Max: Linear, var: pool_elev_current_value.   Applies only to power plant.
+       	Special curves DET - Linear - Falling pool time for Decrease -24h, Falling pool transition elevation - 478.
+	FloodIncrsRate_Detroit - Increasing, Linear, var: release       
+	FloodDcrsRate_Detroit - Decreasing, Linear, var:release
+	Min Flow cons - at Detroit - Min, Step, var: Date
+	Winter Ops max flood flow - at Mehama - max, linear, var: flow at Mehama
+	Winter Ops max flood flow - at Salem - max, linear, var:flow at Salem
+	Max Evacuation Release - Max, Linear, var:  pool_elev_previous value
+     Else (Spring or Summer)
+	DET max power release - Max: Linear, var: pool_elev_current_value.   Applies only to power plant.
+       	Special curves DET - Linear - Falling pool time for Decrease -24h, Falling pool transition elevation - 478.
+	FloodIncrsRate_Detroit - Increasing, Linear, var: release       
+	FloodDcrsRate_Detroit - Decreasing, Linear, var:release
+	Min Flow cons - at Detroit - Min, Step, var: Date
+	Max Evacuation Release - Max, Linear, var:  pool_elev_previous value
+	Max Bankfull flow - at Mehama (COMID - 23785767) - Max, Linear, var: flow at Mehama
+       	Max Bankfull flow - at Jefferson (COMID - 23780423) - Max, Linear, flow at Jefferson
+       	Max Bankfull flow - at Salem - Max, Linear, flow at Salem
+    
+   No Lower RO Flow - Max, Step, var: Date    Applies only to lower controlled outlet.
+   No Upper RO flow above 1542ft. - Max, Step, var:pool_elevation current value.  Applies only to upper controlled outlet.
+   
+
+2 - Conservation
+	DET max power release - Max: Linear, var: pool_elev_current_value.   Applies only to power plant.
+	Min Flow DET plus irrigation most years - Min, Linear, var:North Santiam Diversion, Current value (External variable)
+           Description from Res-SIM - "Reads a variable called "Irrigation from Detroit", which is in file year_classification.dss, 
+                                       which is just zeroes or ones. Places where no irrigation is added have a zero. These are all 
+                                       Nov-March, and all year for deficit water years. Most years have a 1 in April through Oct. If 
+                                       there is a one, then the rule adds 73 cfs to minimum outflow from Detroit.
+	Max Con Flow - at Detroit - Max, Step, var: Date
+	Max Bankfull flow - at Mehama (COMID - 23785767) - Max, Linear, var: flow at Mehama
+       	Max Bankfull flow - at Jefferson (COMID - 23780423) - Max, Linear, flow at Jefferson
+       	Max Bankfull flow - at Salem - Max, Linear, flow at Salem
+	Daily BiOp Max Rate of Decrease - Min, Linear, var:Detroit outflow, lagged 24h
+	Op Temp Control (Spillway) - Min, Linear, var:Detroit outflow, current value (AND by Date).  Applies only to spillway.
+	Op Temp Control (Upper RO) - Min, Linear,var:Detroit outflow, current value (and by Date).  Applies only to upper controlled outlet.
+`	No Lower RO Flow - Max, Step, var: Date    Applies only to lower controlled outlet.
+   	o Upper RO flow above 1542ft. - Max, Step, var:pool_elevation current value.  Applies only to upper controlled outlet.
+
+3 - Buffer
+	DET max power release - Max: Linear, var: pool_elev_current_value.   Applies only to power plant.
+	Lower Minimum flows from Detroit - Min, linear, var: North santiam diversion (ext var, see above).
+	Daily BiOp Max Rate of Decrease - Min, Linear, var:Detroit outflow, lagged 24h
+	No Lower RO flow - Max, Step, var: Date.  Applies only to lower controlled outlet (sets value to zero).
+
+
+Note:  Statement in the ResSIM model say the Lower RO is not ever used at Detroit.  True?

@@ -1,0 +1,41 @@
+Fern Ridge Dam
+
+Top of Dam - 0
+Special Curves FRN:   induced surcharge falling pool (release average inflow over the last 6h)
+FloodDcrsRate_FernR:  Linear - decreasing - var:release
+FloodIncrsRate_FernR: Increasing constant
+Max Evacuation Release:  Linear - Max - var:pool elevation
+
+Flood Control - 1
+Special Curves FRN:   induced surcharge falling pool (release average inflow over the last 6h)
+Ramp Up Rates:  Constant Increasing
+Daily BiOp Max Rate of Decrease: linear - minimum - var:outflow lagged 24h
+Ramp Down Rates:     Linear - increasing - var:release
+Min Flow out of Fern Ridge:  step - minimum - var:date
+Max Evacuation Release:   Linear - Max - var:pool elevation
+Max Regulation Goal - at Monroe:   Linear - Max - var:pool elevation
+
+Conservation - 2
+Min Flow out of Fern Ridge:  step - minimum - var:date
+Min Flow at Monroe: step - minimum - var:date  
+Max Con Flow - at Fern Ridge:   Linear - Max - var:date
+IncrsRamping_FernR:  Constant Increasing  
+DcrsRamping_FernR    Constant Decreasing
+Daily BiOp Max Rate of Decrease: linear - minimum - var:outflow lagged 24h
+
+Buffer - 3
+Min Flow out of Fern Ridge:  step - minimum - var:date
+Daily BiOp Max Rate of Decrease: linear - minimum - var:outflow lagged 24h
+
+
+
+Fern Ridge specifics:
+4 RO gates - max capacity based on pool elevation and gate setting
+6 spillway gates -  max capacity based on pool elevation and gate setting
+1 Sluice gate-  max capacity based on pool elevation and gate setting
+Tailwater elevation - 374m
+Release allocation is sequential - 1st power plant - 2nd RO, 3rd Spill
+
+
+
+Note 2_06_2013:  The sluice gate is the lowest priority sequentially, but could be used to augment flow slightly. Implementation of this gate will be tricky (since it would be the 2nd priority below the spillway elevation and 3rd above it.  Also, the amount of additional release capacity provided is ~10% at low flows diminishing to ~2.5% at high flows.

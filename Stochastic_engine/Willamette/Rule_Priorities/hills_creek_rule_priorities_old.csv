@@ -1,0 +1,11 @@
+0,1,2,3,4,5
+Max_HCR_power_release.csv,Max_HCR_power_release.csv,Max_HCR_power_release.csv,Max_HCR_power_release.csv,Min_Low_Turbine_Flows_at_Low_Reservoir_Elevations.csv,Missing
+Min_HCR_power.csv,Min_HCR_power.csv,Min_HCR_power.csv,Min_HCR_power.csv,Min_Low_RO_Flows_when_turbine_low.csv,Missing
+Min_RO_Flow.csv,Min_RO_Flow.csv,Min_Flow_Hills Creek.csv,Min_Flow_Hills Creek.csv,Missing,Missing
+MaxI_FloodIncrsRate_HillsCrk.csv,Min_Flow_Hills Creek.csv,Max_Flow_Winter_and_Conservation.csv,MaxD_Revised Daily BiOP Max Rate of Decrease.csv,Missing,Missing
+MaxD_FloodDcrsRate_HillsCrk.csv,MaxI_FloodIncrsRate_HillsCrk.csv,MaxI_IncrsRamping_Hills_Crk.csv,Min_RO_Flow.csv,Missing,Missing
+Max_Flow_Winter_and_Conservation.csv,MaxD_FloodDcrsRate_HillsCrk.csv,MaxD_Revised Daily BiOP Max Rate of Decrease.csv,Missing,Missing,Missing
+Missing,Max_Flow_Winter_and_Conservation.csv,Min_RO_Flow.csv,Missing,Missing,Missing
+Missing,Missing,Min_flow_at_Salem_23791083.csv,Missing,Missing,Missing
+Missing,Missing,Min_Flow_at_Albany_23762845.csv,Missing,Missing,Missing
+Missing,Missing,Missing,Missing,Missing,Missing

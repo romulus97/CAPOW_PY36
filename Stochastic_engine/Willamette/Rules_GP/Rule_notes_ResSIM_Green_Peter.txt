@@ -1,0 +1,71 @@
+Green Peter Dam
+
+
+Top of Dam - 0
+GPR max power release:   Linear - Max - var:pool elevation
+New GPR special curve for IRRM:  Linear - induced surcharge falling pool (release average inflow over the last 24h)
+Spill during gate tracking: Linear - Minimum - var: release (from New GPR special curve for IRRM Min Flow)
+FloodIncrsRate_Green:  Constant Increasing
+FloodDcrsRate_GreenP:  Constant Decreasing	
+Max Flow (Winter and Conservation)::   Linear - Max - var:pool elevation
+
+Flood Control - 1
+GPR max power release:   Linear - Max - var:pool elevation
+New GPR special curve for IRRM:  Linear - induced surcharge falling pool (release average inflow over the last 24h)
+Spill during gate tracking: Linear - Minimum - var: release (from New GPR special curve for IRRM Min Flow)
+FloodIncrsRate_GreenP:   Constant Increasing
+FloodDcrsRate_GreenP:  Constant Decreasing
+Flood Ops IRRM
+   IF (Small Flood Ops IRRM)
+	GPR max power release:   Linear - Max - var:pool elevation
+	Winter Ops Min Flow - at Green Peter:   linear - minimum - var:date
+	DcrsRamping_GreenP:  Constant Decreasing
+	10k Max into Foster:  Linear - Maximum - var: Inflow (known flow; cascadia gauge, averaged over 4.0hr period)
+	Max Bankfull Flow - at Waterloo:   Linear - Max - var:date
+
+   ELSE IF (Normal Flood Ops IRRM)
+	GPR max power release:   Linear - Max - var:pool elevation
+	Winter Ops Min Flow - at Green Peter:   linear - minimum - var:date
+	DcrsRamping_GreenP:  Constant Decreasing
+	12k Max into Foster:  Linear - Maximum - var: Inflow (known flow; cascadia gauge, averaged over 4.0hr period)
+	Max Bankfull Flow - at Waterloo:  Linear - Max - var:date
+   ELSE IF (Spring/Fall Large Flood no IRRM)
+	GPR max power release:   Linear - Max - var:pool elevation
+	Special Curves GPR:  Linear - induced surcharge falling pool (release average inflow over the last 24h)
+	FloodIncrsRate_GreenP:  Constant Increasing
+	Max Flow (Winter and Conservation):   Linear - Max - var:pool elevation
+	Winter Ops Min Flow - at Green Peter:   linear - minimum - var:date
+	Max Bankfull Flow - at Waterloo:  Linear - Max - var:date
+   ELSE (Large Flood IRRM)
+	GPR max power release:   Linear - Max - var:pool elevation
+	New GPR special curve for IRRM: Linear - induced surcharge falling pool (release average inflow over the last 24h)
+	Spill during gate tracking: Linear - Minimum - var: release (from New GPR special curve for IRRM Min Flow)
+	FloodIncrsRate_GreenP:  Constant Increasing
+	Max Flow (Winter and Conservation):   Linear - Max - var:pool elevation
+	Winter Ops Min Flow - at Green Peter:   linear - minimum - var:date
+	Max Bankfull Flow - at Waterloo:  Linear - Max - var:date
+
+
+Conservation - 2
+
+GPR max power release:   Linear - Max - var:pool elevation
+Max Flow (Winter and Conservation):   Linear - Max - var:pool elevation
+Min Con Flow from Foster:   Step - Minimum - var: Date
+Max Bankfull flow - at Salem:   Linear - Maximum - var: Date
+Max Bankfull Flow - at Waterloo:  Linear - Maximum - var: Date
+Max Bankfull Flow - at Jefferson:  Linear - Maximum - var: Date
+Min Flow - at Salem
+Daily BiOp Max Rate of Decrease (at FOS):  linear - minimum - var:  FOSTER outflow lagged 24h
+
+
+Buffer - 3
+GPR max power release:   Linear - Max - var:pool elevation
+Min Buffer Flow from Foster:  Step - Minimum - var:Date
+Daily BiOp Max Rate of Decrease (at FOS): linear - minimum - var:outflow lagged 24h
+
+Green Peter Specifics:
+2 Controlled outlets- max capacity based on pool elevation and gate setting
+2 spillway gates - max capacity based on pool elevation and gate setting
+2 power plant outlets - max capacity based on pool elev
+Tailwater elevation - 213m
+Release allocation is sequential - 1st power plant - 2nd Controlled outlets, 3rd Spillway

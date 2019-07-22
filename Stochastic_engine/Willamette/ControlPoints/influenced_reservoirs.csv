@@ -1,0 +1,12 @@
+Control_Point,Influenced Reservoirs (from BiOP doc),,,,,,,IDs
+JAS,HCR,LOP,FAL,,,,,"1,2,4"
+GOS,COT,DOR,,,,,,"5,6"
+VID,CGR,BLU,,,,,,"8,9"
+HAR,HCR,LOP,FAL,COT,DOR,CGR,BLU,"1,2,4,5,6,8,9"
+MON,FRN,,,,,,,7
+ALB,,,,,,,,
+WAT,GPR,,,,,,,10
+MEH,DET,,,,,,,12
+JEF,FOS,DET,,,,,,"11,12"
+SAL,FOS,DET,,,,,,"11,12"
+FOS,GPR,,,,,,,10
