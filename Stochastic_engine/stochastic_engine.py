@@ -20,7 +20,7 @@ starttime = time.time()
 # STOCHASTIC WEATHER AND STREAMFLOW GENERATION
 
 # Specify a number of synthetic years to be simulated 
-sim_years=200
+sim_years=3
 
 # Generate synthetic weather (wind speed and temperature) records. 
 import synthetic_temp_wind_v2

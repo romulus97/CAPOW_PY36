@@ -76,7 +76,7 @@ for i in range(0,int(sim_years)):
     # hist = 1 if looking at historical nuclear power production; facilitates use of
     # monthly nuclear power generation data from EIA. Note that if hist = 0
     # the model assumes that nuclear power plants in California have been retired.
-    hist = 1
+    hist = 0
     hist_year = 2011
 
     import CA_data_setup
