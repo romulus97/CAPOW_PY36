@@ -25,6 +25,6 @@ There are three main parts of the CAPOW model. Each is associated with a separat
 
 The file structure presented on Github is meant to be downloaded as a single compressed zip file, extracted and run by executing the three .py files described above in sequence. **README files in each of the three main sub-repositories** details the function of each related .py script, as well as associated input and output data. 
 
-Note that before running, it's likely that users will need to separately install the **pyomo** mathematical programming package (https://anaconda.org/conda-forge/pyomo) as well as the **CPLEX solver** (https://developer.ibm.com/docloud/blog/2016/11/24/cos-12-7-ai/) and the **xmltodict** package (https://anaconda.org/conda-forge/xmltodict). In addition, in order for Python to run the Matlab scripts, users must first install a **Matlab engine** for Python (instructions are here: https://www.mathworks.com/help/matlab/matlab_external/install-the-matlab-engine-for-python.html)
+Note that before running, it's likely that users will need to separately install the **pyomo** mathematical programming package (https://anaconda.org/conda-forge/pyomo) as well as the **CPLEX solver** (https://developer.ibm.com/docloud/blog/2016/11/24/cos-12-7-ai/) and the **xmltodict** package (https://anaconda.org/conda-forge/xmltodict). 
 
 As publications become available that demonstrate the application the CAPOW model in different contexts, those papers, as well as additional code and data, will also be made available here. 
