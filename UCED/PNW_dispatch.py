@@ -12,7 +12,7 @@ Created on Fri Jul 07 12:23:45 2017
 #######################################################################################################
 
 
-from __future__ import division # This line is used to ensure that int or long division arguments are converted to floating point values before division is performed 
+from __future__ import division # This line is used to ensure that int or long division arguments are converted to floating point values before division is performed
 from pyomo.environ import * # This command makes the symbols used by Pyomo known to Python
 from pyomo.opt import SolverFactory
 import itertools
@@ -37,8 +37,8 @@ model.PSH = Set()
 model.Slack = Set()
 model.Hydro = Set()
 model.WECCImports = Set()
-model.Ramping = model.Hydro | model.WECCImports
-   
+model.Ramping = model.Zone5Generators | model.WECCImports
+
 model.Generators = model.Zone5Generators | model.WECCImports
 
 #
@@ -94,7 +94,7 @@ model.SH_periods = RangeSet(1,model.SimHours)
 model.SimDays = Param(within=PositiveIntegers)
 model.SD_periods = RangeSet(1,model.SimDays)
 
-# Operating horizon information 
+# Operating horizon information
 model.HorizonHours = Param(within=PositiveIntegers)
 model.HH_periods = RangeSet(0,model.HorizonHours)
 model.hh_periods = RangeSet(1,model.HorizonHours)
@@ -153,7 +153,7 @@ model.SimPNW_hydro = Param(model.SD_periods, within=NonNegativeReals)
 
 model.HorizonPath66_imports = Param(model.hd_periods, within=NonNegativeReals,mutable=True)
 model.HorizonPath65_imports = Param(model.hd_periods, within=NonNegativeReals,mutable=True)
-model.HorizonPath8_imports = Param(model.hd_periods, within=NonNegativeReals,mutable=True) 
+model.HorizonPath8_imports = Param(model.hd_periods, within=NonNegativeReals,mutable=True)
 model.HorizonPath14_imports = Param(model.hd_periods, within=NonNegativeReals,mutable=True)
 model.HorizonPath3_imports = Param(model.hd_periods, within=NonNegativeReals,mutable=True)
 model.HorizonPNW_hydro = Param(model.hd_periods, within=NonNegativeReals,mutable=True)
@@ -165,11 +165,11 @@ model.HorizonHydro = Param(model.zones,model.hh_periods,within=NonNegativeReals,
 
 #Minimum flows (hydro and paths)
 model.SimPNW_hydro_minflow = Param(model.SH_periods, within=NonNegativeReals)
-model.SimPath65_imports_minflow = Param(model.SH_periods, within=NonNegativeReals) 
-model.SimPath66_imports_minflow = Param(model.SH_periods, within=NonNegativeReals) 
-model.SimPath8_imports_minflow = Param(model.SH_periods, within=NonNegativeReals) 
-model.SimPath14_imports_minflow = Param(model.SH_periods, within=NonNegativeReals)   
-model.SimPath3_imports_minflow = Param(model.SH_periods, within=NonNegativeReals)  
+model.SimPath65_imports_minflow = Param(model.SH_periods, within=NonNegativeReals)
+model.SimPath66_imports_minflow = Param(model.SH_periods, within=NonNegativeReals)
+model.SimPath8_imports_minflow = Param(model.SH_periods, within=NonNegativeReals)
+model.SimPath14_imports_minflow = Param(model.SH_periods, within=NonNegativeReals)
+model.SimPath3_imports_minflow = Param(model.SH_periods, within=NonNegativeReals)
 
 model.HorizonPath65_minflow  = Param(model.hh_periods,within=NonNegativeReals,mutable=True)
 model.HorizonPath66_minflow  = Param(model.hh_periods,within=NonNegativeReals,mutable=True)
@@ -179,7 +179,7 @@ model.HorizonPath3_minflow  = Param(model.hh_periods,within=NonNegativeReals,mut
 model.HorizonPNW_hydro_minflow = Param(model.hh_periods,within=NonNegativeReals,mutable=True)
 
 ##Initial conditions
-model.ini_on = Param(model.Generators, within=Binary, initialize=0,mutable=True) 
+model.ini_on = Param(model.Generators, within=Binary, initialize=0,mutable=True)
 model.ini_mwh_1 = Param(model.Generators,initialize=0,mutable=True) #seg1
 model.ini_mwh_2 = Param(model.Generators,initialize=0,mutable=True) #seg2
 model.ini_mwh_3 = Param(model.Generators,initialize=0,mutable=True) #seg3
@@ -224,18 +224,18 @@ model.PNWH_minflow = Var(model.HH_periods,within=NonNegativeReals)
 #
 ##
 def SysCost(model):
-    coal1 = sum(model.mwh_1[j,i]*(model.seg1[j]*2 + model.var_om[j]) for i in model.hh_periods for j in model.Coal) 
-    coal2 = sum(model.mwh_2[j,i]*(model.seg2[j]*2 + model.var_om[j]) for i in model.hh_periods for j in model.Coal) 
+    coal1 = sum(model.mwh_1[j,i]*(model.seg1[j]*2 + model.var_om[j]) for i in model.hh_periods for j in model.Coal)
+    coal2 = sum(model.mwh_2[j,i]*(model.seg2[j]*2 + model.var_om[j]) for i in model.hh_periods for j in model.Coal)
     coal3 = sum(model.mwh_3[j,i]*(model.seg3[j]*2 + model.var_om[j]) for i in model.hh_periods for j in model.Coal)
-    nuc1 = sum(model.mwh_1[j,i]*(model.seg1[j]*1 + model.var_om[j]) for i in model.hh_periods for j in model.Nuclear) 
-    nuc2 = sum(model.mwh_2[j,i]*(model.seg2[j]*1 + model.var_om[j]) for i in model.hh_periods for j in model.Nuclear) 
+    nuc1 = sum(model.mwh_1[j,i]*(model.seg1[j]*1 + model.var_om[j]) for i in model.hh_periods for j in model.Nuclear)
+    nuc2 = sum(model.mwh_2[j,i]*(model.seg2[j]*1 + model.var_om[j]) for i in model.hh_periods for j in model.Nuclear)
     nuc3 = sum(model.mwh_3[j,i]*(model.seg3[j]*1 + model.var_om[j]) for i in model.hh_periods for j in model.Nuclear)
-    gas1_5 = sum(model.mwh_1[j,i]*(model.seg1[j]*model.GasPrice['PNW'] + model.var_om[j]) for i in model.hh_periods for j in model.Gas) 
-    gas2_5 = sum(model.mwh_2[j,i]*(model.seg2[j]*model.GasPrice['PNW'] + model.var_om[j]) for i in model.hh_periods for j in model.Gas)  
-    gas3_5 = sum(model.mwh_3[j,i]*(model.seg3[j]*model.GasPrice['PNW'] + model.var_om[j]) for i in model.hh_periods for j in model.Gas)  
-    oil1 = sum(model.mwh_1[j,i]*(model.seg1[j]*20 + model.var_om[j]) for i in model.hh_periods for j in model.Oil) 
-    oil2 = sum(model.mwh_2[j,i]*(model.seg2[j]*20 + model.var_om[j]) for i in model.hh_periods for j in model.Oil)  
-    oil3 = sum(model.mwh_3[j,i]*(model.seg3[j]*20 + model.var_om[j]) for i in model.hh_periods for j in model.Oil)  
+    gas1_5 = sum(model.mwh_1[j,i]*(model.seg1[j]*model.GasPrice['PNW'] + model.var_om[j]) for i in model.hh_periods for j in model.Gas)
+    gas2_5 = sum(model.mwh_2[j,i]*(model.seg2[j]*model.GasPrice['PNW'] + model.var_om[j]) for i in model.hh_periods for j in model.Gas)
+    gas3_5 = sum(model.mwh_3[j,i]*(model.seg3[j]*model.GasPrice['PNW'] + model.var_om[j]) for i in model.hh_periods for j in model.Gas)
+    oil1 = sum(model.mwh_1[j,i]*(model.seg1[j]*20 + model.var_om[j]) for i in model.hh_periods for j in model.Oil)
+    oil2 = sum(model.mwh_2[j,i]*(model.seg2[j]*20 + model.var_om[j]) for i in model.hh_periods for j in model.Oil)
+    oil3 = sum(model.mwh_3[j,i]*(model.seg3[j]*20 + model.var_om[j]) for i in model.hh_periods for j in model.Oil)
     psh1 = sum(model.mwh_1[j,i]*10 for i in model.hh_periods for j in model.PSH)
     psh2 = sum(model.mwh_2[j,i]*10 for i in model.hh_periods for j in model.PSH)
     psh3 = sum(model.mwh_3[j,i]*10 for i in model.hh_periods for j in model.PSH)
@@ -246,24 +246,25 @@ def SysCost(model):
     fixed_gas5 = sum(model.no_load[j]*model.on[j,i]*model.GasPrice['PNW'] for i in model.hh_periods for j in model.Gas)
     fixed_oil = sum(model.no_load[j]*model.on[j,i]*20 for i in model.hh_periods for j in model.Oil)
     fixed_slack = sum(model.no_load[j]*model.on[j,i]*10000 for i in model.hh_periods for j in model.Slack)
-    starts = sum(model.st_cost[j]*model.switch[j,i] for i in model.hh_periods for j in model.Generators) 
-
-    return fixed_slack + fixed_oil + fixed_gas5 + fixed_coal + coal1 + coal2 + coal3 + nuc1 + nuc2 + nuc3 + gas1_5 + gas2_5 + gas3_5 + oil1 + oil2 + oil3 + psh1 + psh2 + psh3 + slack1 + slack2 + slack3 + starts 
+    starts = sum(model.st_cost[j]*model.switch[j,i] for i in model.hh_periods for j in model.Generators)
+    sreserves = sum(model.srsv[j,i] for i in model.hh_periods for j in model.Generators)
+    nreserves = sum(model.nrsv[j,i] for i in model.hh_periods for j in model.Generators)
+    return fixed_slack + fixed_oil + fixed_gas5 + fixed_coal + coal1 + coal2 + coal3 + nuc1 + nuc2 + nuc3 + gas1_5 + gas2_5 + gas3_5 + oil1 + oil2 + oil3 + psh1 + psh2 + psh3 + slack1 + slack2 + slack3 + starts + nreserves + sreserves
 model.SystemCost = Objective(rule=SysCost, sense=minimize)
-    
-   
+
+
 ####################################################################
 #   Constraints                                                    #
 ####################################################################
-   
-###Power Balance 
+
+###Power Balance
 def Zone5_Balance(model,i):
     s1 = sum(model.mwh_1[j,i] for j in model.Zone5Generators)
-    s2 = sum(model.mwh_2[j,i] for j in model.Zone5Generators)  
-    s3 = sum(model.mwh_3[j,i] for j in model.Zone5Generators)  
+    s2 = sum(model.mwh_2[j,i] for j in model.Zone5Generators)
+    s3 = sum(model.mwh_3[j,i] for j in model.Zone5Generators)
     other = model.solar['PNW',i] + model.PNWH_minflow[i]\
     + model.wind['PNW',i] + model.HorizonMustRun['PNW',i]
-    imports =  model.P66I_minflow[i] + model.P65I_minflow[i] + model.P8I_minflow[i] + model.P14I_minflow[i] + model.P3I_minflow[i] + model.mwh_1['P66I',i] + model.mwh_2['P66I',i] + model.mwh_3['P66I',i] + model.mwh_1['P65I',i] + model.mwh_2['P65I',i] + model.mwh_3['P65I',i] + model.mwh_1['P3I',i] + model.mwh_2['P3I',i] + model.mwh_3['P3I',i] + model.mwh_1['P8I',i] + model.mwh_2['P8I',i] + model.mwh_3['P8I',i] + model.mwh_1['P14I',i] + model.mwh_2['P14I',i] + model.mwh_3['P14I',i] 
+    imports =  model.P66I_minflow[i] + model.P65I_minflow[i] + model.P8I_minflow[i] + model.P14I_minflow[i] + model.P3I_minflow[i] + model.mwh_1['P66I',i] + model.mwh_2['P66I',i] + model.mwh_3['P66I',i] + model.mwh_1['P65I',i] + model.mwh_2['P65I',i] + model.mwh_3['P65I',i] + model.mwh_1['P3I',i] + model.mwh_2['P3I',i] + model.mwh_3['P3I',i] + model.mwh_1['P8I',i] + model.mwh_2['P8I',i] + model.mwh_3['P8I',i] + model.mwh_1['P14I',i] + model.mwh_2['P14I',i] + model.mwh_3['P14I',i]
     exports =  model.HorizonPath66_exports[i] + model.HorizonPath65_exports[i] + model.HorizonPath8_exports[i] + model.HorizonPath3_exports[i] + model.HorizonPath14_exports[i]
     return s1 + s2 + s3 + other + imports - exports >= model.HorizonDemand['PNW',i]
 model.Bal5Constraint= Constraint(model.hh_periods,rule=Zone5_Balance)
@@ -274,10 +275,21 @@ def HydroC1(model,i):
     m1 = sum(model.mwh_1['PNWH',i] for i in model.h1_periods)
     m2 = sum(model.mwh_2['PNWH',i] for i in model.h1_periods)
     m3 = sum(model.mwh_3['PNWH',i] for i in model.h1_periods)
-    return m1 + m2 + m3 <= model.HorizonPNW_hydro[1]
+    r1 = sum(model.srsv['PNWH',i] for i in model.h1_periods)
+    n1 = sum(model.nrsv['PNWH',i] for i in model.h1_periods)
+    return m1 + m2 + m3 + r1 + n1 <= model.HorizonPNW_hydro[1]
 model.HydroConstraint1= Constraint(model.h1_periods,rule=HydroC1)
 
-#Max capacity constraints on variable resources 
+def HydroC2(model,i):
+    m1 = sum(model.mwh_1['PNWH',i] for i in model.h2_periods)
+    m2 = sum(model.mwh_2['PNWH',i] for i in model.h2_periods)
+    m3 = sum(model.mwh_3['PNWH',i] for i in model.h2_periods)
+    r1 = sum(model.srsv['PNWH',i] for i in model.h2_periods)
+    n1 = sum(model.nrsv['PNWH',i] for i in model.h2_periods)
+    return m1 + m2 + m3 + r1 + n1 <= model.HorizonPNW_hydro[2]
+model.HydroConstraint2= Constraint(model.h2_periods,rule=HydroC2)
+
+#Max capacity constraints on variable resources
 def SolarC(model,z,i):
     return model.solar[z,i] <= model.HorizonSolar[z,i]
 model.SolarConstraint= Constraint(model.zones,model.hh_periods,rule=SolarC)
@@ -397,12 +409,12 @@ model.MinCap1= Constraint(model.Generators,model.hh_periods,rule=MinC1)
 
 ##System Reserve Requirement (excludes pumped storage)
 def SysReserve(model,i):
-    return sum(model.srsv[j,i] for j in model.Coal) + sum(model.srsv[j,i] for j in model.Gas) + sum(model.srsv[j,i] for j in model.Oil) + sum(model.nrsv[j,i] for j in model.Coal) + sum(model.nrsv[j,i] for j in model.Gas) + sum(model.nrsv[j,i] for j in model.Oil) >= model.HorizonReserves[i]
+    return sum(model.srsv[j,i] for j in model.Coal) + sum(model.srsv[j,i] for j in model.Gas) + sum(model.srsv[j,i] for j in model.Oil) +sum(model.srsv[j,i] for j in model.Hydro) + sum(model.nrsv[j,i] for j in model.Coal) + sum(model.nrsv[j,i] for j in model.Gas) + sum(model.nrsv[j,i] for j in model.Oil) + sum(model.nrsv[j,i] for j in model.Hydro) >= model.HorizonReserves[i]
 model.SystemReserve = Constraint(model.hh_periods,rule=SysReserve)
 ##
 def SpinningReq(model,i):
-    return sum(model.srsv[j,i] for j in model.Generators ) >= 0.5 * model.HorizonReserves[i]
-model.SpinReq = Constraint(model.hh_periods,rule=SpinningReq)           
+    return sum(model.srsv[j,i] for j in model.Coal) + sum(model.srsv[j,i] for j in model.Gas) + sum(model.srsv[j,i] for j in model.Oil) + sum(model.srsv[j,i] for j in model.Hydro) >= 0.5 * model.HorizonReserves[i]
+model.SpinReq = Constraint(model.hh_periods,rule=SpinningReq)
 #
 #
 ##Spinning reserve can only be offered by units that are online
@@ -441,7 +453,7 @@ model.SwitchConstraint = Constraint(model.Generators,model.hh_periods,rule = Swi
 def MinUp(model,j,i,k):
     if i > 0 and k > i and k < min(i+model.minu[j]-1,model.HorizonHours):
         return model.on[j,i] - model.on[j,i-1] <= model.on[j,k]
-    else: 
+    else:
         return Constraint.Skip
 model.MinimumUp = Constraint(model.Generators,model.HH_periods,model.HH_periods,rule=MinUp)
 #
@@ -461,23 +473,31 @@ def PSHC(model,j,i):
 model.PumpTime = Constraint(model.PSH,model.hh_periods,rule=PSHC)
 
 #Ramp Rate Constraints
-def Ramp1(model,j,i):
+def Ramp1a(model,j,i):
     a = model.mwh_1[j,i] + model.mwh_2[j,i] + model.mwh_3[j,i]
     b = model.mwh_1[j,i-1] + model.mwh_2[j,i-1] + model.mwh_3[j,i-1]
-    return a - b <= model.ramp[j] 
-model.RampCon1 = Constraint(model.Ramping,model.ramp1_periods,rule=Ramp1)
+    return a - b <= model.ramp[j]
+model.RampCon1a = Constraint(model.Generators,model.ramp1_periods,rule=Ramp1a)
 
-def Ramp2(model,j,i):
+def Ramp1b(model,j,i):
     a = model.mwh_1[j,i] + model.mwh_2[j,i] + model.mwh_3[j,i]
     b = model.mwh_1[j,i-1] + model.mwh_2[j,i-1] + model.mwh_3[j,i-1]
-    return b - a <= model.ramp[j] 
-model.RampCon2 = Constraint(model.Ramping,model.ramp2_periods,rule=Ramp2)
+    return b - a <= model.ramp[j]
+model.RampCon1b = Constraint(model.Generators,model.ramp1_periods,rule=Ramp1b)
+
+def Ramp2a(model,j,i):
+    a = model.mwh_1[j,i] + model.mwh_2[j,i] + model.mwh_3[j,i]
+    b = model.mwh_1[j,i-1] + model.mwh_2[j,i-1] + model.mwh_3[j,i-1]
+    return a - b <= model.ramp[j]
+model.RampCon2a = Constraint(model.Generators,model.ramp2_periods,rule=Ramp2a)
+
+def Ramp2b(model,j,i):
+    a = model.mwh_1[j,i] + model.mwh_2[j,i] + model.mwh_3[j,i]
+    b = model.mwh_1[j,i-1] + model.mwh_2[j,i-1] + model.mwh_3[j,i-1]
+    return b - a <= model.ramp[j]
+model.RampCon2b = Constraint(model.Generators,model.ramp2_periods,rule=Ramp2b)
 
 #Nuclear constraint
 def NucOn(model,i):
     return model.on["COLUMBIA_2",i] >= 1
 model.NOn = Constraint(model.hh_periods,rule=NucOn)
-    
-
-
-

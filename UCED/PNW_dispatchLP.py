@@ -246,8 +246,8 @@ def SysCost(model):
     psh1 = sum(model.mwh_1[j,i]*10 for i in model.hh_periods for j in model.PSH)
     psh2 = sum(model.mwh_2[j,i]*10 for i in model.hh_periods for j in model.PSH)
     psh3 = sum(model.mwh_3[j,i]*10 for i in model.hh_periods for j in model.PSH)
-    solar=sum(model.solar[j,i]*0  for i in model.hh_periods for j in model.zones)  
-    wind=sum(model.wind[j,i]*0  for i in model.hh_periods for j in model.zones)
+    #solar=sum(model.solar[j,i]*0  for i in model.hh_periods for j in model.zones)
+    #wind=sum(model.wind[j,i]*0  for i in model.hh_periods for j in model.zones)
     slack1 = sum(model.mwh_1[j,i]*model.seg1[j]*10000 for i in model.hh_periods for j in model.Slack)
     slack2 = sum(model.mwh_2[j,i]*model.seg2[j]*10000 for i in model.hh_periods for j in model.Slack)
     slack3 = sum(model.mwh_3[j,i]*model.seg3[j]*10000 for i in model.hh_periods for j in model.Slack)
@@ -259,7 +259,7 @@ def SysCost(model):
     sreserves = sum(model.srsv[j,i] for i in model.hh_periods for j in model.Generators)
     nreserves = sum(model.nrsv[j,i] for i in model.hh_periods for j in model.Generators)
 
-    return fixed_slack + fixed_oil + fixed_gas5 + fixed_coal + coal1 + coal2 + coal3 + nuc1 + nuc2 + nuc3 + gas1_5 + gas2_5 + gas3_5 + oil1 + oil2 + oil3 + psh1 + psh2 + psh3 + solar + wind + slack1 + slack2 + slack3 + starts + sreserves + nreserves  
+    return fixed_slack + fixed_oil + fixed_gas5 + fixed_coal + coal1 + coal2 + coal3 + nuc1 + nuc2 + nuc3 + gas1_5 + gas2_5 + gas3_5 + oil1 + oil2 + oil3 + psh1 + psh2 + psh3 + slack1 + slack2 + slack3 + starts + sreserves + nreserves
 model.SystemCost = Objective(rule=SysCost, sense=minimize)
 
 
