@@ -45,7 +45,7 @@ model.Slack = Set()
 model.Hydro = Set()
 model.WECCImports = Set()
 model.Ramping = model.Zone5Generators | model.WECCImports
-
+model.Reserves = model.Hydro | model.Coal | model.Gas | model.Oil
 model.Generators = model.Zone5Generators | model.WECCImports
 
 #
@@ -246,8 +246,6 @@ def SysCost(model):
     psh1 = sum(model.mwh_1[j,i]*10 for i in model.hh_periods for j in model.PSH)
     psh2 = sum(model.mwh_2[j,i]*10 for i in model.hh_periods for j in model.PSH)
     psh3 = sum(model.mwh_3[j,i]*10 for i in model.hh_periods for j in model.PSH)
-    solar=sum(model.solar[j,i]*0  for i in model.hh_periods for j in model.zones)  
-    wind=sum(model.wind[j,i]*0  for i in model.hh_periods for j in model.zones)
     slack1 = sum(model.mwh_1[j,i]*model.seg1[j]*10000 for i in model.hh_periods for j in model.Slack)
     slack2 = sum(model.mwh_2[j,i]*model.seg2[j]*10000 for i in model.hh_periods for j in model.Slack)
     slack3 = sum(model.mwh_3[j,i]*model.seg3[j]*10000 for i in model.hh_periods for j in model.Slack)
@@ -256,10 +254,8 @@ def SysCost(model):
     fixed_oil = sum(model.no_load[j]*model.on[j,i]*20 for i in model.hh_periods for j in model.Oil)
     fixed_slack = sum(model.no_load[j]*model.on[j,i]*10000 for i in model.hh_periods for j in model.Slack)
     starts = sum(model.st_cost[j]*model.switch[j,i] for i in model.hh_periods for j in model.Generators)
-    sreserves = sum(model.srsv[j,i] for i in model.hh_periods for j in model.Generators)
-    nreserves = sum(model.nrsv[j,i] for i in model.hh_periods for j in model.Generators)
-
-    return fixed_slack + fixed_oil + fixed_gas5 + fixed_coal + coal1 + coal2 + coal3 + nuc1 + nuc2 + nuc3 + gas1_5 + gas2_5 + gas3_5 + oil1 + oil2 + oil3 + psh1 + psh2 + psh3 + solar + wind + slack1 + slack2 + slack3 + starts + sreserves + nreserves  
+    reserves = sum(model.nrsv[j,i] for i in model.hh_periods for j in model.Reserves) + sum(model.nrsv[j,i]*10000 for i in model.hh_periods for j in model.Slack)
+    return fixed_slack + fixed_oil + fixed_gas5 + fixed_coal + coal1 + coal2 + coal3 + nuc1 + nuc2 + nuc3 + gas1_5 + gas2_5 + gas3_5 + oil1 + oil2 + oil3 + psh1 + psh2 + psh3 + slack1 + slack2 + slack3 + starts + reserves
 model.SystemCost = Objective(rule=SysCost, sense=minimize)
 
 
@@ -285,18 +281,14 @@ def HydroC1(model,i):
     m1 = sum(model.mwh_1['PNWH',i] for i in model.h1_periods)
     m2 = sum(model.mwh_2['PNWH',i] for i in model.h1_periods)
     m3 = sum(model.mwh_3['PNWH',i] for i in model.h1_periods)
-    r1 = sum(model.srsv['PNWH',i] for i in model.h1_periods)
-    n1 = sum(model.nrsv['PNWH',i] for i in model.h1_periods)
-    return m1 + m2 + m3 +r1 + n1 <= model.HorizonPNW_hydro[1]
+    return m1 + m2 + m3 <= model.HorizonPNW_hydro[1]
 model.HydroConstraint1= Constraint(model.h1_periods,rule=HydroC1)
 
 def HydroC2(model,i):
     m1 = sum(model.mwh_1['PNWH',i] for i in model.h2_periods)
     m2 = sum(model.mwh_2['PNWH',i] for i in model.h2_periods)
     m3 = sum(model.mwh_3['PNWH',i] for i in model.h2_periods)
-    r1 = sum(model.srsv['PNWH',i] for i in model.h2_periods)
-    n1 = sum(model.nrsv['PNWH',i] for i in model.h2_periods)
-    return m1 + m2 + m3 +r1 + n1 <= model.HorizonPNW_hydro[2]
+    return m1 + m2 + m3 <= model.HorizonPNW_hydro[2]
 model.HydroConstraint2= Constraint(model.h2_periods,rule=HydroC2)
 
 #Max capacity constraints on variable resources
@@ -416,23 +408,11 @@ def MinC1(model,j,i):
     return model.mwh_1[j,i] + model.mwh_2[j,i] + model.mwh_3[j,i] >= model.on[j,i] * model.mincap[j]
 model.MinCap1= Constraint(model.Generators,model.hh_periods,rule=MinC1)
 
-
 ##System Reserve Requirement (excludes pumped storage)
 def SysReserve(model,i):
-    return sum(model.srsv[j,i] for j in model.Coal) + sum(model.srsv[j,i] for j in model.Gas) + sum(model.srsv[j,i] for j in model.Oil) + sum(model.srsv[j,i] for j in model.Hydro) + sum(model.nrsv[j,i] for j in model.Coal) + sum(model.nrsv[j,i] for j in model.Gas) + sum(model.nrsv[j,i] for j in model.Oil) + sum(model.nrsv[j,i] for j in model.Hydro) >= model.HorizonReserves[i]
+    return sum(model.nrsv[j,i] for j in model.Reserves) + sum(model.nrsv[j,i] for j in model.Slack) >= model.HorizonReserves[i]
 model.SystemReserve = Constraint(model.hh_periods,rule=SysReserve)
-##
-def SpinningReq(model,i):
-    return sum(model.srsv[j,i] for j in model.Coal) + sum(model.srsv[j,i] for j in model.Gas) + sum(model.srsv[j,i] for j in model.Oil) + sum(model.srsv[j,i] for j in model.Hydro) >= 0.5 * model.HorizonReserves[i]
-model.SpinReq = Constraint(model.hh_periods,rule=SpinningReq)
-#
-#
-##Spinning reserve can only be offered by units that are online
-def SpinningReq2(model,j,i):
-    return model.srsv[j,i] <= model.on[j,i]*model.netcap[j]
-model.SpinReq2= Constraint(model.Generators,model.hh_periods,rule=SpinningReq2)
-#
-##
+
 ###Segment capacity requirements
 def Seg1(model,j,i):
     return model.mwh_1[j,i] <= .6*model.netcap[j]
