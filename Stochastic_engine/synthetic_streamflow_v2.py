@@ -495,4 +495,3 @@ CA=pd.DataFrame(output_CA,columns=name_CA)
 CA.to_csv('Synthetic_streamflows/synthetic_streamflows_CA.csv')
 Willamatte_Syn=pd.DataFrame(output_WI,columns=name_Will)
 Willamatte_Syn.to_csv('Synthetic_streamflows/synthetic_streamflows_Willamette.csv')
-

@@ -16,9 +16,9 @@ title_list=CA_syn.columns
 
 M1=[]
 M2=[]
-
 S1=[]
 S2=[]
+
 for element in title_list:
     
     hist=CA_hist[element]

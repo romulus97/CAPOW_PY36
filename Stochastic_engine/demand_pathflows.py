@@ -18,10 +18,10 @@ import seaborn as sns
 ######################################################################
 
 #import data
-df_load = pd.read_excel('Synthetic_demand_pathflows/hist_demanddata.xlsx',sheetname='hourly_load',header=0)
-df_weather = pd.read_excel('Synthetic_demand_pathflows/hist_demanddata.xlsx',sheetname='weather',header=0)
-BPA_weights = pd.read_excel('Synthetic_demand_pathflows/hist_demanddata.xlsx',sheetname='BPA_location_weights',header=0)
-CAISO_weights = pd.read_excel('Synthetic_demand_pathflows/hist_demanddata.xlsx',sheetname='CAISO_location_weights',header=0)
+df_load = pd.read_excel('Synthetic_demand_pathflows/hist_demanddata.xlsx',sheet_name='hourly_load',header=0)
+df_weather = pd.read_excel('Synthetic_demand_pathflows/hist_demanddata.xlsx',sheet_name='weather',header=0)
+BPA_weights = pd.read_excel('Synthetic_demand_pathflows/hist_demanddata.xlsx',sheet_name='BPA_location_weights',header=0)
+CAISO_weights = pd.read_excel('Synthetic_demand_pathflows/hist_demanddata.xlsx',sheet_name='CAISO_location_weights',header=0)
 
 Name_list=pd.read_csv('Synthetic_demand_pathflows/Covariance_Calculation.csv')
 Name_list=list(Name_list.loc['SALEM_T':])
@@ -915,7 +915,7 @@ ResidualsLoad = R[0:3*365,:]
 ###################################
 
 #import data
-df_data1 = pd.read_excel('Synthetic_demand_pathflows/46_daily.xlsx',sheetname='Sheet1',header=0)
+df_data1 = pd.read_excel('Synthetic_demand_pathflows/46_daily.xlsx',sheet_name='Sheet1',header=0)
 
 #find average temps 
 cities = ['Tuscon','Phoenix','Vegas','Fresno','Oakland','LA','SanDiego','Sacramento','SanJose','SanFran']
@@ -1096,7 +1096,7 @@ RMSE = (np.sum((residuals**2))/len(residuals))**.5
 ###############################
 
 #import data
-df_data1 = pd.read_excel('Synthetic_demand_pathflows/NW_Path_data.xlsx',sheetname='Daily',header=0)
+df_data1 = pd.read_excel('Synthetic_demand_pathflows/NW_Path_data.xlsx',sheet_name='Daily',header=0)
 
 #find average temps 
 cities = ['Salem','Seattle','Portland','Eugene','Boise','Tuscon','Phoenix','Vegas','Fresno','Oakland','LA','SanDiego','Sacramento','SanJose','SanFran']
@@ -1375,7 +1375,7 @@ ResidualsNWPaths = export_residuals
 ###############################
 
 #import data
-df_data1 = pd.read_excel('Synthetic_demand_pathflows/OtherCA_Path_data.xlsx',sheetname='Daily',header=0)
+df_data1 = pd.read_excel('Synthetic_demand_pathflows/OtherCA_Path_data.xlsx',sheet_name='Daily',header=0)
 
 #find average temps 
 cities = ['Salem','Seattle','Portland','Eugene','Boise','Tuscon','Phoenix','Vegas','Fresno','Oakland','LA','SanDiego','Sacramento','SanJose','SanFran']
@@ -1583,7 +1583,7 @@ ResidualsOtherCA_Paths = export_residuals
 ##########################
 
 #import data
-df_data1 = pd.read_excel('Synthetic_demand_pathflows/Path65_66_regression_data.xlsx',sheetname='Sheet1',header=0)
+df_data1 = pd.read_excel('Synthetic_demand_pathflows/Path65_66_regression_data.xlsx',sheet_name='Sheet1',header=0)
 
 #find average temps 
 cities = ['Salem','Seattle','Portland','Eugene','Boise','Fresno','Oakland','LA','SanDiego','Sacramento','SanJose','SanFran']
@@ -2804,4 +2804,3 @@ df_C.to_csv('Synthetic_demand_pathflows/Sim_hourly_load.csv')
 #plt.figure()
 #sns.distplot(OtherCA_Paths_y[:,3], color="skyblue", label="Hist")
 #sns.distplot(syn_Path45, color="red", label="Sim").set_title("Path45")
-#

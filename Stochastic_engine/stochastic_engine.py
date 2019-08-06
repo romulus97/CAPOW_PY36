@@ -20,7 +20,7 @@ starttime = time.time()
 # STOCHASTIC WEATHER AND STREAMFLOW GENERATION
 
 # Specify a number of synthetic years to be simulated 
-sim_years=3
+sim_years=20
 
 # Generate synthetic weather (wind speed and temperature) records. 
 import synthetic_temp_wind_v2
@@ -72,8 +72,8 @@ CAISO_solar_cap = 9890
 
 # Generate synthetic hourly solar power production time series for 
 # the CAISO zone for the entire simulation period
-import synthetic_solar
-synthetic_solar.solar_sim(sim_years,CAISO_solar_cap)
+import solar_production_simulation
+solar_production_simulation.solar_sim(sim_years,CAISO_solar_cap)
 print('solar')
 ##############################################################################
 #
@@ -112,7 +112,6 @@ NG.to_excel('Gas_prices/NG.xlsx')
 
 elapsed = time.time() - starttime
 print(elapsed)
-##############################################################################
 
 
 

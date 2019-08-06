@@ -10,6 +10,7 @@ from statsmodels.tsa.api import VAR
 import statsmodels.tsa.vector_ar.var_model as var_model
 import pandas as pd
 import numpy as np
+import random
 from copy import deepcopy
 
 def synthetic(sim_years):
@@ -28,14 +29,18 @@ def synthetic(sim_years):
 # need to generate 2 additional years of data (FCRPS model will cut first 
 # and last)
     sim_years = sim_years+3
-    
+    sim_years2= 2* sim_years
     # read historical time series of daily wind and temperature residuals and 
     # covariance matrix
     Residuals=pd.read_csv('Historical_weather_analysis/WIND_TEMP_res.csv')
     Covariance=pd.read_csv('Historical_weather_analysis/Covariance_Calculation.csv')
     
+    Solar_Residuals=pd.read_csv('Historical_weather_analysis/res_irr.csv')
+    Solar_R=Solar_Residuals.loc[:,'Site1':]
     # pull residual data and convert to numerical form
     R = Residuals.loc[:,'SALEM_T':].values
+    
+    R=np.column_stack((R,Solar_R))
     
     # there are a few remaining NaNs. We just set those to zero.
     for i in np.argwhere(np.isnan(R)):
@@ -74,9 +79,17 @@ def synthetic(sim_years):
     Std_T = T_std.loc[0:364,'SALEM_T':].values
     T_res=pd.read_csv('Historical_weather_analysis/Temp_res.csv')
     
+    Solar_ave=pd.read_csv('Historical_weather_analysis/ave_irr.csv')
+    S_ave=Solar_ave.loc[:,'Site1':].values
+    Solar_std=pd.read_csv('Historical_weather_analysis/std_irr.csv')
+    S_std=Solar_std.loc[:,'Site1':].values
     
+    
+    Clear_sky=pd.read_csv('Historical_weather_analysis/clear_sky.csv',header=0,index_col=0)
+    Clear_sky=Clear_sky.values
     # number of simulation days
-    sim_days=sim_years*365
+    
+    sim_days=sim_years2*365
     
     # number of fields (Temps, Wind) to calculate -- two for each station
     fields = len(C)
@@ -98,7 +111,7 @@ def synthetic(sim_years):
         # generate new residual
         for j in range(1,fields+1):
             name='y' + str(j)
-            locals()[name] = p[0,j-1] + p[1,j-1]*y_seeds[0]+ p[2,j-1]*y_seeds[1]+ p[3,j-1]*y_seeds[2]+ p[4,j-1]*y_seeds[3]+ p[5,j-1]*y_seeds[4]+ p[6,j-1]*y_seeds[5]+ p[7,j-1]*y_seeds[6]+ p[8,j-1]*y_seeds[7]+ p[9,j-1]*y_seeds[8]+ p[10,j-1]*y_seeds[9]+ p[11,j-1]*y_seeds[10]+ p[12,j-1]*y_seeds[11]+ p[13,j-1]*y_seeds[12]+  p[14,j-1]*y_seeds[13]+ p[15,j-1]*y_seeds[14]+ p[16,j-1]*y_seeds[15]+ p[17,j-1]*y_seeds[16]+ p[18,j-1]*y_seeds[17]+ p[19,j-1]*y_seeds[18]+ p[20,j-1]*y_seeds[19]+ p[21,j-1]*y_seeds[20]+ p[22,j-1]*y_seeds[21]+ p[23,j-1]*y_seeds[22]+ p[24,j-1]*y_seeds[23]+ p[25,j-1]*y_seeds[24]+ p[26,j-1]*y_seeds[25]+ p[27,j-1]*y_seeds[26]+ p[28,j-1]*y_seeds[27]+ p[29,j-1]*y_seeds[28]+ p[30,j-1]*y_seeds[29]+ p[31,j-1]*y_seeds[30]+ p[32,j-1]*y_seeds[31]+ p[33,j-1]*y_seeds[32]+ p[34,j-1]*y_seeds[33] +E[i,j-1]
+            locals()[name] = p[0,j-1] + p[1,j-1]*y_seeds[0]+ p[2,j-1]*y_seeds[1]+ p[3,j-1]*y_seeds[2]+ p[4,j-1]*y_seeds[3]+ p[5,j-1]*y_seeds[4]+ p[6,j-1]*y_seeds[5]+ p[7,j-1]*y_seeds[6]+ p[8,j-1]*y_seeds[7]+ p[9,j-1]*y_seeds[8]+ p[10,j-1]*y_seeds[9]+ p[11,j-1]*y_seeds[10]+ p[12,j-1]*y_seeds[11]+ p[13,j-1]*y_seeds[12]+  p[14,j-1]*y_seeds[13]+ p[15,j-1]*y_seeds[14]+ p[16,j-1]*y_seeds[15]+ p[17,j-1]*y_seeds[16]+ p[18,j-1]*y_seeds[17]+ p[19,j-1]*y_seeds[18]+ p[20,j-1]*y_seeds[19]+ p[21,j-1]*y_seeds[20]+ p[22,j-1]*y_seeds[21]+ p[23,j-1]*y_seeds[22]+ p[24,j-1]*y_seeds[23]+ p[25,j-1]*y_seeds[24]+ p[26,j-1]*y_seeds[25]+ p[27,j-1]*y_seeds[26]+ p[28,j-1]*y_seeds[27]+ p[29,j-1]*y_seeds[28]+ p[30,j-1]*y_seeds[29]+ p[31,j-1]*y_seeds[30]+ p[32,j-1]*y_seeds[31]+ p[33,j-1]*y_seeds[32]+ p[34,j-1]*y_seeds[33] + p[35,j-1]*y_seeds[34]+ p[36,j-1]*y_seeds[35]+ p[37,j-1]*y_seeds[36]+ p[38,j-1]*y_seeds[37]+ p[39,j-1]*y_seeds[38]+ p[40,j-1]*y_seeds[39]+ p[41,j-1]*y_seeds[40]+ E[i,j-1]
         
         # pass new residual to the next day as a "seed"
         for j in range(1,fields+1):
@@ -115,12 +128,12 @@ def synthetic(sim_years):
     # and average profiles
     
     # synthetic weather as sum of residuals and average profiles, re-seasoned
-    sim_weather=np.zeros((sim_days,fields))
+    sim_weather=np.zeros((sim_days,fields-7))
     n=0
     
     # for each simulated day
     for i in range(0,sim_days):
-        for j in range(0,fields):
+        for j in range(0,fields-7):
             if j in range(1,34,2):
             # adjust simulated residuals so they're unit (=1) standard deviation, re-season, and add back 
             # mean profile
@@ -136,7 +149,15 @@ def synthetic(sim_years):
         n=n+1
         if n >= 365:
             n=0
-            
+    
+    n=0
+    sim_irr=np.zeros((sim_days,7))
+    for i in range(0,sim_days):
+        for j in range(0,7):
+            sim_irr[i,j]=(sim_residuals[i,j+34]*(1/np.std(sim_residuals[:,j+34]))*S_std[n,j]) +S_ave[n,j]
+        n=n+1
+        if n >= 365:
+            n=0
             
     # check for any NaN values
     ############################################################################
@@ -213,22 +234,72 @@ def synthetic(sim_years):
         if n >= 365:
             n=0
             
-        
+################################################################################################################
+#Find the best match between those 2 differnet synthetic sets
+    New_T=sim_weather2[:,range(0,34,2)]
+    Old_T=sim_weather[:,range(0,34,2)]
+    
+    New_T=np.reshape(New_T,(sim_years,17,365))
+    Old_T=np.reshape(Old_T,(sim_years2,17,365))
+    
+    New_T_ave=np.mean(New_T,axis=1)
+    Old_T_ave=np.mean(Old_T,axis=1)
     
     
     
+    year_list=np.zeros(int(sim_years))
+    Best_RMSE = np.inf
+    CHECK=np.zeros((sim_years,sim_years2))
     
+    for i in range(0,sim_years):
+        for j in range(0,sim_years2):
+            RMSE = (np.sum(np.abs(New_T_ave[i,:]-Old_T_ave[j,:])))
+            CHECK[i,j]=RMSE
+            if RMSE <= Best_RMSE:
+                year_list[i] = j
+                Best_RMSE=RMSE
+
+            else:
+                pass
+        Best_RMSE = np.inf     
+    K=np.argsort(CHECK)
+    for i in range(0,sim_years):
+        rand=random.randint(0,10)
+        year_list[i]=K[i,rand]
+################################################################################################################
+#Orgnize data
+    sim_weather3=np.zeros((sim_days,34))
+    for i in range(0,sim_years):
+        sim_weather3[i*365:i*365+365,range(0,34,2)]=sim_weather2[i*365:i*365+365,range(0,34,2)]
+        sim_weather3[i*365:i*365+365,range(1,34,2)]=sim_weather[int(year_list[i])*365:int(year_list[i])*365+365,range(1,34,2)]
+    
+    
+    sim_irr2=np.zeros((sim_days,7))
+    for i in range(0,sim_years):
+        sim_irr2[i*365:i*365+365,:]=Clear_sky-sim_irr[int(year_list[i])*365:int(year_list[i])*365+365,:]
+    
+    sim_irr2[sim_irr2<0]=0
+#
     
     #convert to dataframe, send to csv        
     H = list(Residuals)
-    headers = H[1:]        
+    headers = H[1:]  
+
+    H2 = list(Solar_Residuals)
+    headers2 = H2[1:]        
 #    df_sim = pd.DataFrame(sim_weather)
 #    df_sim.columns = headers    
 #    df_sim.to_csv('Synthetic_weather/synthetic_weather_data_1.csv')
     
-    df_sim2 = pd.DataFrame(sim_weather2)
+    df_sim2 = pd.DataFrame(sim_weather3)
     df_sim2.columns = headers    
     df_sim2.to_csv('Synthetic_weather/synthetic_weather_data.csv')
+    
+    df_sim_irr=pd.DataFrame(sim_irr2)
+    df_sim_irr.columns=headers2
+    df_sim_irr.to_csv('Synthetic_weather/synthetic_irradiance_data.csv')
+    
+
     return None
     
     

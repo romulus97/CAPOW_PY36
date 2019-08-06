@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Feb 14 14:17:50 2018
+Created on Mon May 27 11:13:15 2019
 
-@author: YSu
+@author: jkern
 """
+
 from __future__ import division
 import pandas as pd 
 import numpy as np
@@ -21,9 +22,8 @@ def hydro(sim_years):
     
     
     sim_years = sim_years + 3
-    
     # load California storage reservoir (ORCA) sites
-    df_sites = pd.read_excel('CA_hydropower/sites.xlsx',sheet_name = 'ORCA',header=0)
+    df_sites = pd.read_excel('CA_hydropower/sites.xlsx',sheetname = 'ORCA',header=0)
     ORCA_sites = list(df_sites)
     
     # load upper generation amounts for each predicted hydropower dam (PG&E and SCE)
@@ -84,13 +84,13 @@ def hydro(sim_years):
         Rule_list.append(Rule)
     
     # PGE hydro projects
-    PGE_names = pd.read_excel('CA_hydropower/sites.xlsx',sheet_name ='PGE',header=0)
+    PGE_names = pd.read_excel('CA_hydropower/sites.xlsx',sheetname ='PGE',header=0)
     PGE_dams = list(PGE_names.loc[:,'Balch 1':])
     PGE_Storage=[PGE_dams[3],PGE_dams[7],PGE_dams[8],PGE_dams[9]]
     PGE_No_Data_Dams=[PGE_dams[2],PGE_dams[4],PGE_dams[10],PGE_dams[11],PGE_dams[15],PGE_dams[16],PGE_dams[17],PGE_dams[26],PGE_dams[30],PGE_dams[38],PGE_dams[39],PGE_dams[55],PGE_dams[60],PGE_dams[65]]
     
     ## SCE hydro projects
-    SCE_names = pd.read_excel('CA_hydropower/sites.xlsx',sheet_name ='SCE',header=0)
+    SCE_names = pd.read_excel('CA_hydropower/sites.xlsx',sheetname ='SCE',header=0)
     SCE_dams = list(SCE_names.loc[:,'Big_Creek_1 ':])
     SCE_No_Data_Dams=[SCE_dams[7],SCE_dams[8],SCE_dams[12]]
     
@@ -165,21 +165,21 @@ def hydro(sim_years):
                 else:
                     None
     
-                flow_ts = df_sim.loc[:,site_name].values                
-                weeks = int(np.floor(len(flow_ts)/7))  
+                flow_ts = df_sim.loc[:,site_name].values  
+                flow_daily = flow_ts[year*365:year*365+365]
                 
-                for i in range(0,weeks):
-                    flow_weekly = np.append(flow_weekly,np.sum(flow_ts[i*7:i*7+7]))
-                    
-                    
-                for i in range(0,weeks):
-                    flow_weekly = np.append(flow_weekly,np.sum(flow_ts[i*7:i*7+7]))
+                for i in range(0,52):
+                    flow_weekly = np.append(flow_weekly,np.sum(flow_daily[i*7:i*7+7]))
+                        
+                x = np.max(flow_weekly[15:36])
+                L = list(flow_weekly)
+                peak_flow = L.index(x)
                     
                     
                 for week in range(0,52):
                     
                         # available hydro production based on water availability
-                        avail_power = flow_weekly[year*52+week]*eff
+                        avail_power = flow_weekly[week]*eff
                         
                         # if it's during first refill
                         if week < refill_1_date:
@@ -288,22 +288,27 @@ def hydro(sim_years):
                 else:
                     None
     
-                flow_ts = df_sim.loc[:,site_name].values                
-                weeks = int(np.floor(len(flow_ts)/7))  
-                for i in range(0,weeks):
-                    flow_weekly = np.append(flow_weekly,np.sum(flow_ts[i*7:i*7+7]))
+                flow_ts = df_sim.loc[:,site_name].values  
+                flow_daily = flow_ts[year*365:year*365+365]
+                
+                for i in range(0,52):
+                    flow_weekly = np.append(flow_weekly,np.sum(flow_daily[i*7:i*7+7]))
+                        
+                x = np.max(flow_weekly[15:36])
+                L = list(flow_weekly)
+                peak_flow = L.index(x)
     
                 for week in range(0,52):
                     
                     # available hydro production based on water availability
-                    avail_power = flow_weekly[year*52+week]*eff
+                    avail_power = flow_weekly[week]*eff
                     
                     # if it's still winter, operate as RoR
                     if week < peak_flow - win_date:
                             gen=avail_power
                             if gen >= upper:
                                 gen = upper
-                                surplus = surplus + (avail_power - upper)
+    #                            surplus = surplus + (avail_power - upper)
                             else:
                                 gen = gen
                     
@@ -464,15 +469,21 @@ def hydro(sim_years):
                 else:
                     None
     
-                flow_ts = df_sim.loc[:,site_name].values                
-                weeks = int(np.floor(len(flow_ts)/7))  
-                for i in range(0,weeks):
-                    flow_weekly = np.append(flow_weekly,np.sum(flow_ts[i*7:i*7+7]))
+                flow_ts = df_sim.loc[:,site_name].values
+                flow_daily = flow_ts[year*365:year*365+365]
+                
+                for i in range(0,52):
+                    flow_weekly = np.append(flow_weekly,np.sum(flow_daily[i*7:i*7+7]))
+                        
+                x = np.max(flow_weekly[15:36])
+                L = list(flow_weekly)
+                peak_flow = L.index(x)
+    
     
                 for week in range(0,52):
                     
                     # available hydro production based on water availability
-                    avail_power = flow_weekly[year*52+week]*eff
+                    avail_power = flow_weekly[week]*eff
                     
                     # if it's still winter, operate as RoR
                     if week < peak_flow - win_date:
@@ -552,13 +563,13 @@ def hydro(sim_years):
                 M_SCE = np.column_stack((M_SCE,est_power))
     
     
-    #df_PGE = pd.DataFrame(M_PGE)
-    #df_PGE.columns = PGE_name_list
-    #df_PGE.to_excel('PGE_output.xlsx')
-    #
-    #df_SCE = pd.DataFrame(M_SCE)
-    #df_SCE.columns = SCE_name_list
-    #df_SCE.to_excel('SCE_output.xlsx')
+    df_PGE = pd.DataFrame(M_PGE)
+    df_PGE.columns = PGE_name_list
+    df_PGE.to_excel('PGE_output.xlsx')
+    
+    df_SCE = pd.DataFrame(M_SCE)
+    df_SCE.columns = SCE_name_list
+    df_SCE.to_excel('SCE_output.xlsx')
     
     
     PGE_total=np.sum(M_PGE,axis=1)
@@ -588,4 +599,5 @@ def hydro(sim_years):
     df_D.to_excel('CA_hydropower/CA_hydro_daily.xlsx')
 
     return None 
+
 
