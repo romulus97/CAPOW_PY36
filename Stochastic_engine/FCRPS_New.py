@@ -3171,7 +3171,9 @@ np.savetxt('PNW_hydro/FCRPS/heads.csv',heads,delimiter=',')
 generation[0,:]=generation[2,:]
 generation[1,:]=generation[2,:]
 
-#
+# bias correction
+generation = generation*0.94
+
 total=np.sum((generation),axis=1)
 
 #BPA owned dams
