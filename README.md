@@ -1,6 +1,6 @@
 
 ## Introduction to the CAPOW Model
-This is a general description of the **California and West Coast Power System (CAPOW)** model. CAPOW is primarily Python based (a few Matlab scripts are included; these are executed in Python). The model was built to simulate the operations of the major markets comprising the West Coast bulk electric power system: the **Mid-Columbia (Mid-C)** market, and the **California Independent System Operator (CAISO)**. 
+This is a general description of the **California and West Coast Power System (CAPOW)** model. CAPOW is Python based. The model was built to simulate the operations of the major markets comprising the West Coast bulk electric power system: the **Mid-Columbia (Mid-C)** market, and the **California Independent System Operator (CAISO)**. 
 
 
 <img src="https://github.com/romulus97/CAPOW_PY36/blob/master/Images/figure1.png" alt="alt text" width="520" height= "390">
