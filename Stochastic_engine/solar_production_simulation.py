@@ -159,9 +159,7 @@ def solar_sim(sim_years,cap):
     y_seeds=residules[-7:]
     e=np.random.normal(np.mean(residules),np.std(residules),len(Syn_irr))
     
-    
-    
-    
+
     
     p=arma_fit1.params
     

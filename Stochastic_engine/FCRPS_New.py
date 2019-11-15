@@ -2298,7 +2298,7 @@ for i in range(0,sim_days):
                 powerflow[i,9] = GCL_dg
 
 
-                s_10 = s_10 + local.iloc[i,9]*.001987 + spokane_flow[i-1]*.001987 + discharge[i-1,1]*.001987 + discharge[i-1,17]*.001987 + discharge[i-1,22]*.001987 - GCL_dg
+            s_10 = s_10 + local.iloc[i,9]*.001987 + spokane_flow[i-1]*.001987 + discharge[i-1,1]*.001987 + discharge[i-1,17]*.001987 + discharge[i-1,22]*.001987 - GCL_dg
 
         else:
 
@@ -2327,7 +2327,7 @@ for i in range(0,sim_days):
                 powerflow[i,9] = GCL_dg
 
 
-                s_10 = s_10 + local.iloc[i,9]*.001987 + spokane_flow[i]*.001987 + discharge[i,1]*.001987 + discharge[i,17]*.001987 + discharge[i,22]*.001987 - GCL_dg
+            s_10 = s_10 + local.iloc[i,9]*.001987 + spokane_flow[i]*.001987 + discharge[i,1]*.001987 + discharge[i,17]*.001987 + discharge[i,22]*.001987 - GCL_dg
 
 
         discharge[i,9] = GCL_dg*(1/.001987)  #Convert back to cfs

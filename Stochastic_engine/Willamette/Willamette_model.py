@@ -13,9 +13,6 @@ import numpy as np
 from scipy.interpolate import interp2d
 import datetime as dt
 import os
-#import logging
-
-
 
 ####################
 #set log file

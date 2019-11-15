@@ -1,0 +1,43 @@
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@n2f1-6>
+Subject: Job 965995: <python FNF_DE_regular_dams_PGE.py> in cluster <henry2> Exited
+
+Job <python FNF_DE_regular_dams_PGE.py> was submitted from host <login03> by user <jkern> in cluster <henry2> at Sun Nov 10 22:22:06 2019
+Job was executed on host(s) <n2f1-6>, in queue <cnr>, as user <jkern> in cluster <henry2> at Sun Nov 10 22:22:13 2019
+</home/jkern> was used as the home directory.
+</share/infews/jkern/CAPOW/CA_HYDRO/PGE_FNF_2/PGE_FNF_2> was used as the working directory.
+Started at Sun Nov 10 22:22:13 2019
+Terminated at Sun Nov 10 22:22:24 2019
+Results reported at Sun Nov 10 22:22:24 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+python FNF_DE_regular_dams_PGE.py
+------------------------------------------------------------
+
+Exited with exit code 1.
+
+Resource usage summary:
+
+    CPU time :                                   3.81 sec.
+    Max Memory :                                 27.43 MB
+    Average Memory :                             27.43 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              3
+    Max Threads :                                42
+    Run time :                                   24 sec.
+    Turnaround time :                            18 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <err.965995> for stderr output of this job.
+

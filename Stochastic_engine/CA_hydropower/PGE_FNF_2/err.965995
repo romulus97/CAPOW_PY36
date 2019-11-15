@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "FNF_DE_regular_dams_PGE.py", line 21, in <module>
+    df_hydro = pd.read_excel('reservoir_inflows.xlsx',sheetname='WECC_daily',header=0)
+  File "/gpfs_common/share02/infews/jkern/my_venv/lib/python3.6/site-packages/pandas/util/_decorators.py", line 208, in wrapper
+    return func(*args, **kwargs)
+  File "/gpfs_common/share02/infews/jkern/my_venv/lib/python3.6/site-packages/pandas/io/excel/_base.py", line 306, in read_excel
+    "read_excel() got an unexpected keyword argument " "`{}`".format(arg)
+TypeError: read_excel() got an unexpected keyword argument `sheetname`

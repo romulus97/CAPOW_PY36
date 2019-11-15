@@ -1,0 +1,3 @@
+/nas/longleaf/apps/python/2.7.12/lib/python2.7/site-packages/pandas/io/excel.py:329: FutureWarning: The `sheetname` keyword is deprecated, use `sheet_name` instead
+  **kwds)
+slurmstepd: error: *** JOB 30000466 ON c1109 CANCELLED AT 2018-10-02T10:43:24 DUE TO TIME LIMIT ***

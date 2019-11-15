@@ -1,0 +1,147 @@
+Balch 1
+0.4499623494778048 1.0984299748059161e-73
+Balch 2
+0.45577274118732325 8.692910318540895e-76
+Bucks Creek
+0.526480843014054 6.7594124200149545e-105
+Burney Creek
+0.3668492143269704 9.832008614632657e-48
+COLLRVL 
+0.8401099109322738 0.0
+Cresta
+0.6026966062984994 4.326301733270414e-145
+Donnells
+0.6096789771041056 2.476909998649999e-149
+Electra
+0.534985415493243 6.982958385734229e-109
+Exchequer
+0.8667939124048204 0.0
+Folsom
+0.8702803056774467 0.0
+Haas
+0.5520569776651418 3.0932514742210873e-117
+HatchetCrk
+0.3254838309483345 2.245839833140849e-37
+Holm
+0.6457588817660923 4.7798701966512254e-173
+Hyatt
+0.8479642993684429 0.0
+JBBLACK
+0.5080145523152505 1.2708324308879674e-96
+Kerckhoff
+0.717677069139103 2.1384094910342645e-231
+Kerckhoff 2
+0.8188956275884194 0.0
+Kern_River
+0.5400900127126568 2.491222006187847e-111
+Kings River
+0.6642222626353776 1.7872650111620009e-186
+Kirkwood 1
+0.7391400849450953 1.6438737835730392e-252
+Merced_Aggr_Small
+0.49794719599112086 2.541956055273647e-92
+Middle Fork
+0.2602411833354392 4.989434998290519e-24
+MidForkYuba
+0.682227773971477 1.5785286533606053e-200
+Moccasin
+0.49705379457324167 6.024909142766402e-92
+Mokelumne
+0.533462341654257 3.683388357093376e-108
+New Melones
+0.994057364034419 0.0
+NFeather_Caribou
+0.5180313230080598 4.777421713835408e-101
+Nimbus
+0.7570416570209649 8.698827284429649e-272
+Pine Flat
+0.9694354226144306 0.0
+Pit1_Aggr_Small
+0.5858382142768872 2.8662385661936353e-135
+Pitt_River_1
+0.5388695779409288 9.670157926148757e-111
+Pitt_River_3
+0.5464693163483162 1.895850976954688e-114
+Pitt_River_4
+0.5057477545174827 1.2165492771867422e-95
+Pitt_River_5
+0.5924941966793518 4.45709629765059e-139
+Pitt_River_6
+0.5562592342553195 2.2859354730493354e-119
+Pitt_River_7
+0.6499385849279375 5.270762758374901e-176
+Poe
+0.5709650221376372 4.522023235323426e-127
+Ralston
+0.408554881525781 7.74426291630582e-60
+Rock Creek
+0.4706545141579908 2.330256411696735e-81
+Salt Springs
+0.31558133799699134 4.0239852547614504e-35
+SFeather_Palermo
+0.6020011303036064 1.1295945933169515e-144
+Shasta
+0.9517639956288381 0.0
+Shasta_Aggr_Small
+0.37895052879081975 4.5670641662427376e-51
+SJoachin_Wishon
+0.6360768891370684 2.2644875004714903e-166
+Stanislaus
+0.4377093361921288 2.1941065544274952e-69
+Stanislaus_Donnels
+0.49866528115872344 1.2680127583198394e-92
+Thermalito
+0.8683148658772526 0.0
+Tiger Creek
+-0.19212212611597432 1.3237875551848108e-13
+WFeather
+0.39198550250498115 8.09202190092288e-55
+Woodleaf
+0.4689679715574969 1.0298712147132054e-80
+YubaBear
+0.6410831356039924 8.577671960303697e-170
+YubaWest
+0.7071428985160916 9.704452070279633e-222
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@n2f1-4>
+Subject: Job 965997: <python FNF_DE_regular_dams_PGE.py> in cluster <henry2> Done
+
+Job <python FNF_DE_regular_dams_PGE.py> was submitted from host <login03> by user <jkern> in cluster <henry2> at Sun Nov 10 22:25:17 2019
+Job was executed on host(s) <n2f1-4>, in queue <cnr>, as user <jkern> in cluster <henry2> at Sun Nov 10 22:25:23 2019
+</home/jkern> was used as the home directory.
+</share/infews/jkern/CAPOW/CA_HYDRO/PGE_FNF_2/PGE_FNF_2> was used as the working directory.
+Started at Sun Nov 10 22:25:23 2019
+Terminated at Tue Nov 12 04:15:29 2019
+Results reported at Tue Nov 12 04:15:29 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+python FNF_DE_regular_dams_PGE.py
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   107488.73 sec.
+    Max Memory :                                 145.25 MB
+    Average Memory :                             127.72 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              3
+    Max Threads :                                42
+    Run time :                                   107432 sec.
+    Turnaround time :                            107412 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <err.965997> for stderr output of this job.
+

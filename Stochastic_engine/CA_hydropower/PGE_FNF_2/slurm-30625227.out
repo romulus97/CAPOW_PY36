@@ -1,0 +1,28 @@
+/nas/longleaf/apps/python/2.7.12/lib/python2.7/site-packages/pandas/io/excel.py:329: FutureWarning: The `sheetname` keyword is deprecated, use `sheet_name` instead
+  **kwds)
+Salt Springs
+0.562429062564
+SFeather_Palermo
+0.634960603882
+Shasta
+0.957317070175
+Shasta_Aggr_Small
+0.250258127935
+SJoachin_Wishon
+0.673541501834
+Stanislaus
+0.695494862502
+Stanislaus_Donnels
+0.768804509565
+Thermalito
+0.899183992834
+Tiger Creek
+0.136440737132
+WFeather
+0.43180731034
+Woodleaf
+0.439908149723
+YubaBear
+0.625055802624
+YubaWest
+0.691558379488

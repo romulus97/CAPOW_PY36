@@ -1,0 +1,69 @@
+Big_Creek_1 
+0.5050749374959965
+Big_Creek_2 
+0.48631038192212456
+Big_Creek_2A 
+0.464717046730611
+Big_Creek_3 
+0.7319860338401497
+Big_Creek_4 
+0.7474341246911532
+Big_Creek_8 
+0.49699284129075433
+Bishop_Alamo
+0.5129384565342663
+Kern River 3
+0.6142290874681867
+KernRvr1
+0.40262202315390444
+Mamouth
+0.7678484025038759
+Portal
+0.41814513435379497
+VESTAL 
+0.32426772206069426
+WARNE_2
+0.48201918371741026
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@n2f1-3>
+Subject: Job 965999: <python rule_based_flexible_de_run_1_SCE.py> in cluster <henry2> Done
+
+Job <python rule_based_flexible_de_run_1_SCE.py> was submitted from host <login03> by user <jkern> in cluster <henry2> at Sun Nov 10 22:26:13 2019
+Job was executed on host(s) <n2f1-3>, in queue <cnr>, as user <jkern> in cluster <henry2> at Sun Nov 10 22:26:17 2019
+</home/jkern> was used as the home directory.
+</share/infews/jkern/CAPOW/CA_HYDRO/SCE_FNF_V2/SCE_FNF_V2> was used as the working directory.
+Started at Sun Nov 10 22:26:17 2019
+Terminated at Mon Nov 11 05:50:22 2019
+Results reported at Mon Nov 11 05:50:22 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+python rule_based_flexible_de_run_1_SCE.py
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   26667.53 sec.
+    Max Memory :                                 135.06 MB
+    Average Memory :                             105.00 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              3
+    Max Threads :                                42
+    Run time :                                   26665 sec.
+    Turnaround time :                            26649 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <err.965999> for stderr output of this job.
+

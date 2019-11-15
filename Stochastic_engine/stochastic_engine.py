@@ -54,7 +54,10 @@ print('FCRPS')
 #
 #############################################################################
 ## HOURLY WIND AND SOLAR POWER PRODUCTION
-#
+
+#What REeDS scenario are we running?
+#User specifies combination of scenario and year 
+
 ## WIND
 # Specify installed capacity of wind power for each zone
 PNW_cap = 6445
