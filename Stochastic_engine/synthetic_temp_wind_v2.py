@@ -275,6 +275,7 @@ def synthetic(sim_years):
     
     
     sim_irr2=np.zeros((sim_days,7))
+    sim_irr[sim_irr<0]=0
     for i in range(0,sim_years):
         sim_irr2[i*365:i*365+365,:]=Clear_sky-sim_irr[int(year_list[i])*365:int(year_list[i])*365+365,:]
     
