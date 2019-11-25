@@ -1975,10 +1975,10 @@ HDD_wind_sim=HDD_wind_sim[365:len(HDD_wind_sim)-730]
 CDD_wind_sim=CDD_wind_sim[365:len(CDD_wind_sim)-730]
 
 
-for fd in range(0,f_horizon):
+for d in range(0,effect_sim_year*365-f_horizon):
     
-    collect_data=np.column_stack((sim_month,sim_day,sim_year,np.zeros(effect_sim_year*365),np.zeros(effect_sim_year*365),np.zeros(effect_sim_year*365),sim_wind_daily,sim_BPA_hydro,sim_dow))
-    collect_data_2=np.column_stack((HDD_sim,CDD_sim,HDD_wind_sim,CDD_wind_sim))
+    collect_data=np.column_stack((sim_month[d:d+f_horizon],sim_day[d:d+f_horizon],sim_year[d:d+f_horizon],np.zeros(f_horizon),np.zeros(f_horizon),np.zeros(f_horizon),sim_wind_daily[d:d+f_horizon],sim_BPA_hydro[d,:],sim_dow[d:d+f_horizon]))
+    collect_data_2=np.column_stack((HDD_sim[d:d+f_horizon],CDD_sim[d:d+f_horizon],HDD_wind_sim[d:d+f_horizon],CDD_wind_sim[d:d+f_horizon]))
     Combined=np.column_stack((collect_data,collect_data_2))
     
 #    NEED TO ONLY COLLECT 7 DAYS OF DATA, OR BUILD LARGER MATRICES AND ONLY SELECT FIRST SEVEN
@@ -2112,28 +2112,40 @@ for fd in range(0,f_horizon):
         name='predicted_' + str(line)              
         locals()[name]=predicted
             
-    syn_Path8=predicted_Path8+syn_residuals[:effect_sim_year*365,5]
-    syn_Path14=predicted_Path14+syn_residuals[:effect_sim_year*365,6]
-    syn_Path3=predicted_Path3+syn_residuals[:effect_sim_year*365,7]
+    syn_Path8=predicted_Path8+syn_residuals[d:d+f_horizon,5]
+    syn_Path14=predicted_Path14+syn_residuals[d:d+f_horizon,6]
+    syn_Path3=predicted_Path3+syn_residuals[d:d+f_horizon,7]
     
-    bias = np.mean(syn_Path8) - np.mean(NWPaths_y[:,0])
-    syn_Path8 = syn_Path8 - bias
+    if d < 1:
+        
+        syn_8M = syn_Path8
+        syn_14M = syn_Path14
+        syn_3M = syn_Path3
     
-    bias = np.mean(syn_Path14) - np.mean(NWPaths_y[:,1])
-    syn_Path14 = syn_Path14 - bias
+    else:
+        
+        syn_8M = np.column_stack((syn_8M,syn_Path8))
+        syn_14M = np.column_stack((syn_14M,syn_Path14))
+        syn_3M = np.column_stack((syn_3M,syn_Path3))
     
-    bias = np.mean(syn_Path3) - np.mean(NWPaths_y[:,2])
-    syn_Path3 = syn_Path3 - bias
+#    bias = np.mean(syn_Path8) - np.mean(NWPaths_y[:,0])
+#    syn_Path8 = syn_Path8 - bias
+#    
+#    bias = np.mean(syn_Path14) - np.mean(NWPaths_y[:,1])
+#    syn_Path14 = syn_Path14 - bias
+#    
+#    bias = np.mean(syn_Path3) - np.mean(NWPaths_y[:,2])
+#    syn_Path3 = syn_Path3 - bias
     
-    S = df_data_sim.values
-    HO = H.values
-    stats = np.zeros((69,4))
-    
-    for i in range(0,69):
-        stats[i,0] = np.mean(S[:,i])
-        stats[i,1] = np.mean(HO[:,i])
-        stats[i,2] = np.std(S[:,i])
-        stats[i,3] = np.std(HO[:,i])
+#    S = df_data_sim.values
+#    HO = H.values
+#    stats = np.zeros((69,4))
+#    
+#    for i in range(0,69):
+#        stats[i,0] = np.mean(S[:,i])
+#        stats[i,1] = np.mean(HO[:,i])
+#        stats[i,2] = np.std(S[:,i])
+#        stats[i,3] = np.std(HO[:,i])
     
 
 ################################################################################
@@ -2173,139 +2185,153 @@ HDD_wind_sim=HDD_wind_sim[365:len(HDD_wind_sim)-730]
 CDD_wind_sim=CDD_wind_sim[365:len(CDD_wind_sim)-730]
 
 
-collect_data=np.column_stack((sim_month,sim_day,sim_year,np.zeros(effect_sim_year*365),np.zeros(effect_sim_year*365),sim_wind_daily,sim_BPA_hydro,syn_Path3,syn_Path8,syn_Path14,sim_dow))
-collect_data_2=np.column_stack((HDD_sim,CDD_sim,HDD_wind_sim,CDD_wind_sim))
-Combined=np.column_stack((collect_data,collect_data_2))
-df_data_sim = pd.DataFrame(Combined)
-df_data_sim.rename(columns={0:'Month'}, inplace=True)
-df_data_sim.rename(columns={3:'Path65'}, inplace=True)
-df_data_sim.rename(columns={4:'Path66'}, inplace=True)
-df_data_sim.rename(columns={5:'Wind'}, inplace=True)
-
-jan2 = df_data_sim.loc[df_data_sim['Month'] == 1,:]
-feb2 = df_data_sim.loc[df_data_sim['Month'] == 2,:]
-mar2 = df_data_sim.loc[df_data_sim['Month'] == 3,:]
-apr2 = df_data_sim.loc[df_data_sim['Month'] == 4,:]
-may2 = df_data_sim.loc[df_data_sim['Month'] == 5,:]
-jun2 = df_data_sim.loc[df_data_sim['Month'] == 6,:]
-jul2 = df_data_sim.loc[df_data_sim['Month'] == 7,:]
-aug2 = df_data_sim.loc[df_data_sim['Month'] == 8,:]
-sep2 = df_data_sim.loc[df_data_sim['Month'] == 9,:]
-oct2 = df_data_sim.loc[df_data_sim['Month'] == 10,:]
-nov2 = df_data_sim.loc[df_data_sim['Month'] == 11,:]
-dec2 = df_data_sim.loc[df_data_sim['Month'] == 12,:] 
-
-lines = ['Path65','Path66']
-upper = [3100,4300]
-lower = [-2210,-500]
-
-for line in lines:
-    name='predicted_' + str(line)   
-    locals()[name]=[]
+for d in range(0,effect_sim_year*365-f_horizon):
     
-for line in lines:    
-    predicted=[]
-    rc = np.shape(jan2.loc[:,'Wind':])
-    n = rc[1] 
-    y = df_data_sim.loc[:,line]
-    line_index = lines.index(line)
+    collect_data=np.column_stack((sim_month[d:d+f_horizon],sim_day[d:d+f_horizon],sim_year[d:d+f_horizon],np.zeros(f_horizon),np.zeros(f_horizon),sim_wind_daily[d:d+f_horizon],sim_BPA_hydro[d,:],syn_Path3[:,d],syn_Path8[:,d],syn_Path14[:,d],sim_dow[d:d+f_horizon]))
+    collect_data_2=np.column_stack((HDD_sim[d:d+f_horizon],CDD_sim[d:d+f_horizon],HDD_wind_sim[d:d+f_horizon],CDD_wind_sim[d:d+f_horizon]))
+    Combined=np.column_stack((collect_data,collect_data_2))
 
-    #regression names
-    name_1='jan_reg_6566' + str(line)   
-    name_2='feb_reg_6566' + str(line)   
-    name_3='mar_reg_6566' + str(line)
-    name_4='apr_reg_6566' + str(line)
-    name_5='may_reg_6566' + str(line)
-    name_6='jun_reg_6566' + str(line) 
-    name_7='jul_reg_6566' + str(line)    
-    name_8='aug_reg_6566' + str(line)   
-    name_9='sep_reg_6566' + str(line)    
-    name_10='oct_reg_6566' + str(line)  
-    name_11='nov_reg_6566' + str(line)    
-    name_12='dec_reg_6566' + str(line)
+    df_data_sim = pd.DataFrame(Combined)
+    df_data_sim.rename(columns={0:'Month'}, inplace=True)
+    df_data_sim.rename(columns={3:'Path65'}, inplace=True)
+    df_data_sim.rename(columns={4:'Path66'}, inplace=True)
+    df_data_sim.rename(columns={5:'Wind'}, inplace=True)
     
-    for i in range(0,len(y)):
+    jan2 = df_data_sim.loc[df_data_sim['Month'] == 1,:]
+    feb2 = df_data_sim.loc[df_data_sim['Month'] == 2,:]
+    mar2 = df_data_sim.loc[df_data_sim['Month'] == 3,:]
+    apr2 = df_data_sim.loc[df_data_sim['Month'] == 4,:]
+    may2 = df_data_sim.loc[df_data_sim['Month'] == 5,:]
+    jun2 = df_data_sim.loc[df_data_sim['Month'] == 6,:]
+    jul2 = df_data_sim.loc[df_data_sim['Month'] == 7,:]
+    aug2 = df_data_sim.loc[df_data_sim['Month'] == 8,:]
+    sep2 = df_data_sim.loc[df_data_sim['Month'] == 9,:]
+    oct2 = df_data_sim.loc[df_data_sim['Month'] == 10,:]
+    nov2 = df_data_sim.loc[df_data_sim['Month'] == 11,:]
+    dec2 = df_data_sim.loc[df_data_sim['Month'] == 12,:] 
+    
+    lines = ['Path65','Path66']
+    upper = [3100,4300]
+    lower = [-2210,-500]
+    
+    for line in lines:
+        name='predicted_' + str(line)   
+        locals()[name]=[]
         
-        m = df_data_sim.loc[i,'Month']
+    for line in lines:    
+        predicted=[]
+        rc = np.shape(jan2.loc[:,'Wind':])
+        n = rc[1] 
+        y = df_data_sim.loc[:,line]
+        line_index = lines.index(line)
+    
+        #regression names
+        name_1='jan_reg_6566' + str(line)   
+        name_2='feb_reg_6566' + str(line)   
+        name_3='mar_reg_6566' + str(line)
+        name_4='apr_reg_6566' + str(line)
+        name_5='may_reg_6566' + str(line)
+        name_6='jun_reg_6566' + str(line) 
+        name_7='jul_reg_6566' + str(line)    
+        name_8='aug_reg_6566' + str(line)   
+        name_9='sep_reg_6566' + str(line)    
+        name_10='oct_reg_6566' + str(line)  
+        name_11='nov_reg_6566' + str(line)    
+        name_12='dec_reg_6566' + str(line)
         
-        if m==1:
-            s = jan2.loc[i,'Wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_1].predict(s)
-            predicted = np.append(predicted,p)
-        elif m==2:
-            s = feb2.loc[i,'Wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_2].predict(s)
-            predicted = np.append(predicted,p)
-        elif m==3:
-            s = mar2.loc[i,'Wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_3].predict(s)
-            predicted = np.append(predicted,p)
-        elif m==4:
-            s = apr2.loc[i,'Wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_4].predict(s)
-            predicted = np.append(predicted,p)
-        elif m==5:
-            s = may2.loc[i,'Wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_5].predict(s)
-            predicted = np.append(predicted,p)
-        elif m==6:
-            s = jun2.loc[i,'Wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_6].predict(s)
-            predicted = np.append(predicted,p)
-        elif m==7:
-            s = jul2.loc[i,'Wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_7].predict(s)
-            predicted = np.append(predicted,p)
-        elif m==8:
-            s = aug2.loc[i,'Wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_8].predict(s)
-            predicted = np.append(predicted,p)
-        elif m==9:
-            s = sep2.loc[i,'Wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_9].predict(s)
-            predicted = np.append(predicted,p)
-        elif m==10:
-            s = oct2.loc[i,'Wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_10].predict(s)
-            predicted = np.append(predicted,p)
-        elif m==11:
-            s = nov2.loc[i,'Wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_11].predict(s)
-            predicted = np.append(predicted,p)
-        else:
-            s = dec2.loc[i,'Wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_12].predict(s)
-            predicted = np.append(predicted,p)
+        for i in range(0,len(y)):
             
-        if predicted[i] > upper[line_index]:
-            predicted[i] = upper[line_index]
-        elif predicted[i] < lower[line_index]:
-            predicted[i] = lower[line_index]
+            m = df_data_sim.loc[i,'Month']
             
+            if m==1:
+                s = jan2.loc[i,'Wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_1].predict(s)
+                predicted = np.append(predicted,p)
+            elif m==2:
+                s = feb2.loc[i,'Wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_2].predict(s)
+                predicted = np.append(predicted,p)
+            elif m==3:
+                s = mar2.loc[i,'Wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_3].predict(s)
+                predicted = np.append(predicted,p)
+            elif m==4:
+                s = apr2.loc[i,'Wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_4].predict(s)
+                predicted = np.append(predicted,p)
+            elif m==5:
+                s = may2.loc[i,'Wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_5].predict(s)
+                predicted = np.append(predicted,p)
+            elif m==6:
+                s = jun2.loc[i,'Wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_6].predict(s)
+                predicted = np.append(predicted,p)
+            elif m==7:
+                s = jul2.loc[i,'Wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_7].predict(s)
+                predicted = np.append(predicted,p)
+            elif m==8:
+                s = aug2.loc[i,'Wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_8].predict(s)
+                predicted = np.append(predicted,p)
+            elif m==9:
+                s = sep2.loc[i,'Wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_9].predict(s)
+                predicted = np.append(predicted,p)
+            elif m==10:
+                s = oct2.loc[i,'Wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_10].predict(s)
+                predicted = np.append(predicted,p)
+            elif m==11:
+                s = nov2.loc[i,'Wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_11].predict(s)
+                predicted = np.append(predicted,p)
+            else:
+                s = dec2.loc[i,'Wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_12].predict(s)
+                predicted = np.append(predicted,p)
+                
+            if predicted[i] > upper[line_index]:
+                predicted[i] = upper[line_index]
+            elif predicted[i] < lower[line_index]:
+                predicted[i] = lower[line_index]
+                
+    
+        name='predicted_' + str(line)              
+        locals()[name]=predicted
+    
+    syn_Path65= predicted_Path65 + syn_residuals[d:d+f_horizon,13]
+    syn_Path66 = predicted_Path66 + syn_residuals[d:d+f_horizon,14]
+    
+    if d < 1:
+        
+        syn_65M = syn_Path65
+        syn_66M = syn_Path66
+    
+    else:
+        
+        syn_65M = np.column_stack((syn_65M,syn_Path65))
+        syn_66M = np.column_stack((syn_66M,syn_Path66))
 
-    name='predicted_' + str(line)              
-    locals()[name]=predicted
 
-syn_Path65= predicted_Path65 + syn_residuals[:effect_sim_year*365,13]
-syn_Path66 = predicted_Path66 + syn_residuals[:effect_sim_year*365,14]
-
-bias = np.mean(syn_Path65) - np.mean(Path65_66_y[:,0])
-syn_Path65 = syn_Path65 - bias
-
-bias = np.mean(syn_Path66) - np.mean(Path65_66_y[:,1])
-syn_Path66 = syn_Path66 - bias
+#bias = np.mean(syn_Path65) - np.mean(Path65_66_y[:,0])
+#syn_Path65 = syn_Path65 - bias
+#
+#bias = np.mean(syn_Path66) - np.mean(Path65_66_y[:,1])
+#syn_Path66 = syn_Path66 - bias
 
 ###################################################
 ##                    PATH 46
@@ -2351,117 +2377,128 @@ sim_Hoover = pd.read_csv('Synthetic_streamflows/synthetic_discharge_Hoover.csv',
 sim_Hoover=sim_Hoover.values
 sim_Hoover = sim_Hoover[:effect_sim_year*365]
 
+for d in range(0,effect_sim_year*365-f_horizon):
 
-collect_data=np.column_stack((sim_month,sim_day,sim_year,np.zeros(effect_sim_year*365),sim_dow,sim_Hoover,syn_Path65,syn_Path66))
-collect_data_2=np.column_stack((HDD_sim,CDD_sim,HDD_wind_sim,CDD_wind_sim))
-Combined=np.column_stack((collect_data,collect_data_2))
-df_data_sim = pd.DataFrame(Combined)
-
-df_data_sim.rename(columns={0:'Month'}, inplace=True)
-df_data_sim.rename(columns={3:'Path46'}, inplace=True)
-df_data_sim.rename(columns={4:'Weekday'}, inplace=True)
-
-jan2 = df_data_sim.loc[df_data_sim['Month'] == 1,:]
-feb2 = df_data_sim.loc[df_data_sim['Month'] == 2,:]
-mar2 = df_data_sim.loc[df_data_sim['Month'] == 3,:]
-apr2 = df_data_sim.loc[df_data_sim['Month'] == 4,:]
-may2 = df_data_sim.loc[df_data_sim['Month'] == 5,:]
-jun2 = df_data_sim.loc[df_data_sim['Month'] == 6,:]
-jul2 = df_data_sim.loc[df_data_sim['Month'] == 7,:]
-aug2 = df_data_sim.loc[df_data_sim['Month'] == 8,:]
-sep2 = df_data_sim.loc[df_data_sim['Month'] == 9,:]
-oct2 = df_data_sim.loc[df_data_sim['Month'] == 10,:]
-nov2 = df_data_sim.loc[df_data_sim['Month'] == 11,:]
-dec2 = df_data_sim.loc[df_data_sim['Month'] == 12,:] 
-
-y = df_data_sim.loc[:,'Path46']
-
-predicted_Path46 =[]
-rc = np.shape(jan2.loc[:,'Weekday':])
-n = rc[1] 
-
-upper = 185000
-lower = 48000
-
-predicted=[]
-for i in range(0,len(y)):
+    collect_data=np.column_stack((sim_month[d:d+f_horizon],sim_day[d:d+f_horizon],sim_year[d:d+f_horizon],np.zeros(f_horizon),sim_dow[d:d+f_horizon],sim_Hoover[d:d+f_horizon],syn_Path65[:,d],syn_Path66[:,d]))
+    collect_data_2=np.column_stack((HDD_sim[d:d+f_horizon],CDD_sim[d:d+f_horizon],HDD_wind_sim[d:d+f_horizon],CDD_wind_sim[d:d+f_horizon]))
+    Combined=np.column_stack((collect_data,collect_data_2))
+    df_data_sim = pd.DataFrame(Combined)
     
-    m = df_data_sim.loc[i,'Month']
+    df_data_sim.rename(columns={0:'Month'}, inplace=True)
+    df_data_sim.rename(columns={3:'Path46'}, inplace=True)
+    df_data_sim.rename(columns={4:'Weekday'}, inplace=True)
     
-    if m==1:
-        s = jan2.loc[i,'Weekday':]
-        s = np.reshape(s[:,None],(1,n))
-        p = jan_reg_46.predict(s)
-        predicted = np.append(predicted,p)
-    elif m==2:
-        s = feb2.loc[i,'Weekday':]
-        s = np.reshape(s[:,None],(1,n))
-        p = feb_reg_46.predict(s)
-        predicted = np.append(predicted,p)
-    elif m==3:
-        s = mar2.loc[i,'Weekday':]
-        s = np.reshape(s[:,None],(1,n))
-        p = mar_reg_46.predict(s)
-        predicted = np.append(predicted,p)
-    elif m==4:
-        s = apr2.loc[i,'Weekday':]
-        s = np.reshape(s[:,None],(1,n))
-        p = apr_reg_46.predict(s)
-        predicted = np.append(predicted,p)
-    elif m==5:
-        s = may2.loc[i,'Weekday':]
-        s = np.reshape(s[:,None],(1,n))
-        p = may_reg_46.predict(s)
-        predicted = np.append(predicted,p)
-    elif m==6:
-        s = jun2.loc[i,'Weekday':]
-        s = np.reshape(s[:,None],(1,n))
-        p = jun_reg_46.predict(s)
-        predicted = np.append(predicted,p)
-    elif m==7:
-        s = jul2.loc[i,'Weekday':]
-        s = np.reshape(s[:,None],(1,n))
-        p = jul_reg_46.predict(s)
-        predicted = np.append(predicted,p)
-    elif m==8:
-        s = aug2.loc[i,'Weekday':]
-        s = np.reshape(s[:,None],(1,n))
-        p = aug_reg_46.predict(s)
-        predicted = np.append(predicted,p)
-    elif m==9:
-        s = sep2.loc[i,'Weekday':]
-        s = np.reshape(s[:,None],(1,n))
-        p = sep_reg_46.predict(s)
-        predicted = np.append(predicted,p)
-    elif m==10:
-        s = oct2.loc[i,'Weekday':]
-        s = np.reshape(s[:,None],(1,n))
-        p = oct_reg_46.predict(s)
-        predicted = np.append(predicted,p)
-    elif m==11:
-        s = nov2.loc[i,'Weekday':]
-        s = np.reshape(s[:,None],(1,n))
-        p = nov_reg_46.predict(s)
-        predicted = np.append(predicted,p)
+    jan2 = df_data_sim.loc[df_data_sim['Month'] == 1,:]
+    feb2 = df_data_sim.loc[df_data_sim['Month'] == 2,:]
+    mar2 = df_data_sim.loc[df_data_sim['Month'] == 3,:]
+    apr2 = df_data_sim.loc[df_data_sim['Month'] == 4,:]
+    may2 = df_data_sim.loc[df_data_sim['Month'] == 5,:]
+    jun2 = df_data_sim.loc[df_data_sim['Month'] == 6,:]
+    jul2 = df_data_sim.loc[df_data_sim['Month'] == 7,:]
+    aug2 = df_data_sim.loc[df_data_sim['Month'] == 8,:]
+    sep2 = df_data_sim.loc[df_data_sim['Month'] == 9,:]
+    oct2 = df_data_sim.loc[df_data_sim['Month'] == 10,:]
+    nov2 = df_data_sim.loc[df_data_sim['Month'] == 11,:]
+    dec2 = df_data_sim.loc[df_data_sim['Month'] == 12,:] 
+    
+    y = df_data_sim.loc[:,'Path46']
+    
+    predicted_Path46 =[]
+    rc = np.shape(jan2.loc[:,'Weekday':])
+    n = rc[1] 
+    
+    upper = 185000
+    lower = 48000
+    
+    predicted=[]
+    for i in range(0,len(y)):
+        
+        m = df_data_sim.loc[i,'Month']
+        
+        if m==1:
+            s = jan2.loc[i,'Weekday':]
+            s = np.reshape(s[:,None],(1,n))
+            p = jan_reg_46.predict(s)
+            predicted = np.append(predicted,p)
+        elif m==2:
+            s = feb2.loc[i,'Weekday':]
+            s = np.reshape(s[:,None],(1,n))
+            p = feb_reg_46.predict(s)
+            predicted = np.append(predicted,p)
+        elif m==3:
+            s = mar2.loc[i,'Weekday':]
+            s = np.reshape(s[:,None],(1,n))
+            p = mar_reg_46.predict(s)
+            predicted = np.append(predicted,p)
+        elif m==4:
+            s = apr2.loc[i,'Weekday':]
+            s = np.reshape(s[:,None],(1,n))
+            p = apr_reg_46.predict(s)
+            predicted = np.append(predicted,p)
+        elif m==5:
+            s = may2.loc[i,'Weekday':]
+            s = np.reshape(s[:,None],(1,n))
+            p = may_reg_46.predict(s)
+            predicted = np.append(predicted,p)
+        elif m==6:
+            s = jun2.loc[i,'Weekday':]
+            s = np.reshape(s[:,None],(1,n))
+            p = jun_reg_46.predict(s)
+            predicted = np.append(predicted,p)
+        elif m==7:
+            s = jul2.loc[i,'Weekday':]
+            s = np.reshape(s[:,None],(1,n))
+            p = jul_reg_46.predict(s)
+            predicted = np.append(predicted,p)
+        elif m==8:
+            s = aug2.loc[i,'Weekday':]
+            s = np.reshape(s[:,None],(1,n))
+            p = aug_reg_46.predict(s)
+            predicted = np.append(predicted,p)
+        elif m==9:
+            s = sep2.loc[i,'Weekday':]
+            s = np.reshape(s[:,None],(1,n))
+            p = sep_reg_46.predict(s)
+            predicted = np.append(predicted,p)
+        elif m==10:
+            s = oct2.loc[i,'Weekday':]
+            s = np.reshape(s[:,None],(1,n))
+            p = oct_reg_46.predict(s)
+            predicted = np.append(predicted,p)
+        elif m==11:
+            s = nov2.loc[i,'Weekday':]
+            s = np.reshape(s[:,None],(1,n))
+            p = nov_reg_46.predict(s)
+            predicted = np.append(predicted,p)
+        else:
+            s = dec2.loc[i,'Weekday':]
+            s = np.reshape(s[:,None],(1,n))
+            p = dec_reg_46.predict(s)
+            predicted = np.append(predicted,p)
+            
+        if predicted[i] > upper:
+            predicted[i] = upper
+        elif predicted[i] < lower:
+            predicted[i] = lower  
+            
+    predicted_Path46=predicted
+    
+    syn_Path46=predicted_Path46+syn_residuals[d:d+f_horizon,12]
+        
+#    bias = np.mean(syn_Path46) - np.mean(Path46_y)
+#    syn_Path46 = syn_Path46 - bias
+    syn_Path46 = syn_Path46/24
+    
+    if d < 1:
+        
+        syn_46M = syn_Path46
+    
     else:
-        s = dec2.loc[i,'Weekday':]
-        s = np.reshape(s[:,None],(1,n))
-        p = dec_reg_46.predict(s)
-        predicted = np.append(predicted,p)
         
-    if predicted[i] > upper:
-        predicted[i] = upper
-    elif predicted[i] < lower:
-        predicted[i] = lower  
+        syn_46M = np.column_stack((syn_46M,syn_Path46))
         
-predicted_Path46=predicted
-
-syn_Path46=predicted_Path46+syn_residuals[:effect_sim_year*365,12]
-
-bias = np.mean(syn_Path46) - np.mean(Path46_y)
-syn_Path46 = syn_Path46 - bias
-syn_Path46 = syn_Path46/24
-#
+    
+    
 ################################
 ##        Other CA PATHS 
 ################################
@@ -2496,157 +2533,172 @@ CDD_sim=CDD_sim[365:len(CDD_sim)-730]
 HDD_wind_sim=HDD_wind_sim[365:len(HDD_wind_sim)-730]
 CDD_wind_sim=CDD_wind_sim[365:len(CDD_wind_sim)-730]
 
-collect_data=np.column_stack((sim_month,sim_day,sim_year,np.zeros(effect_sim_year*365),np.zeros(effect_sim_year*365),np.zeros(effect_sim_year*365),np.zeros(effect_sim_year*365),sim_wind_daily,sim_BPA_hydro,sim_dow,syn_Path46,sim_Hoover,syn_Path65,syn_Path66))
-collect_data_2=np.column_stack((HDD_sim,CDD_sim,HDD_wind_sim,CDD_wind_sim))
-Combined=np.column_stack((collect_data,collect_data_2))
-df_data_sim = pd.DataFrame(Combined)
-
-df_data_sim.rename(columns={0:'Month'}, inplace=True)
-df_data_sim.rename(columns={3:'Path61'}, inplace=True)
-df_data_sim.rename(columns={4:'Path42'}, inplace=True)
-df_data_sim.rename(columns={5:'Path24'}, inplace=True)
-df_data_sim.rename(columns={6:'Path45'}, inplace=True)
-df_data_sim.rename(columns={7:'BPA_wind'}, inplace=True)
-
-jan2 = df_data_sim.loc[df_data_sim['Month'] == 1,:]
-feb2 = df_data_sim.loc[df_data_sim['Month'] == 2,:]
-mar2 = df_data_sim.loc[df_data_sim['Month'] == 3,:]
-apr2 = df_data_sim.loc[df_data_sim['Month'] == 4,:]
-may2 = df_data_sim.loc[df_data_sim['Month'] == 5,:]
-jun2 = df_data_sim.loc[df_data_sim['Month'] == 6,:]
-jul2 = df_data_sim.loc[df_data_sim['Month'] == 7,:]
-aug2 = df_data_sim.loc[df_data_sim['Month'] == 8,:]
-sep2 = df_data_sim.loc[df_data_sim['Month'] == 9,:]
-oct2 = df_data_sim.loc[df_data_sim['Month'] == 10,:]
-nov2 = df_data_sim.loc[df_data_sim['Month'] == 11,:]
-dec2 = df_data_sim.loc[df_data_sim['Month'] == 12,:] 
-
-lines = ['Path61','Path42','Path24','Path45']
-upper = [1940,98,92,340]
-lower = [240,-400,-48,-190]
-num_lines = len(lines)
-
-for line in lines:
-    name='predicted_' + str(line)   
-    locals()[name]=[]
-
-for line in lines:    
-    predicted=[]
-    rc = np.shape(jan2.loc[:,'BPA_wind':])
-    n = rc[1] 
-    y = df_data_sim.loc[:,line]
-    line_index = lines.index(line)
-
-    #regression names
-    name_1='jan_reg_CA' + str(line)   
-    name_2='feb_reg_CA' + str(line)   
-    name_3='mar_reg_CA' + str(line)
-    name_4='apr_reg_CA' + str(line)
-    name_5='may_reg_CA' + str(line)
-    name_6='jun_reg_CA' + str(line) 
-    name_7='jul_reg_CA' + str(line)    
-    name_8='aug_reg_CA' + str(line)   
-    name_9='sep_reg_CA' + str(line)    
-    name_10='oct_reg_CA' + str(line)  
-    name_11='nov_reg_CA' + str(line)    
-    name_12='dec_reg_CA' + str(line)
+for d in range(0,effect_sim_year*365-f_horizon):
     
-    for i in range(0,len(y)):
-        
-        m = df_data_sim.loc[i,'Month']
-        
-        if m==1:
-            s = jan2.loc[i,'BPA_wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_1].predict(s)
-            predicted = np.append(predicted,p)
-        elif m==2:
-            s = feb2.loc[i,'BPA_wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_2].predict(s)
-            predicted = np.append(predicted,p)
-        elif m==3:
-            s = mar2.loc[i,'BPA_wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_3].predict(s)
-            predicted = np.append(predicted,p)
-        elif m==4:
-            s = apr2.loc[i,'BPA_wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_4].predict(s)
-            predicted = np.append(predicted,p)
-        elif m==5:
-            s = may2.loc[i,'BPA_wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_5].predict(s)
-            predicted = np.append(predicted,p)
-        elif m==6:
-            s = jun2.loc[i,'BPA_wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_6].predict(s)
-            predicted = np.append(predicted,p)
-        elif m==7:
-            s = jul2.loc[i,'BPA_wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_7].predict(s)
-            predicted = np.append(predicted,p)
-        elif m==8:
-            s = aug2.loc[i,'BPA_wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_8].predict(s)
-            predicted = np.append(predicted,p)
-        elif m==9:
-            s = sep2.loc[i,'BPA_wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_9].predict(s)
-            predicted = np.append(predicted,p)
-        elif m==10:
-            s = oct2.loc[i,'BPA_wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_10].predict(s)
-            predicted = np.append(predicted,p)
-        elif m==11:
-            s = nov2.loc[i,'BPA_wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_11].predict(s)
-            predicted = np.append(predicted,p)
-        else:
-            s = dec2.loc[i,'BPA_wind':]
-            s = np.reshape(s[:,None],(1,n))
-            p = locals()[name_12].predict(s)
-            predicted = np.append(predicted,p)
-            
-#        if predicted[i] > upper[line_index]:
-#            predicted[i] = upper[line_index]
-#        elif predicted[i] < lower[line_index]:
-#            predicted[i] = lower[line_index]   
-            
-        if predicted[i] > upper[line_index]:
-            predicted[i] = np.mean(OtherCA_Paths_y[:,line_index])
-        elif predicted[i] < lower[line_index]:
-            predicted[i] = np.mean(OtherCA_Paths_y[:,line_index])
-            
-
-    name='predicted_' + str(line)              
-    locals()[name]=predicted
+    collect_data=np.column_stack((sim_month[d:d+f_horizon],sim_day[d:d+f_horizon],sim_year[d:d+f_horizon],np.zeros(f_horizon),np.zeros(f_horizon),np.zeros(f_horizon),np.zeros(f_horizon),sim_wind_daily[d:d+f_horizon],sim_BPA_hydro[d,:],sim_dow[d:d+f_horizon],syn_Path46[:,d],sim_Hoover[d:d+f_horizon],syn_Path65[:,d],syn_Path66[:,d]))
+    collect_data_2=np.column_stack((HDD_sim[d:d+f_horizon],CDD_sim[d:d+f_horizon],HDD_wind_sim[d:d+f_horizon],CDD_wind_sim[d:d+f_horizon]))
+    Combined=np.column_stack((collect_data,collect_data_2))
+    df_data_sim = pd.DataFrame(Combined)
     
-syn_Path61= predicted_Path61 + syn_residuals[:effect_sim_year*365,8]
-syn_Path42 = predicted_Path42 + syn_residuals[:effect_sim_year*365,9]
-syn_Path24= predicted_Path24 + syn_residuals[:effect_sim_year*365,10]
-syn_Path45 = predicted_Path45 + syn_residuals[:effect_sim_year*365,11]
+    df_data_sim.rename(columns={0:'Month'}, inplace=True)
+    df_data_sim.rename(columns={3:'Path61'}, inplace=True)
+    df_data_sim.rename(columns={4:'Path42'}, inplace=True)
+    df_data_sim.rename(columns={5:'Path24'}, inplace=True)
+    df_data_sim.rename(columns={6:'Path45'}, inplace=True)
+    df_data_sim.rename(columns={7:'BPA_wind'}, inplace=True)
+    
+    jan2 = df_data_sim.loc[df_data_sim['Month'] == 1,:]
+    feb2 = df_data_sim.loc[df_data_sim['Month'] == 2,:]
+    mar2 = df_data_sim.loc[df_data_sim['Month'] == 3,:]
+    apr2 = df_data_sim.loc[df_data_sim['Month'] == 4,:]
+    may2 = df_data_sim.loc[df_data_sim['Month'] == 5,:]
+    jun2 = df_data_sim.loc[df_data_sim['Month'] == 6,:]
+    jul2 = df_data_sim.loc[df_data_sim['Month'] == 7,:]
+    aug2 = df_data_sim.loc[df_data_sim['Month'] == 8,:]
+    sep2 = df_data_sim.loc[df_data_sim['Month'] == 9,:]
+    oct2 = df_data_sim.loc[df_data_sim['Month'] == 10,:]
+    nov2 = df_data_sim.loc[df_data_sim['Month'] == 11,:]
+    dec2 = df_data_sim.loc[df_data_sim['Month'] == 12,:] 
+    
+    lines = ['Path61','Path42','Path24','Path45']
+    upper = [1940,98,92,340]
+    lower = [240,-400,-48,-190]
+    num_lines = len(lines)
+    
+    for line in lines:
+        name='predicted_' + str(line)   
+        locals()[name]=[]
+    
+    for line in lines:    
+        predicted=[]
+        rc = np.shape(jan2.loc[:,'BPA_wind':])
+        n = rc[1] 
+        y = df_data_sim.loc[:,line]
+        line_index = lines.index(line)
+    
+        #regression names
+        name_1='jan_reg_CA' + str(line)   
+        name_2='feb_reg_CA' + str(line)   
+        name_3='mar_reg_CA' + str(line)
+        name_4='apr_reg_CA' + str(line)
+        name_5='may_reg_CA' + str(line)
+        name_6='jun_reg_CA' + str(line) 
+        name_7='jul_reg_CA' + str(line)    
+        name_8='aug_reg_CA' + str(line)   
+        name_9='sep_reg_CA' + str(line)    
+        name_10='oct_reg_CA' + str(line)  
+        name_11='nov_reg_CA' + str(line)    
+        name_12='dec_reg_CA' + str(line)
+        
+        for i in range(0,len(y)):
+            
+            m = df_data_sim.loc[i,'Month']
+            
+            if m==1:
+                s = jan2.loc[i,'BPA_wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_1].predict(s)
+                predicted = np.append(predicted,p)
+            elif m==2:
+                s = feb2.loc[i,'BPA_wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_2].predict(s)
+                predicted = np.append(predicted,p)
+            elif m==3:
+                s = mar2.loc[i,'BPA_wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_3].predict(s)
+                predicted = np.append(predicted,p)
+            elif m==4:
+                s = apr2.loc[i,'BPA_wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_4].predict(s)
+                predicted = np.append(predicted,p)
+            elif m==5:
+                s = may2.loc[i,'BPA_wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_5].predict(s)
+                predicted = np.append(predicted,p)
+            elif m==6:
+                s = jun2.loc[i,'BPA_wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_6].predict(s)
+                predicted = np.append(predicted,p)
+            elif m==7:
+                s = jul2.loc[i,'BPA_wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_7].predict(s)
+                predicted = np.append(predicted,p)
+            elif m==8:
+                s = aug2.loc[i,'BPA_wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_8].predict(s)
+                predicted = np.append(predicted,p)
+            elif m==9:
+                s = sep2.loc[i,'BPA_wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_9].predict(s)
+                predicted = np.append(predicted,p)
+            elif m==10:
+                s = oct2.loc[i,'BPA_wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_10].predict(s)
+                predicted = np.append(predicted,p)
+            elif m==11:
+                s = nov2.loc[i,'BPA_wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_11].predict(s)
+                predicted = np.append(predicted,p)
+            else:
+                s = dec2.loc[i,'BPA_wind':]
+                s = np.reshape(s[:,None],(1,n))
+                p = locals()[name_12].predict(s)
+                predicted = np.append(predicted,p)
+                
+    #        if predicted[i] > upper[line_index]:
+    #            predicted[i] = upper[line_index]
+    #        elif predicted[i] < lower[line_index]:
+    #            predicted[i] = lower[line_index]   
+                
+            if predicted[i] > upper[line_index]:
+                predicted[i] = np.mean(OtherCA_Paths_y[:,line_index])
+            elif predicted[i] < lower[line_index]:
+                predicted[i] = np.mean(OtherCA_Paths_y[:,line_index])
+                
+    
+        name='predicted_' + str(line)              
+        locals()[name]=predicted
+        
+    syn_Path61= predicted_Path61 + syn_residuals[d:d+f_horizon,8]
+    syn_Path42 = predicted_Path42 + syn_residuals[d:d+f_horizon,9]
+    syn_Path24= predicted_Path24 + syn_residuals[d:d+f_horizon,10]
+    syn_Path45 = predicted_Path45 + syn_residuals[d:d+f_horizon,11]
 
-bias = np.mean(syn_Path61) - np.mean(OtherCA_Paths_y[:,0])
-syn_Path8 = syn_Path61 - bias
+#bias = np.mean(syn_Path61) - np.mean(OtherCA_Paths_y[:,0])
+#syn_Path61 = syn_Path61 - bias
+#
+#bias = np.mean(syn_Path42) - np.mean(OtherCA_Paths_y[:,1])
+#syn_Path42 = syn_Path42 - bias
+#
+#bias = np.mean(syn_Path24) - np.mean(OtherCA_Paths_y[:,2])
+#syn_Path24 = syn_Path24 - bias
+#
+#bias = np.mean(syn_Path45) - np.mean(OtherCA_Paths_y[:,3])
+#syn_Path45 = syn_Path45 - bias
 
-bias = np.mean(syn_Path42) - np.mean(OtherCA_Paths_y[:,1])
-syn_Path42 = syn_Path42 - bias
-
-bias = np.mean(syn_Path24) - np.mean(OtherCA_Paths_y[:,2])
-syn_Path24 = syn_Path24 - bias
-
-bias = np.mean(syn_Path45) - np.mean(OtherCA_Paths_y[:,3])
-syn_Path45 = syn_Path45 - bias
-
+    if d < 1:
+        
+        syn_61M = syn_Path61
+        syn_42M = syn_Path42
+        syn_24M = syn_Path24
+        syn_45M = syn_Path45
+    
+    else:
+        
+        syn_61M = np.column_stack((syn_61M,syn_Path61))
+        syn_42M = np.column_stack((syn_42M,syn_Path42))
+        syn_24M = np.column_stack((syn_24M,syn_Path24))
+        syn_45M = np.column_stack((syn_45M,syn_Path45))
 
 ############################################################################
 syn_BPA= BPA_sim + np.reshape(syn_residuals[:,0],(len(BPA_sim),1))

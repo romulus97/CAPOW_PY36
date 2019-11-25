@@ -2617,7 +2617,7 @@ syn_Path24= predicted_Path24 + syn_residuals[:effect_sim_year*365,10]
 syn_Path45 = predicted_Path45 + syn_residuals[:effect_sim_year*365,11]
 
 bias = np.mean(syn_Path61) - np.mean(OtherCA_Paths_y[:,0])
-syn_Path8 = syn_Path61 - bias
+syn_Path61 = syn_Path61 - bias
 
 bias = np.mean(syn_Path42) - np.mean(OtherCA_Paths_y[:,1])
 syn_Path42 = syn_Path42 - bias
