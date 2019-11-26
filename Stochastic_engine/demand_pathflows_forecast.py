@@ -1942,14 +1942,14 @@ HDD_wind_sim = np.multiply(NW_sim_W,binary_HDD_sim)
 
 for fd in range(0,f_horizon):
     
-    sheet = 'Sheet%d' % fd
-    sim_BPA_hydro = pd.read_csv('PNW_hydro/FCRPS/Path_dams.csv',sheet_name = sheet, header=None)
+    filename = 'PNW_hydro/FCRPS/Path_dams_forecast_%d.xlsx' % fd
+    sim_BPA_hydro = pd.read_excel(filename, header=0,index_col = 0)
     a=sim_BPA_hydro.values
     
     if fd < 1:
         combined = a
     else:
-        combined = pd.dstack([combined,a])
+        combined = np.dstack([combined,a])
     
 sim_BPA_hydro=combined
 sim_BPA_hydro=np.sum(sim_BPA_hydro,axis=1)/24
@@ -1976,6 +1976,7 @@ CDD_wind_sim=CDD_wind_sim[365:len(CDD_wind_sim)-730]
 
 
 for d in range(0,effect_sim_year*365-f_horizon):
+    print('PNW Paths %d' % d)
     
     collect_data=np.column_stack((sim_month[d:d+f_horizon],sim_day[d:d+f_horizon],sim_year[d:d+f_horizon],np.zeros(f_horizon),np.zeros(f_horizon),np.zeros(f_horizon),sim_wind_daily[d:d+f_horizon],sim_BPA_hydro[d,:],sim_dow[d:d+f_horizon]))
     collect_data_2=np.column_stack((HDD_sim[d:d+f_horizon],CDD_sim[d:d+f_horizon],HDD_wind_sim[d:d+f_horizon],CDD_wind_sim[d:d+f_horizon]))
@@ -2187,7 +2188,9 @@ CDD_wind_sim=CDD_wind_sim[365:len(CDD_wind_sim)-730]
 
 for d in range(0,effect_sim_year*365-f_horizon):
     
-    collect_data=np.column_stack((sim_month[d:d+f_horizon],sim_day[d:d+f_horizon],sim_year[d:d+f_horizon],np.zeros(f_horizon),np.zeros(f_horizon),sim_wind_daily[d:d+f_horizon],sim_BPA_hydro[d,:],syn_Path3[:,d],syn_Path8[:,d],syn_Path14[:,d],sim_dow[d:d+f_horizon]))
+    print('Paths 65 & 66 %d' % d)
+    
+    collect_data=np.column_stack((sim_month[d:d+f_horizon],sim_day[d:d+f_horizon],sim_year[d:d+f_horizon],np.zeros(f_horizon),np.zeros(f_horizon),sim_wind_daily[d:d+f_horizon],sim_BPA_hydro[d,:],syn_3M[:,d],syn_8M[:,d],syn_14M[:,d],sim_dow[d:d+f_horizon]))
     collect_data_2=np.column_stack((HDD_sim[d:d+f_horizon],CDD_sim[d:d+f_horizon],HDD_wind_sim[d:d+f_horizon],CDD_wind_sim[d:d+f_horizon]))
     Combined=np.column_stack((collect_data,collect_data_2))
 
@@ -2379,7 +2382,9 @@ sim_Hoover = sim_Hoover[:effect_sim_year*365]
 
 for d in range(0,effect_sim_year*365-f_horizon):
 
-    collect_data=np.column_stack((sim_month[d:d+f_horizon],sim_day[d:d+f_horizon],sim_year[d:d+f_horizon],np.zeros(f_horizon),sim_dow[d:d+f_horizon],sim_Hoover[d:d+f_horizon],syn_Path65[:,d],syn_Path66[:,d]))
+    print('Path 46 %d' % d)
+
+    collect_data=np.column_stack((sim_month[d:d+f_horizon],sim_day[d:d+f_horizon],sim_year[d:d+f_horizon],np.zeros(f_horizon),sim_dow[d:d+f_horizon],sim_Hoover[d:d+f_horizon],syn_65M[:,d],syn_66M[:,d]))
     collect_data_2=np.column_stack((HDD_sim[d:d+f_horizon],CDD_sim[d:d+f_horizon],HDD_wind_sim[d:d+f_horizon],CDD_wind_sim[d:d+f_horizon]))
     Combined=np.column_stack((collect_data,collect_data_2))
     df_data_sim = pd.DataFrame(Combined)
@@ -2535,7 +2540,9 @@ CDD_wind_sim=CDD_wind_sim[365:len(CDD_wind_sim)-730]
 
 for d in range(0,effect_sim_year*365-f_horizon):
     
-    collect_data=np.column_stack((sim_month[d:d+f_horizon],sim_day[d:d+f_horizon],sim_year[d:d+f_horizon],np.zeros(f_horizon),np.zeros(f_horizon),np.zeros(f_horizon),np.zeros(f_horizon),sim_wind_daily[d:d+f_horizon],sim_BPA_hydro[d,:],sim_dow[d:d+f_horizon],syn_Path46[:,d],sim_Hoover[d:d+f_horizon],syn_Path65[:,d],syn_Path66[:,d]))
+    print('Other CA Paths %d' % d)
+    
+    collect_data=np.column_stack((sim_month[d:d+f_horizon],sim_day[d:d+f_horizon],sim_year[d:d+f_horizon],np.zeros(f_horizon),np.zeros(f_horizon),np.zeros(f_horizon),np.zeros(f_horizon),sim_wind_daily[d:d+f_horizon],sim_BPA_hydro[d,:],sim_dow[d:d+f_horizon],syn_46M[:,d],sim_Hoover[d:d+f_horizon],syn_65M[:,d],syn_66M[:,d]))
     collect_data_2=np.column_stack((HDD_sim[d:d+f_horizon],CDD_sim[d:d+f_horizon],HDD_wind_sim[d:d+f_horizon],CDD_wind_sim[d:d+f_horizon]))
     Combined=np.column_stack((collect_data,collect_data_2))
     df_data_sim = pd.DataFrame(Combined)
@@ -2732,109 +2739,163 @@ Demand_Path['SCE_Load_sim']= syn_SCE.tolist()
 Demand_Path['PGEV_Load_sim']= syn_PGEV.tolist()
 Demand_Path['PGEB_Load_sim']=syn_PGEB.tolist()
 
-Demand_Path['Path8_sim']=syn_Path8.tolist()
-Demand_Path['Path3_sim']=syn_Path3.tolist()
-Demand_Path['Path14_sim']=syn_Path14.tolist()
-Demand_Path['Path65_sim']=syn_Path65.tolist()
-Demand_Path['Path66_sim']=syn_Path66.tolist()
-Demand_Path['Path46_sim']=syn_Path46.tolist()
-Demand_Path['Path61_sim']=syn_Path61.tolist()
-Demand_Path['Path42_sim']=syn_Path42.tolist()
-Demand_Path['Path24_sim']=syn_Path24.tolist()
-Demand_Path['Path45_sim']=syn_Path45.tolist()
+#Forecast analysis
+sum_variable = syn_66M
+TG = sum_variable
+r,c = np.shape(TG)
+differences=np.zeros((c-f_horizon+1,f_horizon))
+for i in range(0,c-f_horizon+1):
+    differences[i,:] = (TG[:,i] - TG[0,i:i+f_horizon])/1000
 
-Demand_Path.to_csv('Synthetic_demand_pathflows/Load_Path_Sim.csv')
-
-######################################################################
-##                         Hourly Demand Simulation
-######################################################################
-#
-BPA_profile = np.zeros((24,365))
-SDGE_profile = np.zeros((24,365))
-SCE_profile = np.zeros((24,365))
-PGEV_profile = np.zeros((24,365))
-PGEB_profile = np.zeros((24,365))
-
-# number of historical days
-hist_days = len(SCE_load)/24
-hist_years = int(hist_days/365)
-sim_years = int(len(sim_weather)/365)
-
-# create profiles
-for i in range(0,hist_years):
-    for j in range(0,365):
-        
-        # pull 24 hours of demand
-        BPA_sample = BPA_load[i*8760+j*24:i*8760+j*24+24]
-        SDGE_sample = SDGE_load[i*8760+j*24:i*8760+j*24+24]
-        SCE_sample = SCE_load[i*8760+j*24:i*8760+j*24+24]
-        PGEV_sample = PGEV_load[i*8760+j*24:i*8760+j*24+24]
-        PGEB_sample = PGEB_load[i*8760+j*24:i*8760+j*24+24]
-        
-        # create fractional profile (relative to peak demand)
-        sample_peak = np.max(BPA_sample)
-        BPA_fraction = BPA_sample/sample_peak
-        BPA_profile[:,j] = BPA_profile[:,j] + BPA_fraction*(1/hist_years)
- 
-        sample_peak = np.max(SDGE_sample)
-        SDGE_fraction = SDGE_sample/sample_peak
-        SDGE_profile[:,j] = SDGE_profile[:,j] + SDGE_fraction*(1/hist_years)
-
-        sample_peak = np.max(SCE_sample)
-        SCE_fraction = SCE_sample/sample_peak
-        SCE_profile[:,j] = SCE_profile[:,j] + SCE_fraction*(1/hist_years)
-
-        sample_peak = np.max(PGEV_sample)
-        PGEV_fraction = PGEV_sample/sample_peak
-        PGEV_profile[:,j] = PGEV_profile[:,j] + PGEV_fraction*(1/hist_years) 
-        
-        sample_peak = np.max(PGEB_sample)
-        PGEB_fraction = PGEB_sample/sample_peak
-        PGEB_profile[:,j] = PGEB_profile[:,j] + PGEB_fraction*(1/hist_years)        
-        
-# simulate using synthetic peaks
-BPA_hourly = np.zeros((8760*effect_sim_year,1))
-SDGE_hourly = np.zeros((8760*effect_sim_year,1))
-SCE_hourly = np.zeros((8760*effect_sim_year,1))
-PGEV_hourly = np.zeros((8760*effect_sim_year,1))
-PGEB_hourly = np.zeros((8760*effect_sim_year,1))
-PNW_hourly = np.zeros((8760*effect_sim_year,1))
-
-for i in range(0,effect_sim_year):
-    for j in range(0,365):
-        v = syn_BPA[i*365+j]*BPA_profile[:,j]
-        a = np.reshape(v,(24,1))
-        BPA_hourly[i*8760+24*j:i*8760+24*j+24] = a
-        
-        v = syn_SDGE[i*365+j]*SDGE_profile[:,j]
-        a = np.reshape(v,(24,1))
-        SDGE_hourly[i*8760+24*j:i*8760+24*j+24] = a
-        
-        v = syn_SCE[i*365+j]*SCE_profile[:,j]
-        a = np.reshape(v,(24,1))
-        SCE_hourly[i*8760+24*j:i*8760+24*j+24] = a
-        
-        v = syn_PGEV[i*365+j]*PGEV_profile[:,j]
-        a = np.reshape(v,(24,1))
-        PGEV_hourly[i*8760+24*j:i*8760+24*j+24] = a
-        
-        v = syn_PGEB[i*365+j]*PGEB_profile[:,j]
-        a = np.reshape(v,(24,1))
-        PGEB_hourly[i*8760+24*j:i*8760+24*j+24] = a
-        
-#Scale BPA demand up to PNW region wide total
-import PNW_demand_scaling
-
-for i in range(0,effect_sim_year):
+month_ID = np.zeros(((effect_sim_year+3)*365,1))
+for i in range(0,effect_sim_year+3):
+    month_ID[i*365+0:i*365+31] = 1
+    month_ID[i*365+31:i*365+59]=2
+    month_ID[i*365+59:i*365+90]=3
+    month_ID[i*365+90:i*365+120]=4
+    month_ID[i*365+120:i*365+151]=5
+    month_ID[i*365+151:i*365+181]=6
+    month_ID[i*365+181:i*365+212]=7
+    month_ID[i*365+212:i*365+243]=8
+    month_ID[i*365+243:i*365+273]=9
+    month_ID[i*365+273:i*365+304]=10
+    month_ID[i*365+304:i*365+334]=11
+    month_ID[i*365+334:i*365+365]=12
     
-    A = PNW_demand_scaling.PNW_demand(BPA_hourly[i*8760:i*8760+8760,0])
-    B = np.reshape(A[:,None],(8760,1))
-    PNW_hourly[i*8760:i*8760+8760] = B
+month_ID = month_ID[0:len(differences)]
+    
+combined = np.column_stack((differences,month_ID))
+df_combined = pd.DataFrame(combined)
+df_combined.columns = ['1','2','3','4','5','6','7','Month']
 
-Combined = np.column_stack((BPA_hourly,PNW_hourly,SDGE_hourly,SCE_hourly,PGEV_hourly,PGEB_hourly))
-df_C = pd.DataFrame(Combined)
-df_C.columns = ['BPA','PNW','SDGE','SCE','PGE_valley','PGE_bay']
-df_C.to_csv('Synthetic_demand_pathflows/Sim_hourly_load.csv')
+plt.figure()
+#plt.style.use('default')
+
+months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+for i in range(0,12):
+    plt.subplot(4,3,i+1)
+    
+    month_selection = df_combined.loc[df_combined['Month']==i+1,:]
+    
+    for j in range(0,len(month_selection)):
+       
+        plt.plot(month_selection.iloc[j,0:f_horizon])
+        
+    if i ==6:
+        plt.ylabel('Difference (GWh)',fontweight='bold') 
+    if i == 10:
+        plt.xlabel('Forecast Horizon (Days)',fontweight='bold')
+    plt.title(months[i],fontweight='bold')
+    plt.ylim([-4,4])
+plt.subplots_adjust(wspace=0.6,hspace=1.2)
+
+plt.savefig('Path66_perfect_foresight.png', dpi=2000)
+
+#START HERE
+#
+#Demand_Path['Path8_sim']=syn_Path8.tolist()
+#Demand_Path['Path3_sim']=syn_Path3.tolist()
+#Demand_Path['Path14_sim']=syn_Path14.tolist()
+#Demand_Path['Path65_sim']=syn_Path65.tolist()
+#Demand_Path['Path66_sim']=syn_Path66.tolist()
+#Demand_Path['Path46_sim']=syn_Path46.tolist()
+#Demand_Path['Path61_sim']=syn_Path61.tolist()
+#Demand_Path['Path42_sim']=syn_Path42.tolist()
+#Demand_Path['Path24_sim']=syn_Path24.tolist()
+#Demand_Path['Path45_sim']=syn_Path45.tolist()
+#
+#Demand_Path.to_csv('Synthetic_demand_pathflows/Load_Path_Sim.csv')
+#
+#######################################################################
+###                         Hourly Demand Simulation
+#######################################################################
+##
+#BPA_profile = np.zeros((24,365))
+#SDGE_profile = np.zeros((24,365))
+#SCE_profile = np.zeros((24,365))
+#PGEV_profile = np.zeros((24,365))
+#PGEB_profile = np.zeros((24,365))
+#
+## number of historical days
+#hist_days = len(SCE_load)/24
+#hist_years = int(hist_days/365)
+#sim_years = int(len(sim_weather)/365)
+#
+## create profiles
+#for i in range(0,hist_years):
+#    for j in range(0,365):
+#        
+#        # pull 24 hours of demand
+#        BPA_sample = BPA_load[i*8760+j*24:i*8760+j*24+24]
+#        SDGE_sample = SDGE_load[i*8760+j*24:i*8760+j*24+24]
+#        SCE_sample = SCE_load[i*8760+j*24:i*8760+j*24+24]
+#        PGEV_sample = PGEV_load[i*8760+j*24:i*8760+j*24+24]
+#        PGEB_sample = PGEB_load[i*8760+j*24:i*8760+j*24+24]
+#        
+#        # create fractional profile (relative to peak demand)
+#        sample_peak = np.max(BPA_sample)
+#        BPA_fraction = BPA_sample/sample_peak
+#        BPA_profile[:,j] = BPA_profile[:,j] + BPA_fraction*(1/hist_years)
+# 
+#        sample_peak = np.max(SDGE_sample)
+#        SDGE_fraction = SDGE_sample/sample_peak
+#        SDGE_profile[:,j] = SDGE_profile[:,j] + SDGE_fraction*(1/hist_years)
+#
+#        sample_peak = np.max(SCE_sample)
+#        SCE_fraction = SCE_sample/sample_peak
+#        SCE_profile[:,j] = SCE_profile[:,j] + SCE_fraction*(1/hist_years)
+#
+#        sample_peak = np.max(PGEV_sample)
+#        PGEV_fraction = PGEV_sample/sample_peak
+#        PGEV_profile[:,j] = PGEV_profile[:,j] + PGEV_fraction*(1/hist_years) 
+#        
+#        sample_peak = np.max(PGEB_sample)
+#        PGEB_fraction = PGEB_sample/sample_peak
+#        PGEB_profile[:,j] = PGEB_profile[:,j] + PGEB_fraction*(1/hist_years)        
+#        
+## simulate using synthetic peaks
+#BPA_hourly = np.zeros((8760*effect_sim_year,1))
+#SDGE_hourly = np.zeros((8760*effect_sim_year,1))
+#SCE_hourly = np.zeros((8760*effect_sim_year,1))
+#PGEV_hourly = np.zeros((8760*effect_sim_year,1))
+#PGEB_hourly = np.zeros((8760*effect_sim_year,1))
+#PNW_hourly = np.zeros((8760*effect_sim_year,1))
+#
+#for i in range(0,effect_sim_year):
+#    for j in range(0,365):
+#        v = syn_BPA[i*365+j]*BPA_profile[:,j]
+#        a = np.reshape(v,(24,1))
+#        BPA_hourly[i*8760+24*j:i*8760+24*j+24] = a
+#        
+#        v = syn_SDGE[i*365+j]*SDGE_profile[:,j]
+#        a = np.reshape(v,(24,1))
+#        SDGE_hourly[i*8760+24*j:i*8760+24*j+24] = a
+#        
+#        v = syn_SCE[i*365+j]*SCE_profile[:,j]
+#        a = np.reshape(v,(24,1))
+#        SCE_hourly[i*8760+24*j:i*8760+24*j+24] = a
+#        
+#        v = syn_PGEV[i*365+j]*PGEV_profile[:,j]
+#        a = np.reshape(v,(24,1))
+#        PGEV_hourly[i*8760+24*j:i*8760+24*j+24] = a
+#        
+#        v = syn_PGEB[i*365+j]*PGEB_profile[:,j]
+#        a = np.reshape(v,(24,1))
+#        PGEB_hourly[i*8760+24*j:i*8760+24*j+24] = a
+#        
+##Scale BPA demand up to PNW region wide total
+#import PNW_demand_scaling
+#
+#for i in range(0,effect_sim_year):
+#    
+#    A = PNW_demand_scaling.PNW_demand(BPA_hourly[i*8760:i*8760+8760,0])
+#    B = np.reshape(A[:,None],(8760,1))
+#    PNW_hourly[i*8760:i*8760+8760] = B
+#
+#Combined = np.column_stack((BPA_hourly,PNW_hourly,SDGE_hourly,SCE_hourly,PGEV_hourly,PGEB_hourly))
+#df_C = pd.DataFrame(Combined)
+#df_C.columns = ['BPA','PNW','SDGE','SCE','PGE_valley','PGE_bay']
+#df_C.to_csv('Synthetic_demand_pathflows/Sim_hourly_load.csv')
 
 #plt.figure()
 #sns.distplot(NWPaths_y[:,0], color="skyblue", label="Hist")

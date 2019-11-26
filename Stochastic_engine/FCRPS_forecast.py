@@ -3572,6 +3572,11 @@ plt.savefig('FCRPS_perfect_foresight.png', dpi=2000)
 ##
 ##Total_sum.to_excel('PNW_hydro/PNW_hydro_daily.xlsx') #to be used in the dispatch
 ##np.savetxt('PNW_hydro/FCRPS/BPA_owned_dams.csv',BPA,delimiter=',') #to be used for BPA revenue
-##np.savetxt('PNW_hydro/FCRPS/Path_dams.csv',Path_dams,delimiter=',') #to be used for path transmission estimation
+
+for fd in range(0,f_horizon):
+    df = pd.DataFrame(Path_dams[:,:,fd])
+    filename = 'PNW_hydro/FCRPS/Path_dams_forecast_%d.xlsx' % int(fd)
+    df.to_excel(filename)
+
 ##np.savetxt('PNW_hydro/FCRPS/Total_PNW_dams.csv',Total_generation,delimiter=',') #same as dispatch but single dams
 ##np.savetxt('PNW_hydro/FCRPS/generation.csv',generation,delimiter=',') #all modeled dams and unmodeled sum
