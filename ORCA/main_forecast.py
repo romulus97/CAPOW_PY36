@@ -183,7 +183,7 @@ for k in range(start, stop):
     noresR = np.zeros((timeseries_length,f_horizon,len(noresnames)))
     soresR = np.zeros((timeseries_length,f_horizon,len(soresnames)))
            
-    for t in range(0, 10):
+    for t in range(0, timeseries_length-6):
       if (t % 365 == 364):
         print('Year ', (t+1)/365, ', ', datetime.now() - startTime)
         sys.stdout.flush()
@@ -441,8 +441,7 @@ for k in range(start, stop):
                   Bno.delta.eastside_streams[t+d] = Bno.delta.eastside_streams[t]
                   Bno.delta.ccc[t+d] = Bno.delta.ccc[t]
                   Bno.delta.barkerslough[t+d] = Bno.delta.barkerslough[t]
-           
-            
+             
           else:
               
               swp_pumping, cvp_pumping, swp_alloc, cvp_alloc, proj_surplus, max_pumping, swp_forgo, cvp_forgo, swp_AF, cvp_AF, swp_AS, cvp_AS, flood_release, flood_volume = Bno.simulate_north(t, swp_release, cvp_release, swp_release2, cvp_release2, swp_pump, cvp_pump)

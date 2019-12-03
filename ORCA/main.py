@@ -178,190 +178,32 @@ for k in range(start, stop):
     
     # output
     noresR = np.zeros((timeseries_length,len(noresnames)))
-    soresR = np.zeros((timeseries_length,f_horizon,len(soresnames)))
+    soresR = np.zeros((timeseries_length,len(soresnames)))
            
     for t in range(0, timeseries_length):
       if (t % 365 == 364):
         print('Year ', (t+1)/365, ', ', datetime.now() - startTime)
         sys.stdout.flush()
+
+      # the northern model takes variables from the southern model as inputs (initialized above), & outputs are used as input variables in the southern model
+      swp_pumping, cvp_pumping, swp_alloc, cvp_alloc, proj_surplus, max_pumping, swp_forgo, cvp_forgo, swp_AF, cvp_AF, swp_AS, cvp_AS, flood_release, flood_volume = modelno.simulate_north(t, swp_release, cvp_release, swp_release2, cvp_release2, swp_pump, cvp_pump)        
+      swp_release, cvp_release, swp_release2, cvp_release2, swp_pump, cvp_pump = modelso.simulate_south(t, swp_pumping, cvp_pumping, swp_alloc, cvp_alloc, proj_surplus, max_pumping, swp_forgo, cvp_forgo, swp_AF, cvp_AF, swp_AS, cvp_AS, modelno.delta.forecastSJWYT, modelno.delta.max_tax_free, flood_release, flood_volume)
+                   
+      noresR[t,0] = modelno.shasta.R[t]
+      noresR[t,1] = modelno.oroville.R[t]
+      noresR[t,2] = modelno.yuba.R[t]
+      noresR[t,3] = modelno.folsom.R[t]
+      noresR[t,4] = modelno.newmelones.R[t]
+      noresR[t,5] = modelno.donpedro.R[t]
+      noresR[t,6] = modelno.exchequer.R[t]
       
-        
-      for fd in range(0,f_horizon):
-         
-          if t < 1 and fd < 1:
-
-              # the northern model takes variables from the southern model as inputs (initialized above), & outputs are used as input variables in the southern model
-              swp_pumping, cvp_pumping, swp_alloc, cvp_alloc, proj_surplus, max_pumping, swp_forgo, cvp_forgo, swp_AF, cvp_AF, swp_AS, cvp_AS, flood_release, flood_volume = modelno.simulate_north(t, swp_release, cvp_release, swp_release2, cvp_release2, swp_pump, cvp_pump)        
-              swp_release, cvp_release, swp_release2, cvp_release2, swp_pump, cvp_pump = modelso.simulate_south(t, swp_pumping, cvp_pumping, swp_alloc, cvp_alloc, proj_surplus, max_pumping, swp_forgo, cvp_forgo, swp_AF, cvp_AF, swp_AS, cvp_AS, modelno.delta.forecastSJWYT, modelno.delta.max_tax_free, flood_release, flood_volume)
-              
-              Aso = copy.deepcopy(modelso)
-              Bno = copy.deepcopy(modelno)
-              
-              noresR[t,fd,0] = Bno.shasta.R[t]
-              noresR[t,fd,1] = Bno.oroville.R[t]
-              noresR[t,fd,2] = Bno.yuba.R[t]
-              noresR[t,fd,3] = Bno.folsom.R[t]
-              noresR[t,fd,4] = Bno.newmelones.R[t]
-              noresR[t,fd,5] = Bno.donpedro.R[t]
-              noresR[t,fd,6] = Bno.exchequer.R[t]
-              
-              soresR[t,fd,0] = Aso.millerton.R[t]
-              soresR[t,fd,1] = Aso.isabella.R[t]
-              soresR[t,fd,2] = Aso.success.R[t]
-              soresR[t,fd,3] = Aso.kaweah.R[t]
-              soresR[t,fd,4] = Aso.pineflat.R[t]
+      soresR[t,0] = modelso.millerton.R[t]
+      soresR[t,1] = modelso.isabella.R[t]
+      soresR[t,2] = modelso.success.R[t]
+      soresR[t,3] = modelso.kaweah.R[t]
+      soresR[t,4] = modelso.pineflat.R[t]
  
-              for d in range(1,f_horizon):
                   
-                  Bno.shasta.Q[t+d] = Bno.shasta.Q[t]
-                  Bno.shasta.E[t+d] = Bno.shasta.E[t]
-                  Bno.shasta.SNPK[t+d] = Bno.shasta.SNPK[t]
-                  Bno.shasta.precip[t+d] = Bno.shasta.precip[t]
-                  Bno.shasta.downstream[t+d] = Bno.shasta.downstream[t]
-                  Bno.shasta.fnf[t+d] = Bno.shasta.fnf[t]
-
-                  Bno.oroville.Q[t+d] = Bno.oroville.Q[t]
-                  Bno.oroville.E[t+d] = Bno.oroville.E[t]
-                  Bno.oroville.SNPK[t+d] = Bno.oroville.SNPK[t]
-                  Bno.oroville.precip[t+d] = Bno.oroville.precip[t]
-                  Bno.oroville.downstream[t+d] = Bno.oroville.downstream[t]
-                  Bno.oroville.fnf[t+d] = Bno.oroville.fnf[t]
-
-                  Bno.yuba.Q[t+d] = Bno.yuba.Q[t]
-                  Bno.yuba.E[t+d] = Bno.yuba.E[t]
-                  Bno.yuba.SNPK[t+d] = Bno.yuba.SNPK[t]
-                  Bno.yuba.precip[t+d] = Bno.yuba.precip[t]
-                  Bno.yuba.downstream[t+d] = Bno.yuba.downstream[t]
-                  Bno.yuba.fnf[t+d] = Bno.yuba.fnf[t]
-
-                  Bno.folsom.Q[t+d] = Bno.folsom.Q[t]
-                  Bno.folsom.E[t+d] = Bno.folsom.E[t]
-                  Bno.folsom.SNPK[t+d] = Bno.folsom.SNPK[t]
-                  Bno.folsom.precip[t+d] = Bno.folsom.precip[t]
-                  Bno.folsom.downstream[t+d] = Bno.folsom.downstream[t]
-                  Bno.folsom.fnf[t+d] = Bno.folsom.fnf[t]
-
-                  Bno.newmelones.Q[t+d] = Bno.newmelones.Q[t]
-                  Bno.newmelones.E[t+d] = Bno.newmelones.E[t]
-                  Bno.newmelones.SNPK[t+d] = Bno.newmelones.SNPK[t]
-                  Bno.newmelones.precip[t+d] = Bno.newmelones.precip[t]
-                  Bno.newmelones.downstream[t+d] = Bno.newmelones.downstream[t]
-                  Bno.newmelones.fnf[t+d] = Bno.newmelones.fnf[t]
-
-                  Bno.donpedro.Q[t+d] = Bno.donpedro.Q[t]
-                  Bno.donpedro.E[t+d] = Bno.donpedro.E[t]
-                  Bno.donpedro.SNPK[t+d] = Bno.donpedro.SNPK[t]
-                  Bno.donpedro.precip[t+d] = Bno.donpedro.precip[t]
-                  Bno.donpedro.downstream[t+d] = Bno.donpedro.downstream[t]
-                  Bno.donpedro.fnf[t+d] = Bno.donpedro.fnf[t]
-
-                  Bno.exchequer.Q[t+d] = Bno.exchequer.Q[t]
-                  Bno.exchequer.E[t+d] = Bno.exchequer.E[t]
-                  Bno.exchequer.SNPK[t+d] = Bno.exchequer.SNPK[t]
-                  Bno.exchequer.precip[t+d] = Bno.exchequer.precip[t]
-                  Bno.exchequer.downstream[t+d] = Bno.exchequer.downstream[t]
-                  Bno.exchequer.fnf[t+d] = Bno.exchequer.fnf[t]   
-                  
-                  Aso.millerton.Q[t+d] = Aso.millerton.Q[t]
-                  Aso.millerton.E[t+d] = Aso.millerton.E[t]
-                  Aso.millerton.SNPK[t+d] = Aso.millerton.SNPK[t]
-                  Aso.millerton.precip[t+d] = Aso.millerton.precip[t]
-                  Aso.millerton.downstream[t+d] = Aso.millerton.downstream[t]
-                  Aso.millerton.fnf[t+d] = Aso.millerton.fnf[t] 
-                  
-                  Aso.isabella.Q[t+d] = Aso.isabella.Q[t]
-                  Aso.isabella.E[t+d] = Aso.isabella.E[t]
-                  Aso.isabella.SNPK[t+d] = Aso.isabella.SNPK[t]
-                  Aso.isabella.precip[t+d] = Aso.isabella.precip[t]
-                  Aso.isabella.downstream[t+d] = Aso.isabella.downstream[t]
-                  Aso.isabella.fnf[t+d] = Aso.isabella.fnf[t] 
-                  
-                  Aso.success.Q[t+d] = Aso.success.Q[t]
-                  Aso.success.E[t+d] = Aso.success.E[t]
-                  Aso.success.SNPK[t+d] = Aso.success.SNPK[t]
-                  Aso.success.precip[t+d] = Aso.success.precip[t]
-                  Aso.success.downstream[t+d] = Aso.success.downstream[t]
-                  Aso.success.fnf[t+d] = Aso.success.fnf[t] 
-                  
-                  Aso.kaweah.Q[t+d] = Aso.kaweah.Q[t]
-                  Aso.kaweah.E[t+d] = Aso.kaweah.E[t]
-                  Aso.kaweah.SNPK[t+d] = Aso.kaweah.SNPK[t]
-                  Aso.kaweah.precip[t+d] = Aso.kaweah.precip[t]
-                  Aso.kaweah.downstream[t+d] = Aso.kaweah.downstream[t]
-                  Aso.kaweah.fnf[t+d] = Aso.kaweah.fnf[t] 
-                  
-                  Aso.pineflat.Q[t+d] = Aso.pineflat.Q[t]
-                  Aso.pineflat.E[t+d] = Aso.pineflat.E[t]
-                  Aso.pineflat.SNPK[t+d] = Aso.pineflat.SNPK[t]
-                  Aso.pineflat.precip[t+d] = Aso.pineflat.precip[t]
-                  Aso.pineflat.downstream[t+d] = Aso.pineflat.downstream[t]
-                  Aso.pineflat.fnf[t+d] = Aso.pineflat.fnf[t] 
-                  
-                  Bno.delta.gains_sac[t+d] = Bno.delta.gains_sac[t]
-                  Bno.delta.gains_sj[t+d] = Bno.delta.gains_sj[t]
-                  Bno.delta.depletions[t+d] = Bno.delta.depletions[t]
-                  Bno.delta.eastside_streams[t+d] = Bno.delta.eastside_streams[t]
-                  Bno.delta.ccc[t+d] = Bno.delta.ccc[t]
-                  Bno.delta.barkerslough[t+d] = Bno.delta.barkerslough[t]
-                  
-          elif t < 1 and fd > 1:
-                          
-              
-              swp_pumping, cvp_pumping, swp_alloc, cvp_alloc, proj_surplus, max_pumping, swp_forgo, cvp_forgo, swp_AF, cvp_AF, swp_AS, cvp_AS, flood_release, flood_volume = Bno.simulate_north(t, swp_release, cvp_release, swp_release2, cvp_release2, swp_pump, cvp_pump)
-              swp_release, cvp_release, swp_release2, cvp_release2, swp_pump, cvp_pump = Aso.simulate_south(t, swp_pumping, cvp_pumping, swp_alloc, cvp_alloc, proj_surplus, max_pumping, swp_forgo, cvp_forgo, swp_AF, cvp_AF, swp_AS, cvp_AS, modelno.delta.forecastSJWYT, modelno.delta.max_tax_free, flood_release, flood_volume)
-              
-              for r in noresnames:
-                  r_index = noresnames.index(r)
-                  noresR[t,fd,r_index] = Bno.__getattribute__(r).R[t]
-              
-              for r in soresnames:
-                  r_index = soresnames.index(r)
-                  soresR[t,fd,r_index] = Aso.__getattribute__(r).R[t]              
-              
-          elif t > 1 and fd < 1:
-             
-              swp_pumping, cvp_pumping, swp_alloc, cvp_alloc, proj_surplus, max_pumping, swp_forgo, cvp_forgo, swp_AF, cvp_AF, swp_AS, cvp_AS, flood_release, flood_volume = modelno.simulate_north(t, swp_release, cvp_release, swp_release2, cvp_release2, swp_pump, cvp_pump)
-              swp_release, cvp_release, swp_release2, cvp_release2, swp_pump, cvp_pump = modelso.simulate_south(t, swp_pumping, cvp_pumping, swp_alloc, cvp_alloc, proj_surplus, max_pumping, swp_forgo, cvp_forgo, swp_AF, cvp_AF, swp_AS, cvp_AS, modelno.delta.forecastSJWYT, modelno.delta.max_tax_free, flood_release, flood_volume)
-
-              Aso = copy.deepcopy(modelso)
-              Bno = copy.deepcopy(modelno)
-              
-              for r in noresnames:
-                  r_index = noresnames.index(r)
-                  noresR[t,fd,r_index] = Bno.__getattribute__(r).R[t]
-              
-              for r in soresnames:
-                  r_index = soresnames.index(r)
-                  soresR[t,fd,r_index] = Aso.__getattribute__(r).R[t]
-              
-              for r in noresnames:
-                  for n in res_params:
-                      for d in range(1,7):
-                          Bno.__getattribute__(r).__getattribute__(n)[t+d] = modelno.__getattribute__(r).__getattribute__(n)[t]
-              for r in soresnames:
-                  for n in res_params:
-                      for d in range(1,7):
-                          Aso.__getattribute__(r).__getattribute__(n)[t+d] = modelso.__getattribute__(r).__getattribute__(n)[t]
-              for n in delta_params:
-                  for d in range(1,7):
-                      Bno.delta.__getattribute__(n)[t+d] = modelno.delta.__getattribute__(n)[t]
-           
-            
-          else:
-              
-              swp_pumping, cvp_pumping, swp_alloc, cvp_alloc, proj_surplus, max_pumping, swp_forgo, cvp_forgo, swp_AF, cvp_AF, swp_AS, cvp_AS, flood_release, flood_volume = Bno.simulate_north(t, swp_release, cvp_release, swp_release2, cvp_release2, swp_pump, cvp_pump)
-              swp_release, cvp_release, swp_release2, cvp_release2, swp_pump, cvp_pump = Aso.simulate_south(t, swp_pumping, cvp_pumping, swp_alloc, cvp_alloc, proj_surplus, max_pumping, swp_forgo, cvp_forgo, swp_AF, cvp_AF, swp_AS, cvp_AS, Bno.delta.forecastSJWYT, Bno.delta.max_tax_free, flood_release, flood_volume)
-              
-              for r in noresnames:
-                  r_index = noresnames.index(r)
-                  noresR[t,fd,r_index] = Bno.__getattribute__(r).R[t]
-              
-              for r in soresnames:
-                  r_index = soresnames.index(r)
-                  soresR[t,fd,r_index] = Aso.__getattribute__(r).R[t]
-                  
-                  
-
               
 
 #    # for n in new_inputs.sensitivity_factors['factor_list']:
