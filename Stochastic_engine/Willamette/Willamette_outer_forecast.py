@@ -982,7 +982,7 @@ for i in range(0,12):
         plt.plot(month_selection.iloc[j,0:f_horizon])
         
     if i ==6:
-        plt.ylabel('Difference (GWh)',fontweight='bold') 
+        plt.ylabel('Difference (MWh)',fontweight='bold') 
     if i == 10:
         plt.xlabel('Forecast Horizon (Days)',fontweight='bold')
     plt.title(months[i],fontweight='bold')
