@@ -180,7 +180,8 @@ for k in range(start, stop):
     noresR = np.zeros((timeseries_length,len(noresnames)))
     soresR = np.zeros((timeseries_length,len(soresnames)))
            
-    for t in range(0, timeseries_length):
+    for t in range(0, 1000):
+      print(t)
       if (t % 365 == 364):
         print('Year ', (t+1)/365, ', ', datetime.now() - startTime)
         sys.stdout.flush()
@@ -203,8 +204,6 @@ for k in range(start, stop):
       soresR[t,3] = modelso.kaweah.R[t]
       soresR[t,4] = modelso.pineflat.R[t]
  
-                  
-              
 
 #    # for n in new_inputs.sensitivity_factors['factor_list']:
 #    #   param_df[n][k] = new_inputs.sensitivity_factors[n]['realization']
