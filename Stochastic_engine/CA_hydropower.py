@@ -13,17 +13,16 @@ import matplotlib.pyplot as plt
 
 def hydro(sim_years):
     
-#########################################################################
-# This purpose of this script is to use synthetic streamflows at major California
-# reservoir sites to simulate daily hydropower production for the PG&E and SCE 
-# zones of the California electricty market (CAISO), using parameters optimized
-# via a differential evolution algorithm. 
-#########################################################################
-    
-    
-    sim_years = sim_years + 3
+    #########################################################################
+    # This purpose of this script is to use synthetic streamflows at major California
+    # reservoir sites to simulate daily hydropower production for the PG&E and SCE 
+    # zones of the California electricty market (CAISO), using parameters optimized
+    # via a differential evolution algorithm. 
+    #########################################################################
+        
+        
     # load California storage reservoir (ORCA) sites
-    df_sites = pd.read_excel('CA_hydropower/sites.xlsx',sheetname = 'ORCA',header=0)
+    df_sites = pd.read_excel('CA_hydropower/sites.xlsx',sheet_name = 'ORCA',header=0)
     ORCA_sites = list(df_sites)
     
     # load upper generation amounts for each predicted hydropower dam (PG&E and SCE)
@@ -33,7 +32,18 @@ def hydro(sim_years):
     calender = pd.read_excel('CA_hydropower/calender.xlsx',header=0)
     
     # load simulated full natural flows at each California storage reservoir (ORCA site)
-    df_sim = pd.read_csv('Synthetic_streamflows/synthetic_streamflows_CA.csv',header=0)
+    df_sim = pd.read_csv('Synthetic_streamflows/synthetic_streamflows_CA.csv',header=0,index_col=0)
+    df_sim = df_sim.loc[365:len(df_sim)-731,:]
+    df_sim = df_sim.reset_index(drop=True)
+    
+    sim_years = int(len(df_sim)/365)
+    
+    # load simulated outflows calculated by ORCA
+    df_ORCA = pd.read_csv('ORCA_output.csv')
+    outflow_sites = ['SHA_otf','ORO_otf','YRS_otf','FOL_otf','NML_otf','DNP_otf','EXC_otf','MIL_otf','ISB_otf','SUC_otf','KWH_otf','PFT_otf']
+    for i in range(0,len(df_sim)):       
+        for s in outflow_sites:
+            df_sim.loc[i,s] = df_ORCA.loc[i,s]
     
     #Add month and day columns to the dataframe
     Month = []
@@ -84,13 +94,13 @@ def hydro(sim_years):
         Rule_list.append(Rule)
     
     # PGE hydro projects
-    PGE_names = pd.read_excel('CA_hydropower/sites.xlsx',sheetname ='PGE',header=0)
+    PGE_names = pd.read_excel('CA_hydropower/sites.xlsx',sheet_name ='PGE',header=0)
     PGE_dams = list(PGE_names.loc[:,'Balch 1':])
     PGE_Storage=[PGE_dams[3],PGE_dams[7],PGE_dams[8],PGE_dams[9]]
     PGE_No_Data_Dams=[PGE_dams[2],PGE_dams[4],PGE_dams[10],PGE_dams[11],PGE_dams[15],PGE_dams[16],PGE_dams[17],PGE_dams[26],PGE_dams[30],PGE_dams[38],PGE_dams[39],PGE_dams[55],PGE_dams[60],PGE_dams[65]]
     
     ## SCE hydro projects
-    SCE_names = pd.read_excel('CA_hydropower/sites.xlsx',sheetname ='SCE',header=0)
+    SCE_names = pd.read_excel('CA_hydropower/sites.xlsx',sheet_name ='SCE',header=0)
     SCE_dams = list(SCE_names.loc[:,'Big_Creek_1 ':])
     SCE_No_Data_Dams=[SCE_dams[7],SCE_dams[8],SCE_dams[12]]
     
@@ -583,13 +593,13 @@ def hydro(sim_years):
     zones = ['PGE','SCE']
     Totals.columns = zones
     
-    # Convert to daily, cut 1st and last 2 years
-    sim_years2 = sim_years - 3
+    # Convert to daily, cut last year
+    sim_years2 = sim_years-1
     daily = np.zeros((sim_years2*365,2))
     for i in range(0,sim_years2):
         for z in zones:
             z_index = zones.index(z)
-            s = Totals.loc[(i+1)*52:(i+1)*52+52,z].values
+            s = Totals.loc[(i)*52:(i)*52+52,z].values
             for w in range(0,52):
                 daily[i*365+w*7:i*365+w*7+7,z_index] = s[w]/7
             daily[i*365+364,z_index] =  daily[i*365+w*7+6,z_index]

@@ -490,7 +490,7 @@ def wind_sim(sim_years, PNW_cap, CAISO_cap):
     BPA = PNW_cap*sim_hourly[:,0]
     CAISO = CAISO_cap*sim_hourly[:,1]
     
-    #remove 1st and last year
+    #remove 1st year and last 2 years
     h = int(len(BPA))
     BPA = BPA[8760:h-2*8760]
     CAISO = CAISO[8760:h-2*8760]

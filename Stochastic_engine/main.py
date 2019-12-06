@@ -180,7 +180,7 @@ for k in range(start, stop):
     noresR = np.zeros((timeseries_length,len(noresnames)))
     soresR = np.zeros((timeseries_length,len(soresnames)))
            
-    for t in range(0, 1000):
+    for t in range(0,timeseries_length):
       print(t)
       if (t % 365 == 364):
         print('Year ', (t+1)/365, ', ', datetime.now() - startTime)
@@ -203,6 +203,14 @@ for k in range(start, stop):
       soresR[t,2] = modelso.success.R[t]
       soresR[t,3] = modelso.kaweah.R[t]
       soresR[t,4] = modelso.pineflat.R[t]
+      
+      
+#convert from kAF to cfs      
+combined = np.column_stack((noresR*504.51198,soresR*504.51198))
+combined = combined[93:-273]
+df_combined = pd.DataFrame(combined)
+df_combined.columns = ['SHA_otf','ORO_otf','YRS_otf','FOL_otf','NML_otf','DNP_otf','EXC_otf','MIL_otf','ISB_otf','SUC_otf','KWH_otf','PFT_otf']
+df_combined.to_csv('ORCA_output.csv')
  
 
 #    # for n in new_inputs.sensitivity_factors['factor_list']:

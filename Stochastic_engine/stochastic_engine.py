@@ -20,7 +20,11 @@ starttime = time.time()
 # STOCHASTIC WEATHER AND STREAMFLOW GENERATION
 
 # Specify a number of synthetic years to be simulated 
-sim_years=100
+sim_years=2
+
+#NOTE: currently have to manually alter cord/data/input/baseflow_inputs.json file to 
+# account for correct number of simulation years. Should be simulation years + 3, starting
+# on 1/1/1901
 
 # Generate synthetic weather (wind speed and temperature) records. 
 import synthetic_temp_wind_v2
@@ -30,6 +34,11 @@ print('synth weather')
 # Generate synthetic streamflow records 
 import synthetic_streamflow_v2
 print('streamflows')
+
+# Run ORCA to get California storage dam releases
+import main
+print('ORCA')
+
 #############################################################################
 #
 #############################################################################

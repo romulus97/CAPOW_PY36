@@ -8,6 +8,7 @@ Created on Wed Mar 21 10:00:33 2018
 from __future__ import division
 from sklearn import linear_model
 from statsmodels.tsa.api import VAR
+import scipy.stats as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -26,7 +27,9 @@ CAISO_weights = pd.read_excel('Synthetic_demand_pathflows/hist_demanddata.xlsx',
 Name_list=pd.read_csv('Synthetic_demand_pathflows/Covariance_Calculation.csv')
 Name_list=list(Name_list.loc['SALEM_T':])
 Name_list=Name_list[1:]
-sim_weather=pd.read_csv('Synthetic_weather/synthetic_weather_data.csv',header=0)
+sim_weather=pd.read_csv('Synthetic_weather/synthetic_weather_data.csv',header=0,index_col=0)
+sim_weather = sim_weather.loc[365:len(sim_weather)-731,:]
+sim_weather = sim_weather.reset_index(drop=True)
 
 #weekday designation
 dow = df_weather.loc[:,'Weekday']
@@ -267,8 +270,8 @@ for i in range(0,sim_days):
     simulated = np.append(simulated,y_hat)
     BPA_sim = simulated.reshape((len(simulated),1))  
     
-#a=st.pearsonr(peaks,BPA_p)
-#print a[0]**2
+a=st.pearsonr(peaks,BPA_p)
+print(a[0]**2, a[1])
 
 # Residuals
 BPAresiduals = BPA_p - peaks
@@ -755,8 +758,8 @@ for i in range(0,sim_days):
     simulated = np.append(simulated,y_hat)
     PGEV_sim = simulated.reshape((len(simulated),1))    
 
-#a=st.pearsonr(peaks,PGEV_p)
-#print a[0]**2
+a=st.pearsonr(peaks,PGEV_p)
+print(a[0]**2, a[1])
 
 # Residuals
 PGEVresiduals = PGEV_p - peaks
@@ -1956,11 +1959,11 @@ sim_wind_daily = np.zeros((effect_sim_year*365,1))
 for i in range(0,effect_sim_year*365):
     sim_wind_daily[i] = np.sum((sim_BPA_wind_power.loc[i*24:i*24+24]))
 
-HDD_sim=HDD_sim[365:len(HDD_sim)-730]
-CDD_sim=CDD_sim[365:len(CDD_sim)-730]
-
-HDD_wind_sim=HDD_wind_sim[365:len(HDD_wind_sim)-730]
-CDD_wind_sim=CDD_wind_sim[365:len(CDD_wind_sim)-730]
+#HDD_sim=HDD_sim[730:len(HDD_sim)-730]
+#CDD_sim=CDD_sim[730:len(CDD_sim)-730]
+#
+#HDD_wind_sim=HDD_wind_sim[730:len(HDD_wind_sim)-730]
+#CDD_wind_sim=CDD_wind_sim[730:len(CDD_wind_sim)-730]
 
 
 collect_data=np.column_stack((sim_month,sim_day,sim_year,np.zeros(effect_sim_year*365),np.zeros(effect_sim_year*365),np.zeros(effect_sim_year*365),sim_wind_daily,sim_BPA_hydro,sim_dow))
@@ -2147,11 +2150,11 @@ binary_HDD_sim = HDD_sim > 0
 CDD_wind_sim = np.multiply(P6566_sim_W,binary_CDD_sim)
 HDD_wind_sim = np.multiply(P6566_sim_W,binary_HDD_sim)
 
-HDD_sim=HDD_sim[365:len(HDD_sim)-730]
-CDD_sim=CDD_sim[365:len(CDD_sim)-730]
-
-HDD_wind_sim=HDD_wind_sim[365:len(HDD_wind_sim)-730]
-CDD_wind_sim=CDD_wind_sim[365:len(CDD_wind_sim)-730]
+#HDD_sim=HDD_sim[730:len(HDD_sim)-730]
+#CDD_sim=CDD_sim[730:len(CDD_sim)-730]
+#
+#HDD_wind_sim=HDD_wind_sim[730:len(HDD_wind_sim)-730]
+#CDD_wind_sim=CDD_wind_sim[730:len(CDD_wind_sim)-730]
 
 
 collect_data=np.column_stack((sim_month,sim_day,sim_year,np.zeros(effect_sim_year*365),np.zeros(effect_sim_year*365),sim_wind_daily,sim_BPA_hydro,syn_Path3,syn_Path8,syn_Path14,sim_dow))
@@ -2322,11 +2325,11 @@ binary_HDD_sim = HDD_sim > 0
 CDD_wind_sim = np.multiply(P46_sim_W,binary_CDD_sim)
 HDD_wind_sim = np.multiply(P46_sim_W,binary_HDD_sim)
 
-HDD_sim=HDD_sim[365:len(HDD_sim)-730]
-CDD_sim=CDD_sim[365:len(CDD_sim)-730]
-
-HDD_wind_sim=HDD_wind_sim[365:len(HDD_wind_sim)-730]
-CDD_wind_sim=CDD_wind_sim[365:len(CDD_wind_sim)-730]
+#HDD_sim=HDD_sim[730:len(HDD_sim)-730]
+#CDD_sim=CDD_sim[730:len(CDD_sim)-730]
+#
+#HDD_wind_sim=HDD_wind_sim[730:len(HDD_wind_sim)-730]
+#CDD_wind_sim=CDD_wind_sim[730:len(CDD_wind_sim)-730]
 
 sim_Hoover = pd.read_csv('Synthetic_streamflows/synthetic_discharge_Hoover.csv',header=None)
 sim_Hoover=sim_Hoover.values
@@ -2471,11 +2474,11 @@ binary_HDD_sim = HDD_sim > 0
 CDD_wind_sim = np.multiply(CA_sim_W,binary_CDD_sim)
 HDD_wind_sim = np.multiply(CA_sim_W,binary_HDD_sim)
 
-HDD_sim=HDD_sim[365:len(HDD_sim)-730]
-CDD_sim=CDD_sim[365:len(CDD_sim)-730]
-
-HDD_wind_sim=HDD_wind_sim[365:len(HDD_wind_sim)-730]
-CDD_wind_sim=CDD_wind_sim[365:len(CDD_wind_sim)-730]
+#HDD_sim=HDD_sim[730:len(HDD_sim)-730]
+#CDD_sim=CDD_sim[730:len(CDD_sim)-730]
+#
+#HDD_wind_sim=HDD_wind_sim[730:len(HDD_wind_sim)-730]
+#CDD_wind_sim=CDD_wind_sim[730:len(CDD_wind_sim)-730]
 
 collect_data=np.column_stack((sim_month,sim_day,sim_year,np.zeros(effect_sim_year*365),np.zeros(effect_sim_year*365),np.zeros(effect_sim_year*365),np.zeros(effect_sim_year*365),sim_wind_daily,sim_BPA_hydro,sim_dow,syn_Path46,sim_Hoover,syn_Path65,syn_Path66))
 collect_data_2=np.column_stack((HDD_sim,CDD_sim,HDD_wind_sim,CDD_wind_sim))
@@ -2631,26 +2634,26 @@ syn_Path45 = syn_Path45 - bias
 
 ############################################################################
 syn_BPA= BPA_sim + np.reshape(syn_residuals[:,0],(len(BPA_sim),1))
-syn_BPA= syn_BPA[365:len(BPA_sim)-730]
+#syn_BPA= syn_BPA[365:len(BPA_sim)-730]
 syn_BPA=np.reshape(syn_BPA,(effect_sim_year*365))
 
 
 syn_SDGE= SDGE_sim + np.reshape(syn_residuals[:,1],(len(BPA_sim),1))
-syn_SDGE= syn_SDGE[365:len(BPA_sim)-730]
+#syn_SDGE= syn_SDGE[365:len(BPA_sim)-730]
 syn_SDGE=np.reshape(syn_SDGE,(effect_sim_year*365))
 
 
 syn_SCE= SCE_sim + np.reshape(syn_residuals[:,2],(len(BPA_sim),1))
-syn_SCE= syn_SCE[365:len(BPA_sim)-730]
+#syn_SCE= syn_SCE[365:len(BPA_sim)-730]
 syn_SCE=np.reshape(syn_SCE,(effect_sim_year*365))
 
 
 syn_PGEV= PGEV_sim + np.reshape(syn_residuals[:,3],(len(BPA_sim),1))
-syn_PGEV= syn_PGEV[365:len(BPA_sim)-730]
+#syn_PGEV= syn_PGEV[365:len(BPA_sim)-730]
 syn_PGEV=np.reshape(syn_PGEV,(effect_sim_year*365))
 
 syn_PGEB= PGEB_sim + np.reshape(syn_residuals[:,4],(len(BPA_sim),1))
-syn_PGEB= syn_PGEB[365:len(BPA_sim)-730]
+#syn_PGEB= syn_PGEB[365:len(BPA_sim)-730]
 syn_PGEB=np.reshape(syn_PGEB,(effect_sim_year*365))
 
 ###############################################################################

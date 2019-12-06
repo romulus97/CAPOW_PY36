@@ -495,3 +495,26 @@ CA=pd.DataFrame(output_CA,columns=name_CA)
 CA.to_csv('Synthetic_streamflows/synthetic_streamflows_CA.csv')
 Willamatte_Syn=pd.DataFrame(output_WI,columns=name_Will)
 Willamatte_Syn.to_csv('Synthetic_streamflows/synthetic_streamflows_Willamette.csv')
+
+#write CA synthetic flows to ORCA file
+leap_cycles = int(sim_years//4)
+r=np.shape(output_CA)
+for i in range(0,leap_cycles):
+    
+    if i < 1:
+        C = output_CA[0:1154,:]
+        B = np.empty((1,int(r[1])))
+        B[:] =np.nan
+        D = output_CA[i*1460+1154:i*1460+1154+1460]
+        F = np.vstack((C,B,D))
+    else:
+        D = output_CA[i*1460+1154:i*1460+1154+1460]      
+        F = np.vstack((F,B,D))
+        
+df_leap = pd.DataFrame(F,columns=name_CA)
+df_leap.to_csv('cord/data/input/forecast_flows.csv')
+
+        
+        
+    
+    
