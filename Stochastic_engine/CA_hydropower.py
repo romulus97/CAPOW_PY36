@@ -4,13 +4,13 @@ Created on Mon May 27 11:13:15 2019
 
 @author: jkern
 """
-
+    
 from __future__ import division
 import pandas as pd 
 import numpy as np
 from datetime import datetime
 import matplotlib.pyplot as plt
-
+    
 def hydro(sim_years):
     
     #########################################################################
@@ -33,17 +33,18 @@ def hydro(sim_years):
     
     # load simulated full natural flows at each California storage reservoir (ORCA site)
     df_sim = pd.read_csv('Synthetic_streamflows/synthetic_streamflows_CA.csv',header=0,index_col=0)
-    df_sim = df_sim.loc[365:len(df_sim)-731,:]
-    df_sim = df_sim.reset_index(drop=True)
-    
-    sim_years = int(len(df_sim)/365)
-    
+    df_sim = df_sim.loc[0:(sim_years+3)*365,:]
+    #    df_sim = df_sim.loc[365:len(df_sim)-731,:]
+    #    df_sim = df_sim.reset_index(drop=True)
+       
     # load simulated outflows calculated by ORCA
     df_ORCA = pd.read_csv('ORCA_output.csv')
     outflow_sites = ['SHA_otf','ORO_otf','YRS_otf','FOL_otf','NML_otf','DNP_otf','EXC_otf','MIL_otf','ISB_otf','SUC_otf','KWH_otf','PFT_otf']
-    for i in range(0,len(df_sim)):       
+    for i in range(0,len(df_ORCA)):       
         for s in outflow_sites:
             df_sim.loc[i,s] = df_ORCA.loc[i,s]
+            
+    sim_years = sim_years+3
     
     #Add month and day columns to the dataframe
     Month = []
@@ -593,13 +594,13 @@ def hydro(sim_years):
     zones = ['PGE','SCE']
     Totals.columns = zones
     
-    # Convert to daily, cut last year
-    sim_years2 = sim_years-1
+    # Convert to daily, cut first year and last two years
+    sim_years2 = sim_years-3
     daily = np.zeros((sim_years2*365,2))
     for i in range(0,sim_years2):
         for z in zones:
             z_index = zones.index(z)
-            s = Totals.loc[(i)*52:(i)*52+52,z].values
+            s = Totals.loc[(i+1)*52:(i+1)*52+52,z].values
             for w in range(0,52):
                 daily[i*365+w*7:i*365+w*7+7,z_index] = s[w]/7
             daily[i*365+364,z_index] =  daily[i*365+w*7+6,z_index]
@@ -607,7 +608,7 @@ def hydro(sim_years):
     df_D = pd.DataFrame(daily)
     df_D.columns = ['PGE_valley','SCE']
     df_D.to_excel('CA_hydropower/CA_hydro_daily.xlsx')
-
+    
     return None 
-
-
+    
+    

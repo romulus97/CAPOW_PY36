@@ -27,8 +27,12 @@ CAISO_weights = pd.read_excel('Synthetic_demand_pathflows/hist_demanddata.xlsx',
 Name_list=pd.read_csv('Synthetic_demand_pathflows/Covariance_Calculation.csv')
 Name_list=list(Name_list.loc['SALEM_T':])
 Name_list=Name_list[1:]
+
+df_wind=pd.read_csv('Synthetic_wind_power/wind_power_sim.csv',header=0)
+sim_years = int(len(df_wind)/8760) + 3
 sim_weather=pd.read_csv('Synthetic_weather/synthetic_weather_data.csv',header=0,index_col=0)
-sim_weather = sim_weather.loc[365:len(sim_weather)-731,:]
+sim_weather = sim_weather.iloc[0:365*sim_years,:]
+sim_weather = sim_weather.iloc[365:len(sim_weather)-730,:]
 sim_weather = sim_weather.reset_index(drop=True)
 
 #weekday designation
@@ -2767,6 +2771,7 @@ Combined = np.column_stack((BPA_hourly,PNW_hourly,SDGE_hourly,SCE_hourly,PGEV_ho
 df_C = pd.DataFrame(Combined)
 df_C.columns = ['BPA','PNW','SDGE','SCE','PGE_valley','PGE_bay']
 df_C.to_csv('Synthetic_demand_pathflows/Sim_hourly_load.csv')
+
 
 #plt.figure()
 #sns.distplot(NWPaths_y[:,0], color="skyblue", label="Hist")

@@ -114,9 +114,9 @@ def wind_sim(sim_years, PNW_cap, CAISO_cap):
     #pull relevant fields (not all meteorological stations are used in regressions)
     S = list(df_data)
     fields = S[5:]
-    
     df_sim = pd.read_csv('Synthetic_weather/synthetic_weather_data.csv',header=0)
     df_sim = df_sim[fields]
+    df_sim = df_sim.loc[0:365*sim_years-1,:]
     
     # add calender to synthetic weather data
     calender = pd.read_excel('Synthetic_wind_power/calender.xlsx',header=0)

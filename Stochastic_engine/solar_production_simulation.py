@@ -109,7 +109,8 @@ def solar_sim(sim_years,cap):
         
         
     Syn_irr=pd.read_csv('Synthetic_weather/synthetic_irradiance_data.csv',header=0,index_col=0)
-   
+    Syn_irr = Syn_irr.loc[0:365*sim_years-1,:]
+    
     Normal_Starting=datetime(1900,1,1)
     
     datelist=pd.date_range(Normal_Starting,periods=365)

@@ -27,191 +27,194 @@ import json
 from distutils.util import strtobool
 import copy
 
-path_model = './'
-#path_model = sys.argv[1]
-print (sys.argv)
-os.chdir(path_model)
-
-startTime = datetime.now()
-
-# get runtime params from config file
-config = ConfigObj('cord/data/input/runtime_params.ini')
-parallel_mode = bool(strtobool(config['parallel_mode']))
-model_mode = config['model_mode']
-short_test = int(config['short_test'])
-print_log = bool(strtobool(config['print_log']))
-seed = int(config['seed'])
-scenario_name = config['scenario_name'] #scenarios provide information on infrastructural plans
-flow_input_type = config['flow_input_type']
-flow_input_source = config['flow_input_source']
-total_sensitivity_factors = int(config['total_sensitivity_factors'])
-sensitivity_sample_file = config['sensitivity_sample_file']
-output_list = config['output_list']
-output_directory = config['output_directory']
-clean_output = bool(strtobool(config['clean_output']))
-
-if parallel_mode == True:
-  from mpi4py import MPI
-  import math
-  import time
-
-  # =============================================================================
-  # Experiment set up
-  # =============================================================================
-  # Functions or anything else that will be called
-  #
-  # =============================================================================
-  # Start parallelization
-  # =============================================================================
-
-  # Parallel simulation
-  comm = MPI.COMM_WORLD
-
-  # Number of processors and the rank of processors
-  rank = comm.Get_rank()
-  nprocs = comm.Get_size()
-
-  # Determine the chunk which each processor will neeed to do
-  count = int(math.floor(total_sensitivity_factors/nprocs))
-  remainder = total_sensitivity_factors % nprocs
-
-  # Use the processor rank to determine the chunk of work each processor will do
-  if rank < remainder:
-    start = rank*(count+1)
-    stop = start + count + 1
-  else:
-    start = remainder*(count+1) + (rank-remainder)*count
-    stop = start + count
-
-else: # non-parallel mode
-  start = 0
-  stop = total_sensitivity_factors
-  rank = 0
-
-# infrastructure scenario file, to be used for all sensitivity samples
-with open('cord/scenarios/scenarios_main.json') as f:
-  scenarios = json.load(f)
-scenario = scenarios[scenario_name]
-results_folder = output_directory + '/' + scenario_name
-#os.makedirs(results_folder)
-shutil.copy('cord/data/input/runtime_params.ini', results_folder + '/runtime_params.ini')
-
-# make separate output folder for each processor
-results_folder = results_folder + '/p' + str(rank)
-#os.makedirs(results_folder)
-
-# always use shorter historical dataframe for expected delta releases
-expected_release_datafile = 'cord/data/input/cord-data.csv'
-# data for actual simulation
-if model_mode == 'simulation':
-  demand_type = 'baseline'
-  #demand_type = 'pmp'
-  input_data_file = 'cord/data/input/cord-data-sim.csv'
-elif model_mode == 'validation':
-  demand_type = 'pesticide'
-  input_data_file = 'cord/data/input/cord-data.csv'
-elif model_mode == 'sensitivity':
-  demand_type = 'baseline'
-  base_data_file = 'cord/data/input/cord-data.csv'
-
-# output all print statements to log file. separate for each processor.
-if print_log:
-  sys.stdout = open(results_folder + '/log_p' + str(rank) + '.txt', 'w')
-
-if parallel_mode:
-  print ("Processor rank: %d , out of %d !" % (comm.rank, comm.size))
-  print ("Hello from rank %d out of %d !" % (comm.rank, comm.size))
-
-# =============================================================================
-# Loop though all samples, run sensitivity analysis. If parallel, k runs only through subset of samples for each processor.
-# =============================================================================
-for k in range(start, stop):
-
-  print('#######################################################')
-  print('Sample ' + str(k) + ' start')
-  sys.stdout.flush()
-
-  # put everything in "try", so error on one sample run won't crash whole job. But this makes it hard to debug, so may want to comment this out when debugging.
-  # try:
-    ######################################################################################
-  if model_mode == 'sensitivity':
-    #####FLOW GENERATOR#####
-    #seed
-    if (seed > 0):
-      np.random.seed(seed)
-
-    # read in k'th sample from sensitivity sample file
-    sensitivity_sample = np.genfromtxt(sensitivity_sample_file, delimiter='\t', skip_header=k+1, max_rows=1)[1:]
-    with open(sensitivity_sample_file, 'r') as f:
-      sensitivity_sample_names = f.readlines()[0].split('\n')[0]
-    np.savetxt(results_folder + '/sample' + str(k) + '.txt', sensitivity_sample.reshape(1, len(sensitivity_sample)), delimiter=',', header=sensitivity_sample_names)
-    sensitivity_sample_names = sensitivity_sample_names.split('\t')[1:]
-
-    #Initialize flow input scenario based on sensitivity sample
-    new_inputs = Inputter(base_data_file, expected_release_datafile, model_mode, results_folder, k, sensitivity_sample_names, sensitivity_sample, use_sensitivity = True)
-    new_inputs.run_initialization('XXX')
-    new_inputs.run_routine(flow_input_type, flow_input_source)
-    input_data_file = results_folder + '/' + new_inputs.export_series[flow_input_type][flow_input_source]  + "_"  + str(k) + ".csv"
-
-    modelno = Model(input_data_file, expected_release_datafile, model_mode, demand_type, k, sensitivity_sample_names, sensitivity_sample, new_inputs.sensitivity_factors)
-    modelso = Model(input_data_file, expected_release_datafile, model_mode, demand_type, k, sensitivity_sample_names, sensitivity_sample, new_inputs.sensitivity_factors)
-    os.remove(input_data_file)
-
-    modelso.max_tax_free = {}
-    modelso.omr_rule_start, modelso.max_tax_free = modelno.northern_initialization_routine(startTime)
-    modelso.forecastSRI = modelno.delta.forecastSRI
-    modelso.southern_initialization_routine(startTime, scenario)
-    sys.stdout.flush()
-    timeseries_length = min(modelno.T, modelso.T)
-    swp_release = 1
-    cvp_release = 1
-    swp_release2 = 1
-    cvp_release2 = 1
-    swp_pump = 999.0
-    cvp_pump = 999.0
-    proj_surplus = 0.0
-    swp_available = 0.0
-    cvp_available = 0.0
+def sim(sim_years):
     
-    noresnames = ['shasta','oroville','yuba','folsom','newmelones','donpedro','exchequer']
-    soresnames = ['millerton','isabella','success','kaweah','pineflat']
+    path_model = './'
+    #path_model = sys.argv[1]
+    print (sys.argv)
+    os.chdir(path_model)
     
-    # output
-    noresR = np.zeros((timeseries_length,len(noresnames)))
-    soresR = np.zeros((timeseries_length,len(soresnames)))
-           
-    for t in range(0,timeseries_length):
-      print(t)
-      if (t % 365 == 364):
-        print('Year ', (t+1)/365, ', ', datetime.now() - startTime)
+    startTime = datetime.now()
+    
+    # get runtime params from config file
+    config = ConfigObj('cord/data/input/runtime_params.ini')
+    parallel_mode = bool(strtobool(config['parallel_mode']))
+    model_mode = config['model_mode']
+    short_test = int(config['short_test'])
+    print_log = bool(strtobool(config['print_log']))
+    seed = int(config['seed'])
+    scenario_name = config['scenario_name'] #scenarios provide information on infrastructural plans
+    flow_input_type = config['flow_input_type']
+    flow_input_source = config['flow_input_source']
+    total_sensitivity_factors = int(config['total_sensitivity_factors'])
+    sensitivity_sample_file = config['sensitivity_sample_file']
+    output_list = config['output_list']
+    output_directory = config['output_directory']
+    clean_output = bool(strtobool(config['clean_output']))
+    
+    if parallel_mode == True:
+      from mpi4py import MPI
+      import math
+      import time
+    
+      # =============================================================================
+      # Experiment set up
+      # =============================================================================
+      # Functions or anything else that will be called
+      #
+      # =============================================================================
+      # Start parallelization
+      # =============================================================================
+    
+      # Parallel simulation
+      comm = MPI.COMM_WORLD
+    
+      # Number of processors and the rank of processors
+      rank = comm.Get_rank()
+      nprocs = comm.Get_size()
+    
+      # Determine the chunk which each processor will neeed to do
+      count = int(math.floor(total_sensitivity_factors/nprocs))
+      remainder = total_sensitivity_factors % nprocs
+    
+      # Use the processor rank to determine the chunk of work each processor will do
+      if rank < remainder:
+        start = rank*(count+1)
+        stop = start + count + 1
+      else:
+        start = remainder*(count+1) + (rank-remainder)*count
+        stop = start + count
+    
+    else: # non-parallel mode
+      start = 0
+      stop = total_sensitivity_factors
+      rank = 0
+    
+    # infrastructure scenario file, to be used for all sensitivity samples
+    with open('cord/scenarios/scenarios_main.json') as f:
+      scenarios = json.load(f)
+    scenario = scenarios[scenario_name]
+    results_folder = output_directory + '/' + scenario_name
+    #os.makedirs(results_folder)
+    shutil.copy('cord/data/input/runtime_params.ini', results_folder + '/runtime_params.ini')
+    
+    # make separate output folder for each processor
+    results_folder = results_folder + '/p' + str(rank)
+    #os.makedirs(results_folder)
+    
+    # always use shorter historical dataframe for expected delta releases
+    expected_release_datafile = 'cord/data/input/cord-data.csv'
+    # data for actual simulation
+    if model_mode == 'simulation':
+      demand_type = 'baseline'
+      #demand_type = 'pmp'
+      input_data_file = 'cord/data/input/cord-data-sim.csv'
+    elif model_mode == 'validation':
+      demand_type = 'pesticide'
+      input_data_file = 'cord/data/input/cord-data.csv'
+    elif model_mode == 'sensitivity':
+      demand_type = 'baseline'
+      base_data_file = 'cord/data/input/cord-data.csv'
+    
+    # output all print statements to log file. separate for each processor.
+    if print_log:
+      sys.stdout = open(results_folder + '/log_p' + str(rank) + '.txt', 'w')
+    
+    if parallel_mode:
+      print ("Processor rank: %d , out of %d !" % (comm.rank, comm.size))
+      print ("Hello from rank %d out of %d !" % (comm.rank, comm.size))
+    
+    # =============================================================================
+    # Loop though all samples, run sensitivity analysis. If parallel, k runs only through subset of samples for each processor.
+    # =============================================================================
+    for k in range(start, stop):
+    
+      print('#######################################################')
+      print('Sample ' + str(k) + ' start')
+      sys.stdout.flush()
+    
+      # put everything in "try", so error on one sample run won't crash whole job. But this makes it hard to debug, so may want to comment this out when debugging.
+      # try:
+        ######################################################################################
+      if model_mode == 'sensitivity':
+        #####FLOW GENERATOR#####
+        #seed
+        if (seed > 0):
+          np.random.seed(seed)
+    
+        # read in k'th sample from sensitivity sample file
+        sensitivity_sample = np.genfromtxt(sensitivity_sample_file, delimiter='\t', skip_header=k+1, max_rows=1)[1:]
+        with open(sensitivity_sample_file, 'r') as f:
+          sensitivity_sample_names = f.readlines()[0].split('\n')[0]
+        np.savetxt(results_folder + '/sample' + str(k) + '.txt', sensitivity_sample.reshape(1, len(sensitivity_sample)), delimiter=',', header=sensitivity_sample_names)
+        sensitivity_sample_names = sensitivity_sample_names.split('\t')[1:]
+    
+        #Initialize flow input scenario based on sensitivity sample
+        new_inputs = Inputter(base_data_file, expected_release_datafile, model_mode, results_folder, k, sensitivity_sample_names, sensitivity_sample, use_sensitivity = True)
+        new_inputs.run_initialization('XXX')
+        new_inputs.run_routine(flow_input_type, flow_input_source)
+        input_data_file = results_folder + '/' + new_inputs.export_series[flow_input_type][flow_input_source]  + "_"  + str(k) + ".csv"
+    
+        modelno = Model(input_data_file, expected_release_datafile, model_mode, demand_type, k, sensitivity_sample_names, sensitivity_sample, new_inputs.sensitivity_factors)
+        modelso = Model(input_data_file, expected_release_datafile, model_mode, demand_type, k, sensitivity_sample_names, sensitivity_sample, new_inputs.sensitivity_factors)
+        os.remove(input_data_file)
+    
+        modelso.max_tax_free = {}
+        modelso.omr_rule_start, modelso.max_tax_free = modelno.northern_initialization_routine(startTime)
+        modelso.forecastSRI = modelno.delta.forecastSRI
+        modelso.southern_initialization_routine(startTime, scenario)
         sys.stdout.flush()
-
-      # the northern model takes variables from the southern model as inputs (initialized above), & outputs are used as input variables in the southern model
-      swp_pumping, cvp_pumping, swp_alloc, cvp_alloc, proj_surplus, max_pumping, swp_forgo, cvp_forgo, swp_AF, cvp_AF, swp_AS, cvp_AS, flood_release, flood_volume = modelno.simulate_north(t, swp_release, cvp_release, swp_release2, cvp_release2, swp_pump, cvp_pump)        
-      swp_release, cvp_release, swp_release2, cvp_release2, swp_pump, cvp_pump = modelso.simulate_south(t, swp_pumping, cvp_pumping, swp_alloc, cvp_alloc, proj_surplus, max_pumping, swp_forgo, cvp_forgo, swp_AF, cvp_AF, swp_AS, cvp_AS, modelno.delta.forecastSJWYT, modelno.delta.max_tax_free, flood_release, flood_volume)
-                   
-      noresR[t,0] = modelno.shasta.R[t]
-      noresR[t,1] = modelno.oroville.R[t]
-      noresR[t,2] = modelno.yuba.R[t]
-      noresR[t,3] = modelno.folsom.R[t]
-      noresR[t,4] = modelno.newmelones.R[t]
-      noresR[t,5] = modelno.donpedro.R[t]
-      noresR[t,6] = modelno.exchequer.R[t]
-      
-      soresR[t,0] = modelso.millerton.R[t]
-      soresR[t,1] = modelso.isabella.R[t]
-      soresR[t,2] = modelso.success.R[t]
-      soresR[t,3] = modelso.kaweah.R[t]
-      soresR[t,4] = modelso.pineflat.R[t]
-      
-      
-#convert from kAF to cfs      
-combined = np.column_stack((noresR*504.51198,soresR*504.51198))
-combined = combined[93:-273]
-df_combined = pd.DataFrame(combined)
-df_combined.columns = ['SHA_otf','ORO_otf','YRS_otf','FOL_otf','NML_otf','DNP_otf','EXC_otf','MIL_otf','ISB_otf','SUC_otf','KWH_otf','PFT_otf']
-df_combined.to_csv('ORCA_output.csv')
+        timeseries_length = (sim_years+3)*365#min(modelno.T, modelso.T)
+        swp_release = 1
+        cvp_release = 1
+        swp_release2 = 1
+        cvp_release2 = 1
+        swp_pump = 999.0
+        cvp_pump = 999.0
+        proj_surplus = 0.0
+        swp_available = 0.0
+        cvp_available = 0.0
+        
+        noresnames = ['shasta','oroville','yuba','folsom','newmelones','donpedro','exchequer']
+        soresnames = ['millerton','isabella','success','kaweah','pineflat']
+        
+        # output
+        noresR = np.zeros((timeseries_length,len(noresnames)))
+        soresR = np.zeros((timeseries_length,len(soresnames)))
+               
+        for t in range(0,timeseries_length):
+          print(t)
+          if (t % 365 == 364):
+            print('Year ', (t+1)/365, ', ', datetime.now() - startTime)
+            sys.stdout.flush()
+    
+          # the northern model takes variables from the southern model as inputs (initialized above), & outputs are used as input variables in the southern model
+          swp_pumping, cvp_pumping, swp_alloc, cvp_alloc, proj_surplus, max_pumping, swp_forgo, cvp_forgo, swp_AF, cvp_AF, swp_AS, cvp_AS, flood_release, flood_volume = modelno.simulate_north(t, swp_release, cvp_release, swp_release2, cvp_release2, swp_pump, cvp_pump)        
+          swp_release, cvp_release, swp_release2, cvp_release2, swp_pump, cvp_pump = modelso.simulate_south(t, swp_pumping, cvp_pumping, swp_alloc, cvp_alloc, proj_surplus, max_pumping, swp_forgo, cvp_forgo, swp_AF, cvp_AF, swp_AS, cvp_AS, modelno.delta.forecastSJWYT, modelno.delta.max_tax_free, flood_release, flood_volume)
+                       
+          noresR[t,0] = modelno.shasta.R[t]
+          noresR[t,1] = modelno.oroville.R[t]
+          noresR[t,2] = modelno.yuba.R[t]
+          noresR[t,3] = modelno.folsom.R[t]
+          noresR[t,4] = modelno.newmelones.R[t]
+          noresR[t,5] = modelno.donpedro.R[t]
+          noresR[t,6] = modelno.exchequer.R[t]
+          
+          soresR[t,0] = modelso.millerton.R[t]
+          soresR[t,1] = modelso.isabella.R[t]
+          soresR[t,2] = modelso.success.R[t]
+          soresR[t,3] = modelso.kaweah.R[t]
+          soresR[t,4] = modelso.pineflat.R[t]
+          
+          
+    #convert from kAF to cfs      
+    combined = np.column_stack((noresR*504.51198,soresR*504.51198))
+    combined = combined[93:-273]
+    df_combined = pd.DataFrame(combined)
+    df_combined.columns = ['SHA_otf','ORO_otf','YRS_otf','FOL_otf','NML_otf','DNP_otf','EXC_otf','MIL_otf','ISB_otf','SUC_otf','KWH_otf','PFT_otf']
+    df_combined.to_csv('ORCA_output.csv')
  
+    return None
 
 #    # for n in new_inputs.sensitivity_factors['factor_list']:
 #    #   param_df[n][k] = new_inputs.sensitivity_factors[n]['realization']
