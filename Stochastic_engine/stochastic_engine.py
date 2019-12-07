@@ -22,6 +22,7 @@ starttime = time.time()
 # Specify a number of synthetic weather years to be simulated. Then
 # edit the /cord/data/input/base_inflows.json file, specifying the start and end 
 # dates of the forecast_exp scenario flow files. Start date must be 1/1/1901.
+# End dates must be stoch_years + 3 after start date. 
 
 stoch_years=20
 
