@@ -38,10 +38,10 @@ def calc(sim_years):
         
         else:
             ICFs[i] = 0
-            
+                   
+    np.savetxt('PNW_hydro/FCRPS/ICFcal.csv',ICFs,delimiter=',')
+        
     return None
         
     
-        
-    
-    np.savetxt('PNW_hydro/FCRPS/ICFcal.csv',ICFs,delimiter=',')
+ 
