@@ -81,6 +81,7 @@ for i in range(0,sim_years):
     for n in range(0,len(Hist_years)):
         if Difference[n]==np.min(Difference):
          Rule=n
+         print(n)
     Rule_list.append(Rule)
 
 # PGE hydro projects
@@ -225,7 +226,7 @@ for name in PGE_dams:
             File_name='CA_hydropower/PGE_FNF_2/FNF_' + str(name) +'.txt'
             Temp_Rule=pd.read_csv(File_name,delimiter=' ',header=None)
             peak_flow,sum_cap,spr_cap,fall_cap,win_date,spr_date,sum_date,fall_date,eff,check_surplus=Temp_Rule.loc[Rule][:]
-
+                        
             surplus = 0
             transfer = 0
             k = str(PGE_names.loc[0][name])

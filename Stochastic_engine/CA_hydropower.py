@@ -12,7 +12,7 @@ from datetime import datetime
 import matplotlib.pyplot as plt
     
 def hydro(sim_years):
-    
+        
     #########################################################################
     # This purpose of this script is to use synthetic streamflows at major California
     # reservoir sites to simulate daily hydropower production for the PG&E and SCE 
@@ -605,10 +605,31 @@ def hydro(sim_years):
                 daily[i*365+w*7:i*365+w*7+7,z_index] = s[w]/7
             daily[i*365+364,z_index] =  daily[i*365+w*7+6,z_index]
      
-    df_D = pd.DataFrame(daily)
+    PGE_block = daily[:,0]
+    SCE_block = daily[:,1] 
+            
+    # calculate smoothed version
+    PGE_smooth = np.zeros((len(PGE_block)))    
+    SCE_smooth = np.zeros((len(PGE_block)))  
+    PGE_smooth[0:4] = PGE_block[0]
+    PGE_smooth[-4:] = PGE_block[-1]
+    SCE_smooth[0:4] = SCE_block[0]
+    SCE_smooth[-4:] = SCE_block[-1]
+    
+    for i in range(4,len(PGE_block)-4):
+        PGE_smooth[i] = np.mean(PGE_block[i-3:i+3])
+        SCE_smooth[i] = np.mean(SCE_block[i-3:i+3])
+    
+    # new residuals 
+    PGE_new = PGE_smooth + np.random.randn(len(PGE_smooth))*np.std(PGE_residuals) 
+    SCE_new = SCE_smooth + np.random.randn(len(SCE_smooth))*np.std(SCE_residuals) 
+    
+    combined = np.column_stack((PGE_new,SCE_new))
+    
+    df_D = pd.DataFrame(combined)
     df_D.columns = ['PGE_valley','SCE']
     df_D.to_excel('CA_hydropower/CA_hydro_daily.xlsx')
-    
+        
     return None 
     
     
