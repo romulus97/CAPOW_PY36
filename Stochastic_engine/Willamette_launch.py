@@ -16,3 +16,5 @@ def launch(sim_years):
     import Willamette_outer
     Willamette_outer.simulate(sim_years)
 #elapsed = time.time() - starttime
+    
+    return None

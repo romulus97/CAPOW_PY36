@@ -34,8 +34,6 @@ def hydro(sim_years):
     # load simulated full natural flows at each California storage reservoir (ORCA site)
     df_sim = pd.read_csv('Synthetic_streamflows/synthetic_streamflows_CA.csv',header=0,index_col=0)
     df_sim = df_sim.loc[0:(sim_years+3)*365,:]
-    #    df_sim = df_sim.loc[365:len(df_sim)-731,:]
-    #    df_sim = df_sim.reset_index(drop=True)
        
     # load simulated outflows calculated by ORCA
     df_ORCA = pd.read_csv('ORCA_output.csv')
@@ -109,6 +107,7 @@ def hydro(sim_years):
     check_unused = []
     PGE_name_list = []
     SCE_name_list = []
+    
     for name in PGE_dams:
         
         est_power = []

@@ -48,7 +48,7 @@ import main
 main.sim(sim_years)
 print('ORCA')
 #
-# California Hydropower model (machine learning) 
+# California Hydropower model
 import CA_hydropower
 CA_hydropower.hydro(sim_years)
 print('CA hydropower')
@@ -70,9 +70,6 @@ print('FCRPS')
 #
 #############################################################################
 ## HOURLY WIND AND SOLAR POWER PRODUCTION
-
-#What REeDS scenario are we running?
-#User specifies combination of scenario and year 
 
 ## WIND
 # Specify installed capacity of wind power for each zone
@@ -102,8 +99,6 @@ print('solar')
 # Calculate daily peak and hourly electricity demand for each zone and daily 
 # flows of electricity along each WECC path that exchanges electricity between
 # core UC/ED model (CAISO, Mid-C markets) and other WECC zones
-
-# NOTE: NEED TO ACCOUNT FOR PNW DEMAND CALCULATION IN FOLLOWING SCRIPT
 
 import demand_pathflows
 print('paths')
