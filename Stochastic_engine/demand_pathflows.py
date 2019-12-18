@@ -274,8 +274,8 @@ for i in range(0,sim_days):
     simulated = np.append(simulated,y_hat)
     BPA_sim = simulated.reshape((len(simulated),1))  
     
-a=st.pearsonr(peaks,BPA_p)
-print(a[0]**2, a[1])
+#a=st.pearsonr(peaks,BPA_p)
+#print(a[0]**2, a[1])
 
 # Residuals
 BPAresiduals = BPA_p - peaks
@@ -762,8 +762,8 @@ for i in range(0,sim_days):
     simulated = np.append(simulated,y_hat)
     PGEV_sim = simulated.reshape((len(simulated),1))    
 
-a=st.pearsonr(peaks,PGEV_p)
-print(a[0]**2, a[1])
+#a=st.pearsonr(peaks,PGEV_p)
+#print(a[0]**2, a[1])
 
 # Residuals
 PGEVresiduals = PGEV_p - peaks

@@ -95,12 +95,12 @@ def sim(sim_years):
       scenarios = json.load(f)
     scenario = scenarios[scenario_name]
     results_folder = output_directory + '/' + scenario_name
-    #os.makedirs(results_folder)
+#    os.makedirs(results_folder)
     shutil.copy('cord/data/input/runtime_params.ini', results_folder + '/runtime_params.ini')
     
     # make separate output folder for each processor
     results_folder = results_folder + '/p' + str(rank)
-    #os.makedirs(results_folder)
+#    os.makedirs(results_folder)
     
     # always use shorter historical dataframe for expected delta releases
     expected_release_datafile = 'cord/data/input/cord-data.csv'
