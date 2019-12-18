@@ -620,8 +620,8 @@ def hydro(sim_years):
         SCE_smooth[i] = np.mean(SCE_block[i-3:i+3])
     
     # new residuals 
-    PGE_new = PGE_smooth + np.random.randn(len(PGE_smooth))*np.std(PGE_residuals) 
-    SCE_new = SCE_smooth + np.random.randn(len(SCE_smooth))*np.std(SCE_residuals) 
+    PGE_new = PGE_smooth + np.random.randn(len(PGE_smooth))*3366 
+    SCE_new = SCE_smooth + np.random.randn(len(SCE_smooth))*2194
     
     combined = np.column_stack((PGE_new,SCE_new))
     
