@@ -34,9 +34,7 @@ def simulate(sim_years):
     reservoirs = settings["settings"]["reservoirs"]['reservoir']
     output_filenames=settings["settings"]['data_outputs']['filenames']
     path=settings["settings"]['data_inputs']['path']
-    path=path['@path']
-    
-    
+    path=path['@path'] 
     
     #Create Reservoir class
     class Reservoir:
