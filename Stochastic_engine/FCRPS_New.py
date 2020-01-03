@@ -3303,7 +3303,7 @@ def simulate(sim_years):
     #Load Willamette
     df_Willamette = pd.read_excel('Willamette/Output/WillametteDAMS_hydropower.xlsx', usecols=np.arange(1,9))
     Willamette=pd.DataFrame(24*df_Willamette.sum(axis=1),columns=['tot_Willamette_dailySum'])
-    #cut first two years and last year plus start at 243 to align with FCRPS output
+    #cut first two years and last year 
     Willamette = Willamette.iloc[365:len(Willamette)-(2*365),:]
     Willamette= Willamette.reset_index(drop=True)
     

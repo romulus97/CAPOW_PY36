@@ -16,7 +16,7 @@ Created on Mon Oct  8 11:45:39 2018
 ############################################################################
 # Simulates power system operations for as many simulation days as
 # specified (max is 365)
-days = 4
+days = 1
 
 # CALIFORNIA
 import CA_wrapper

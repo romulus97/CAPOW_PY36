@@ -593,51 +593,51 @@ def sim(days):
 
 
             for j in instance.Generators:
-                if instance.on[j,H] == 1:
+                if instance.on[j,24] == 1:
                     instance.on[j,0] = 1
                 else:
                     instance.on[j,0] = 0
                 instance.on[j,0].fixed = True
 
-                if instance.mwh_1[j,H].value <=0 and instance.mwh_1[j,H].value>= -0.0001:
+                if instance.mwh_1[j,24].value <=0 and instance.mwh_1[j,24].value>= -0.0001:
                     newval_1=0
                 else:
-                    newval_1=instance.mwh_1[j,H].value
+                    newval_1=instance.mwh_1[j,24].value
                 instance.mwh_1[j,0] = newval_1
                 instance.mwh_1[j,0].fixed = True
 
-                if instance.mwh_2[j,H].value <=0 and instance.mwh_2[j,H].value>= -0.0001:
+                if instance.mwh_2[j,24].value <=0 and instance.mwh_2[j,24].value>= -0.0001:
                     newval=0
                 else:
-                    newval=instance.mwh_2[j,H].value
+                    newval=instance.mwh_2[j,24].value
 
-                if instance.mwh_3[j,H].value <=0 and instance.mwh_3[j,H].value>= -0.0001:
+                if instance.mwh_3[j,24].value <=0 and instance.mwh_3[j,24].value>= -0.0001:
                     newval2=0
                 else:
-                    newval2=instance.mwh_3[j,H].value
+                    newval2=instance.mwh_3[j,24].value
 
 
                 instance.mwh_2[j,0] = newval
                 instance.mwh_2[j,0].fixed = True
                 instance.mwh_3[j,0] = newval2
                 instance.mwh_3[j,0].fixed = True
-                if instance.switch[j,H] == 1:
+                if instance.switch[j,24] == 1:
                     instance.switch[j,0] = 1
                 else:
                     instance.switch[j,0] = 0
                 instance.switch[j,0].fixed = True
 
-                if instance.srsv[j,H].value <=0 and instance.srsv[j,H].value>= -0.0001:
+                if instance.srsv[j,24].value <=0 and instance.srsv[j,24].value>= -0.0001:
                     newval_srsv=0
                 else:
-                    newval_srsv=instance.srsv[j,H].value
+                    newval_srsv=instance.srsv[j,24].value
                 instance.srsv[j,0] = newval_srsv
                 instance.srsv[j,0].fixed = True
 
-                if instance.nrsv[j,H].value <=0 and instance.nrsv[j,H].value>= -0.0001:
+                if instance.nrsv[j,24].value <=0 and instance.nrsv[j,24].value>= -0.0001:
                     newval_nrsv=0
                 else:
-                    newval_nrsv=instance.nrsv[j,H].value
+                    newval_nrsv=instance.nrsv[j,24].value
                 instance.nrsv[j,0] = newval_nrsv
                 instance.nrsv[j,0].fixed = True
 
