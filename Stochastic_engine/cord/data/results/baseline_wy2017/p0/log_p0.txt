@@ -365,7 +365,7 @@ Sample 0 start
 362
 363
 364
-Year  1.0 ,  0:01:56.644608
+Year  1.0 ,  0:02:02.440604
 365
 366
 367
@@ -731,7 +731,7 @@ Year  1.0 ,  0:01:56.644608
 727
 728
 729
-Year  2.0 ,  0:03:03.645417
+Year  2.0 ,  0:02:59.459091
 730
 731
 732
@@ -1097,7 +1097,7 @@ Year  2.0 ,  0:03:03.645417
 1092
 1093
 1094
-Year  3.0 ,  0:04:08.580727
+Year  3.0 ,  0:03:53.058693
 1095
 1096
 1097
@@ -1463,7 +1463,7 @@ Year  3.0 ,  0:04:08.580727
 1457
 1458
 1459
-Year  4.0 ,  0:05:10.370820
+Year  4.0 ,  0:04:50.708850
 1460
 1461
 1462
@@ -1829,7 +1829,7 @@ Year  4.0 ,  0:05:10.370820
 1822
 1823
 1824
-Year  5.0 ,  0:06:14.743610
+Year  5.0 ,  0:05:48.895349
 1825
 1826
 1827
@@ -2195,7 +2195,7 @@ Year  5.0 ,  0:06:14.743610
 2187
 2188
 2189
-Year  6.0 ,  0:07:09.700094
+Year  6.0 ,  0:07:03.391447
 ORCA
 CA hydropower
 Willamette
@@ -2203,8 +2203,5 @@ FCRPS
 wind
 solar
 paths
-1245.9792597293854
+1197.8460309505463
 [4;33mReloaded modules[24m: synthetic_temp_wind_v2, synthetic_streamflow_v2, main, cord, cord.model, cord.reservoir, cord.util, cord.delta, cord.district, cord.crop, cord.scenario, cord.private, cord.contract, cord.canal, cord.waterbank, cord.inputter, cord.plotter, CA_hydropower, Willamette_launch, Willamette_model, Willamette_outer, ICF_calc_new, FCRPS_New, wind_speed2_wind_power, solar_production_simulation, demand_pathflows, PNW_demand_scaling[0m
-synth weather
-streamflows
-['C:/Users/jkern/Documents/GitHub/HYDROWIRES/Stochastic_engine/stochastic_engine.py']

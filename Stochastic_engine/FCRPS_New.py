@@ -3050,11 +3050,11 @@ def simulate(sim_years):
         #Calculate daily reservoir discharge and end-of-day storage. Have to
         #convert project inflows ("local") to kAF.
         PLT_dg = max(0,local.iloc[i,44]*.001987 + RBU_dg)
-        s_45 = s_45 + local.iloc[i,44]*.001987 - PLT_dg
+        s_44 = s_44 + local.iloc[i,44]*.001987 + RBU_dg - PLT_dg
         powerflow[i,44] = min(PLT_dg,f_max[44])
         spill[i,44] = max(0,PLT_dg - f_max[44])
         discharge[i,44] = PLT_dg*(1/.001987)  #Convert back to cfs
-        storage[i,44] = s_45
+        storage[i,44] = s_44
         generation[i,44] = ((1000*62.1792*powerflow[i,44]*14.27641*9.81*.87)/1000000)*24
     
         #########################
