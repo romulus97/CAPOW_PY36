@@ -2205,3 +2205,5 @@ solar
 paths
 1197.8460309505463
 [4;33mReloaded modules[24m: synthetic_temp_wind_v2, synthetic_streamflow_v2, main, cord, cord.model, cord.reservoir, cord.util, cord.delta, cord.district, cord.crop, cord.scenario, cord.private, cord.contract, cord.canal, cord.waterbank, cord.inputter, cord.plotter, CA_hydropower, Willamette_launch, Willamette_model, Willamette_outer, ICF_calc_new, FCRPS_New, wind_speed2_wind_power, solar_production_simulation, demand_pathflows, PNW_demand_scaling[0m
+[4;33mReloaded modules[24m: ICF_calc_new[0m
+[4;33mReloaded modules[24m: ICF_calc_new[0m

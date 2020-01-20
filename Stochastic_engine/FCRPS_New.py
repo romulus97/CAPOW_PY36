@@ -1091,7 +1091,7 @@ def simulate(sim_years):
                 if s_2>2140*3:
                     MCD_dg =10000*.001987
                 elif s_2<=2140*3 and s_2>=1450*3:
-                    MCD_dg = 8000.001987
+                    MCD_dg = 8000*.001987
                 elif s_2<=1450*3 and s_2>=1140*3:
                     MCD_dg = 10000*.001987
                 elif s_2<1140*3:

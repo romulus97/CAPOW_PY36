@@ -13,8 +13,7 @@ import numpy as np
 #d=pd.read_excel('Synthetic_streamflows/BPA_hist_streamflow.xlsx')
 #d=d['TDA5ARF']
 
-def calc(sim_years):
-    
+def calc(sim_years): 
     d=pd.read_csv('Synthetic_streamflows/synthetic_streamflows_TDA.csv',header=None)
     d = d.iloc[0:(sim_years+3)*365,:]
     doy = np.arange(1,366)
@@ -32,12 +31,14 @@ def calc(sim_years):
     
         b = np.argwhere(a>450000)
         if len(b) > 0:
-            
-            ICFs[i] = min(j[b]*(j[b]>80)) 
+            jb = j[b]
+            c=np.argwhere(jb>80)[:,0]
+            jc = jb[c]
+            ICFs[i] = min(jc)[0]
         
         
         else:
-            ICFs[i] = 0
+            ICFs[i] = np.argwhere(a>max(a)-1)
                    
     np.savetxt('PNW_hydro/FCRPS/ICFcal.csv',ICFs,delimiter=',')
         
