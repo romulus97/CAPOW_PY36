@@ -123,7 +123,6 @@ def setup(year,hist,hist_year):
         df_total_must_run =pd.DataFrame(must_run,columns=('PGE_valley','PGE_bay','SCE','SDGE'))
         df_total_must_run.to_csv('CA_data_file/must_run_hourly.csv')
 
-
     ############
     #  sets    #
     ############
@@ -131,7 +130,6 @@ def setup(year,hist,hist_year):
     import os
     from shutil import copy
     from pathlib import Path
-
 
     path=str(Path.cwd().parent) +str (Path('/UCED/LR/CA' + str(year)))
     os.makedirs(path,exist_ok=True)
