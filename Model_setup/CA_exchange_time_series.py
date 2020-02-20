@@ -135,39 +135,41 @@ def exchange(year):
     
     # convert to minimum flow time series and dispatchable (daily)
     
-    df_data = pd.read_excel('../Stochastic_engine/CA_hydropower/CA_hydro_daily.xlsx',header=0)
-    hydro = df_data.loc[year*365:year*365+364,:]
-    hydro = hydro.reset_index()
-    hydro=hydro.values
-    PGE_ALL=hydro[:,1]/0.837
-    SCE_all=hydro[:,2]/0.8016
-    hydro=pd.DataFrame()
-    hydro['PGE_valley']=PGE_ALL
-    hydro['SCE']=SCE_all
+    df_data = pd.read_excel('../Stochastic_engine/CA_hydropower/CA_hydro_daily.xlsx',header=0,index_col=0)
+    dhydro = df_data.loc[year*365:year*365+364,:]
+    dhydro = dhydro.reset_index(drop=True)
+    dhydro=dhydro.values
+    for i in range(0,len(dhydro)):
+        for j in range(0,2):
+            if dhydro[i,j] < 0:
+                dhydro[i,j] = 0
+    PGE_ALL=dhydro[:,0]/0.837
+    SCE_all=dhydro[:,1]/0.8016       
+    dhydro=pd.DataFrame()
+    dhydro['PGE_valley']=PGE_ALL
+    dhydro['SCE']=SCE_all
     zones = ['PGE_valley','SCE']
     df_mins = pd.read_excel('Hydro_setup/Minimum_hydro_profiles.xlsx',header=0)
     
-    for i in range(0,len(hydro)):
+    for i in range(0,len(dhydro)):
         for z in zones:
             
-            if df_mins.loc[i,z]*24 >= hydro.loc[i,z]:
-                df_mins.loc[i,z] = hydro.loc[i,z]/24
-                hydro.loc[i,z] = 0
+            if df_mins.loc[i,z]*24 >= dhydro.loc[i,z]:
+                df_mins.loc[i,z] = np.max((0,dhydro.loc[i,z]/24))
+                dhydro.loc[i,z] = 0
             
             else:
-                hydro.loc[i,z] = np.max((0,hydro.loc[i,z]-df_mins.loc[i,z]*24))
+                dhydro.loc[i,z] = np.max((0,dhydro.loc[i,z]-df_mins.loc[i,z]*24))
     
-    dispatchable_hydro = hydro
-    dispatchable_hydro.to_csv('Hydro_setup/CA_dispatchable_hydro.csv')
+    dhydro.to_csv('Hydro_setup/CA_dispatchable_hydro.csv')
     
     # hourly minimum flow for hydro
     hourly = np.zeros((8760,len(zones)))
     
-    df_data = pd.read_excel('../Stochastic_engine/CA_hydropower/CA_hydro_daily.xlsx',header=0)
-    hydro = df_data.loc[year*365:year*365+364,:]
-    hydro = hydro.reset_index()
-    PGE_ALL=hydro[:,1]/0.837
-    SCE_all=hydro[:,2]/0.8016
+    df_data = pd.read_excel('../Stochastic_engine/CA_hydropower/CA_hydro_daily.xlsx',header=0,index_col=0)
+    hydro = df_data.loc[year*365:year*365+364,:].values
+    PGE_ALL=hydro[:,0]/0.837
+    SCE_all=hydro[:,1]/0.8016
     hydro=pd.DataFrame()
     hydro['PGE_valley']=PGE_ALL
     hydro['SCE']=SCE_all
@@ -177,7 +179,9 @@ def exchange(year):
         for z in zones:
             index = zones.index(z)
             
-            hourly[i*24:i*24+24,index] = np.min((df_mins.loc[i,z],hydro.loc[i,z]))
+            h = np.max((0,hydro.loc[i,z]))
+            
+            hourly[i*24:i*24+24,index] = np.min((df_mins.loc[i,z],h))
             
     H = pd.DataFrame(hourly)
     H.columns = zones
