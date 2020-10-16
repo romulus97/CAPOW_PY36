@@ -9,9 +9,6 @@ import pandas as pd
 import numpy as np
 
 def setup(year,hist,hist_year):
-#    year = 0
-#    hist = 0
-#    hist_year = 2010
 
     #read generator parameters into DataFrame
     df_gen = pd.read_csv('CA_data_file/generators.csv',header=0)
@@ -139,12 +136,10 @@ def setup(year,hist,hist_year):
     dispatchLP_file='../UCED/CA_dispatchLP.py'
     wrapper_file='../UCED/CA_wrapper.py'
     simulation_file='../UCED/CA_simulation.py'
-    price_cal_file='../UCED/CA_price_calculation.py'
 
     copy(dispatch_file,path)
     copy(wrapper_file,path)
     copy(simulation_file,path)
-    copy(price_cal_file,path)
     copy(dispatchLP_file,path)
     copy(generators_file,path)
 

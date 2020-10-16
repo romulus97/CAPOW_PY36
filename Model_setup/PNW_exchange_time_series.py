@@ -19,7 +19,7 @@ def exchange(year):
     
     # select dispatchable imports 
     imports = df_data
-    imports = imports.reset_index()
+    imports = imports.reset_index(drop=True)
     
     for p in paths:
         for i in range(0,len(imports)):     
@@ -76,7 +76,7 @@ def exchange(year):
     df_data = df_data[c]
     df_data.columns = [paths]
     df_data = df_data.loc[year*365:year*365+364,:]
-    df_data = df_data.reset_index()
+    df_data = df_data.reset_index(drop=True)
     
     e = np.zeros((8760,5))
     
@@ -88,7 +88,9 @@ def exchange(year):
         pp = path_profiles.values
         
         if p=='Path3' or p=='Path65' or p=='Path66':   #SCRIPT ASSUMPTION: NEGATIVE = EXPORT. revert sign when needed
-                df_data.loc[:,p]=-df_data.loc[:,p]
+            
+            for i in range(0,len(df_data)):
+                df_data.loc[i,p] = df_data.loc[i,p]*-1
     
         for i in range(0,len(df_data)):
             if df_data.loc[i,p].values < 0:
@@ -111,19 +113,19 @@ def exchange(year):
     
     # convert to minimum flow time series and dispatchable (daily)
     
-    df_data = pd.read_excel('../Stochastic_engine/PNW_hydro/PNW_hydro_daily.xlsx',header=0)
+    df_data = pd.read_excel('../Stochastic_engine/PNW_hydro/PNW_hydro_daily.xlsx',header=0,index_col=0)
     hydro = df_data.loc[year*365:year*365+364,'PNW']
-    hydro = hydro.reset_index()
-    df_mins = pd.read_excel('Hydro_setup/Minimum_hydro_profiles.xlsx',header=0)
-   
+    hydro = hydro.reset_index(drop=True)
+    df_mins = pd.read_excel('Hydro_setup/Minimum_hydro_profiles.xlsx',header=0,index_col=0)
+       
     for i in range(0,len(hydro)):
     
-        if df_mins.loc[i,'PNW']*24 >= hydro.loc[i,'PNW']:
-            df_mins.loc[i,'PNW'] = hydro.loc[i,'PNW']/24
-            hydro.loc[i,'PNW'] = 0
+        if df_mins.loc[i,'PNW']*24 >= hydro[i]:
+            df_mins.loc[i,'PNW'] = hydro[i]/24
+            hydro[i] = 0
         
         else:
-            hydro.loc[i,'PNW'] = np.max((0,hydro.loc[i,'PNW']-df_mins.loc[i,'PNW']*24))
+            hydro[i] = np.max((0,hydro[i]-df_mins.loc[i,'PNW']*24))
     
     dispatchable_hydro = hydro
     dispatchable_hydro.to_csv('Hydro_setup/PNW_dispatchable_hydro.csv')
@@ -133,11 +135,11 @@ def exchange(year):
     
     df_data = pd.read_excel('../Stochastic_engine/PNW_hydro/PNW_hydro_daily.xlsx',header=0)
     hydro = df_data.loc[year*365:year*365+364,'PNW']
-    hydro = hydro.reset_index()
+    hydro = hydro.reset_index(drop=True)
         
     for i in range(0,365):
             
-        hourly[i*24:i*24+24] = np.min((df_mins.loc[i,'PNW'],hydro.loc[i,'PNW']))
+        hourly[i*24:i*24+24] = np.min((df_mins.loc[i,'PNW'],hydro[i]))
             
     H = pd.DataFrame(hourly)
     H.columns = ['PNW']

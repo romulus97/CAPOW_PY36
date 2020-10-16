@@ -574,27 +574,27 @@ def ZeroSum(model,j,i):
 model.ZeroSumConstraint=Constraint(model.Generators,model.hh_periods,rule=ZeroSum)
 #
 #
-##Switch is 1 if unit is turned on in current period
-def SwitchCon(model,j,i):
-    return model.switch[j,i] >= 1 - model.on[j,i-1] - (1 - model.on[j,i])
-model.SwitchConstraint = Constraint(model.Generators,model.hh_periods,rule = SwitchCon)
-#
-#
-##Min Up time
-def MinUp(model,j,i,k):
-    if i > 0 and k > i and k < min(i+model.minu[j]-1,model.HorizonHours):
-        return model.on[j,i] - model.on[j,i-1] <= model.on[j,k]
-    else:
-        return Constraint.Skip
-model.MinimumUp = Constraint(model.Generators,model.HH_periods,model.HH_periods,rule=MinUp)
-#
-##Min Down time
-def MinDown(model,j,i,k):
-   if i > 0 and k > i and k < min(i+model.mind[j]-1,model.HorizonHours):
-       return model.on[j,i-1] - model.on[j,i] <= 1 - model.on[j,k]
-   else:
-       return Constraint.Skip
-model.MinimumDown = Constraint(model.Generators,model.HH_periods,model.HH_periods,rule=MinDown)
+# ##Switch is 1 if unit is turned on in current period
+# def SwitchCon(model,j,i):
+#     return model.switch[j,i] >= 1 - model.on[j,i-1] - (1 - model.on[j,i])
+# model.SwitchConstraint = Constraint(model.Generators,model.hh_periods,rule = SwitchCon)
+# #
+# #
+# ##Min Up time
+# def MinUp(model,j,i,k):
+#     if i > 0 and k > i and k < min(i+model.minu[j]-1,model.HorizonHours):
+#         return model.on[j,i] - model.on[j,i-1] <= model.on[j,k]
+#     else:
+#         return Constraint.Skip
+# model.MinimumUp = Constraint(model.Generators,model.HH_periods,model.HH_periods,rule=MinUp)
+# #
+# ##Min Down time
+# def MinDown(model,j,i,k):
+#    if i > 0 and k > i and k < min(i+model.mind[j]-1,model.HorizonHours):
+#        return model.on[j,i-1] - model.on[j,i] <= 1 - model.on[j,k]
+#    else:
+#        return Constraint.Skip
+# model.MinimumDown = Constraint(model.Generators,model.HH_periods,model.HH_periods,rule=MinDown)
 
 #Pumped Storage constraints
 def PSHC(model,j,i):
@@ -604,14 +604,26 @@ def PSHC(model,j,i):
 model.PumpTime = Constraint(model.PSH,model.hh_periods,rule=PSHC)
 
 #Ramp Rate Constraints
-def Ramp1(model,j,i):
+def Ramp1a(model,j,i):
     a = model.mwh_1[j,i] + model.mwh_2[j,i] + model.mwh_3[j,i]
     b = model.mwh_1[j,i-1] + model.mwh_2[j,i-1] + model.mwh_3[j,i-1]
     return a - b <= model.ramp[j]
-model.RampCon1 = Constraint(model.Ramping,model.ramp1_periods,rule=Ramp1)
+model.RampCon1a = Constraint(model.Ramping,model.ramp1_periods,rule=Ramp1a)
 
-def Ramp2(model,j,i):
+def Ramp2a(model,j,i):
+    a = model.mwh_1[j,i] + model.mwh_2[j,i] + model.mwh_3[j,i]
+    b = model.mwh_1[j,i-1] + model.mwh_2[j,i-1] + model.mwh_3[j,i-1]
+    return a - b <= model.ramp[j]
+model.RampCon2a = Constraint(model.Ramping,model.ramp2_periods,rule=Ramp2a)
+
+def Ramp1b(model,j,i):
     a = model.mwh_1[j,i] + model.mwh_2[j,i] + model.mwh_3[j,i]
     b = model.mwh_1[j,i-1] + model.mwh_2[j,i-1] + model.mwh_3[j,i-1]
     return b - a <= model.ramp[j]
-model.RampCon2 = Constraint(model.Ramping,model.ramp2_periods,rule=Ramp2)
+model.RampCon1b = Constraint(model.Ramping,model.ramp1_periods,rule=Ramp1b)
+
+def Ramp2b(model,j,i):
+    a = model.mwh_1[j,i] + model.mwh_2[j,i] + model.mwh_3[j,i]
+    b = model.mwh_1[j,i-1] + model.mwh_2[j,i-1] + model.mwh_3[j,i-1]
+    return b - a <= model.ramp[j]
+model.RampCon2b = Constraint(model.Ramping,model.ramp2_periods,rule=Ramp2b)

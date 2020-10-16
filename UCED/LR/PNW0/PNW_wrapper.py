@@ -58,6 +58,7 @@ def sim(days):
     flow=[]
     Generator=[]
     Duals=[]
+    System_cost = []
     
     df_generators = pd.read_csv('generators.csv',header=0)
     
@@ -73,7 +74,7 @@ def sim(days):
             instance.GasPrice[z] = instance.SimGasPrice[z,day]
             
             for i in K:
-                instance.HorizonDemand[z,i] = instance.SimDemand[z,(day-1)*co+i]
+                instance.HorizonDemand[z,i] = instance.SimDemand[z,(day-1)*24+i]
                 instance.HorizonWind[z,i] = instance.SimWind[z,(day-1)*24+i]
                 instance.HorizonSolar[z,i] = instance.SimSolar[z,(day-1)*24+i]
                 instance.HorizonMustRun[z,i] = instance.SimMustRun[z,(day-1)*24+i]
@@ -101,8 +102,48 @@ def sim(days):
             instance.HorizonPath66_minflow[i] = instance.SimPath66_imports_minflow[(day-1)*24+i]  
             instance.HorizonPNW_hydro_minflow[i] = instance.SimPNW_hydro_minflow[(day-1)*24+i]
     #            
-        PNW_result = opt.solve(instance)
+        PNW_result = opt.solve(instance,tee=True,symbolic_solver_labels=True)
         instance.solutions.load_from(PNW_result)   
+        
+        ##################
+        # record objective function
+        
+        coal = 0
+        nuclear = 0
+        gas = 0
+        oil = 0
+        psh = 0
+        slack = 0
+        f_gas = 0
+        f_oil = 0
+        f_coal = 0
+        st = 0
+        
+        for i in range(1,25):
+            for j in instance.Coal:
+                coal = coal + instance.mwh_1[j,i].value*(instance.seg1[j]*2 + instance.var_om[j]) + instance.mwh_2[j,i].value*(instance.seg2[j]*2 + instance.var_om[j]) + instance.mwh_3[j,i].value*(instance.seg3[j]*2 + instance.var_om[j])  
+            for j in instance.Gas:
+                gas = gas + instance.mwh_1[j,i].value*(instance.seg1[j]*instance.GasPrice['PNW'].value + instance.var_om[j]) + instance.mwh_2[j,i].value*(instance.seg2[j]*instance.GasPrice['PNW'].value + instance.var_om[j]) + instance.mwh_3[j,i].value*(instance.seg3[j]*instance.GasPrice['PNW'].value + instance.var_om[j])  
+            for j in instance.Nuclear:
+                nuclear = nuclear + instance.mwh_1[j,i].value*(instance.seg1[j]*1 + instance.var_om[j]) + instance.mwh_2[j,i].value*(instance.seg2[j]*1 + instance.var_om[j]) + instance.mwh_3[j,i].value*(instance.seg3[j]*1 + instance.var_om[j])  
+            for j in instance.Oil:
+                oil = oil + instance.mwh_1[j,i].value*(instance.seg1[j]*20 + instance.var_om[j]) + instance.mwh_2[j,i].value*(instance.seg2[j]*20 + instance.var_om[j]) + instance.mwh_3[j,i].value*(instance.seg3[j]*20 + instance.var_om[j])  
+            for j in instance.PSH:
+                psh = psh + instance.mwh_1[j,i].value*(instance.seg1[j]*10 + instance.var_om[j]) + instance.mwh_2[j,i].value*(instance.seg2[j]*10 + instance.var_om[j]) + instance.mwh_3[j,i].value*(instance.seg3[j]*10 + instance.var_om[j])  
+            for j in instance.Slack:
+                slack = slack + instance.mwh_1[j,i].value*(instance.seg1[j]*2000 + instance.var_om[j]) + instance.mwh_2[j,i].value*(instance.seg2[j]*2000 + instance.var_om[j]) + instance.mwh_3[j,i].value*(instance.seg3[j]*2000 + instance.var_om[j])  
+            for j in instance.Gas:
+                f_gas = f_gas + instance.no_load[j]*instance.on[j,i].value*2
+            for j in instance.Coal:
+                f_coal = f_coal + instance.no_load[j]*instance.on[j,i].value*2
+            for j in instance.Oil:
+                f_oil = f_oil + instance.no_load[j]*instance.on[j,i].value*2
+            for j in instance.Generators:
+                st = st + instance.st_cost[j]*instance.switch[j,i].value
+
+        S = gas + oil + coal + slack + psh + nuclear + st + f_gas + f_oil + f_coal 
+        System_cost.append(S)
+
         
         for z in instance2.zones:
             
@@ -150,9 +191,10 @@ def sim(days):
                 for index in cobject:
                      if int(index>0 and index<25):
     #                print ("   Constraint",c)
-                         Duals.append((str(c),index+((day-1)*24), instance2.dual[cobject[index]]))
-    #            print ("      ", index, instance2.dual[cobject[index]])
-
+                         try:
+                             Duals.append((str(c),index+((day-1)*24), instance2.dual[cobject[index]]))
+                         except KeyError:
+                             Duals.append((str(c),index+((day-1)*24),-999))
      
         #The following section is for storing and sorting results
         for v in instance.component_objects(Var, active=True):
@@ -392,6 +434,7 @@ def sim(days):
     solar_pd=pd.DataFrame(solar,columns=('Zone','Time','Value'))
     wind_pd=pd.DataFrame(wind,columns=('Zone','Time','Value'))
     shadow_price=pd.DataFrame(Duals,columns=('Constraint','Time','Value'))
+    objective = pd.DataFrame(System_cost)
         
     mwh_1_pd.to_csv('mwh_1.csv')
     mwh_2_pd.to_csv('mwh_2.csv')
@@ -403,5 +446,6 @@ def sim(days):
     solar_pd.to_csv('solar_out.csv')
     wind_pd.to_csv('wind_out.csv')
     shadow_price.to_csv('shadow_price.csv')
+    objective.to_csv('obj_function.csv')
     
     return None

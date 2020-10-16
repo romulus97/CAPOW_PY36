@@ -462,23 +462,24 @@ def Ramp1a(model,j,i):
     return a - b <= model.ramp[j]
 model.RampCon1a = Constraint(model.Generators,model.ramp1_periods,rule=Ramp1a)
 
-def Ramp1b(model,j,i):
-    a = model.mwh_1[j,i] + model.mwh_2[j,i] + model.mwh_3[j,i]
-    b = model.mwh_1[j,i-1] + model.mwh_2[j,i-1] + model.mwh_3[j,i-1]
-    return b - a <= model.ramp[j]
-model.RampCon1b = Constraint(model.Generators,model.ramp1_periods,rule=Ramp1b)
-
 def Ramp2a(model,j,i):
     a = model.mwh_1[j,i] + model.mwh_2[j,i] + model.mwh_3[j,i]
     b = model.mwh_1[j,i-1] + model.mwh_2[j,i-1] + model.mwh_3[j,i-1]
     return a - b <= model.ramp[j]
 model.RampCon2a = Constraint(model.Generators,model.ramp2_periods,rule=Ramp2a)
 
+def Ramp1b(model,j,i):
+    a = model.mwh_1[j,i] + model.mwh_2[j,i] + model.mwh_3[j,i]
+    b = model.mwh_1[j,i-1] + model.mwh_2[j,i-1] + model.mwh_3[j,i-1]
+    return b - a <= model.ramp[j]
+model.RampCon1b = Constraint(model.Generators,model.ramp1_periods,rule=Ramp1b)
+
 def Ramp2b(model,j,i):
     a = model.mwh_1[j,i] + model.mwh_2[j,i] + model.mwh_3[j,i]
     b = model.mwh_1[j,i-1] + model.mwh_2[j,i-1] + model.mwh_3[j,i-1]
     return b - a <= model.ramp[j]
 model.RampCon2b = Constraint(model.Generators,model.ramp2_periods,rule=Ramp2b)
+
 
 #Nuclear constraint
 def NucOn(model,i):

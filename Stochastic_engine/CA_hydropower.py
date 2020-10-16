@@ -623,6 +623,11 @@ def hydro(sim_years):
     PGE_new = PGE_smooth + np.random.randn(len(PGE_smooth))*3366 
     SCE_new = SCE_smooth + np.random.randn(len(SCE_smooth))*2194
     
+    # eliminate zeros
+    for i in range(0,len(PGE_new)):
+        PGE_new[i] = max(PGE_new[i],0)
+        SCE_new[i] = max(SCE_new[i],0)
+    
     combined = np.column_stack((PGE_new,SCE_new))
     
     df_D = pd.DataFrame(combined)

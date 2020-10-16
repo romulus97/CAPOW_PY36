@@ -21,14 +21,3 @@ days = 365
 # CALIFORNIA
 import CA_wrapper
 CA_wrapper.sim(days)
-
-
-############################################################################
-#                    WHOLESALE ELECTRICITY PRICES
-#
-import CA_price_calculation
-#import emission_calculation
-
-# Prices in California need to be translated to a CAISO average price from
-# prices at the four zones. This is done using a regression among historical
-# zonal prices.

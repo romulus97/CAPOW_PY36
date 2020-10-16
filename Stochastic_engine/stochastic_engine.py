@@ -27,12 +27,12 @@ starttime = time.time()
 stoch_years=20
 
 # Generate synthetic weather (wind speed and temperature) records. 
-import synthetic_temp_wind_v2
-synthetic_temp_wind_v2.synthetic(stoch_years)
+import synthetic_temp_wind
+synthetic_temp_wind.synthetic(stoch_years)
 print('synth weather')
 
 # Generate synthetic streamflow records 
-import synthetic_streamflow_v2
+import synthetic_streamflow
 print('streamflows')
 
 #############################################################################
@@ -40,8 +40,8 @@ print('streamflows')
 #############################################################################
 # DAILY HYDROPOWER SIMULATION
 
-# Now specify a smaller subset of stochastic data to run (must be <= stoch years)
-sim_years = 3
+# Now specify a smaller subset of stochastic data to run (must be < stoch years)
+sim_years = 19
 
 # Run ORCA to get California storage dam releases
 import main
@@ -58,12 +58,11 @@ import Willamette_launch
 Willamette_launch.launch(sim_years)
 print('Willamette')
 
-
 # Federal Columbia River Power System Model (mass balance in Python)
-import ICF_calc_new
-ICF_calc_new.calc(sim_years)
-import FCRPS_New
-FCRPS_New.simulate(sim_years)
+import ICF_calc
+ICF_calc.calc(sim_years)
+import FCRPS
+FCRPS.simulate(sim_years)
 print('FCRPS')
 
 #############################################################################

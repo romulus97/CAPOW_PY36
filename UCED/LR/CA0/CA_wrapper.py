@@ -27,9 +27,6 @@ def sim(days):
     instance2.dual = pyo.Suffix(direction=pyo.Suffix.IMPORT)
     opt = SolverFactory("cplex")
 
-
-
-
     H = instance.HorizonHours
     D = 2
     K=range(1,H+1)
@@ -48,6 +45,7 @@ def sim(days):
     flow=[]
     Generator=[]
     Duals=[]
+    System_cost = []
     df_generators = pd.read_csv('generators.csv',header=0)
 
     #max here can be (1,365)
@@ -88,8 +86,89 @@ def sim(days):
             instance.HorizonPGE_valley_hydro_minflow[i] = instance.SimPGE_valley_hydro_minflow[(day-1)*24+i]
             instance.HorizonSCE_hydro_minflow[i] = instance.SimSCE_hydro_minflow[(day-1)*24+i]
     #
-        CAISO_result = opt.solve(instance)
+        CAISO_result = opt.solve(instance,tee=True,symbolic_solver_labels=True)
         instance.solutions.load_from(CAISO_result)
+        
+        ########### 
+        # record objective function value
+        
+        coal = 0
+        gas11 = 0
+        gas21 = 0
+        gas31 = 0
+        gas12 = 0
+        gas22 = 0
+        gas32 = 0
+        gas13 = 0
+        gas23 = 0
+        gas33 = 0
+        gas14 = 0
+        gas24 = 0
+        gas34 = 0
+        oil = 0
+        psh = 0
+        slack = 0
+        f_gas1 = 0
+        f_gas2 = 0
+        f_gas3 = 0
+        f_oil = 0
+        f_coal = 0
+        st = 0
+        sdgei = 0
+        scei = 0
+        pgei = 0
+        f = 0
+
+        for i in range(1,25):
+            for j in instance.Coal:
+                coal = coal + instance.mwh_1[j,i].value*(instance.seg1[j]*2 + instance.var_om[j]) + instance.mwh_2[j,i].value*(instance.seg2[j]*2 + instance.var_om[j]) + instance.mwh_3[j,i].value*(instance.seg3[j]*2 + instance.var_om[j])  
+            for j in instance.Zone1Gas:
+                gas11 = gas11 + instance.mwh_1[j,i].value*(instance.seg1[j]*instance.GasPrice['PGE_valley'].value + instance.var_om[j]) 
+                gas21 = gas21 + instance.mwh_2[j,i].value*(instance.seg2[j]*instance.GasPrice['PGE_valley'].value + instance.var_om[j]) 
+                gas31 = gas31 + instance.mwh_3[j,i].value*(instance.seg3[j]*instance.GasPrice['PGE_valley'].value + instance.var_om[j]) 
+            for j in instance.Zone2Gas:
+                gas12 = gas12 + instance.mwh_1[j,i].value*(instance.seg1[j]*instance.GasPrice['PGE_bay'].value + instance.var_om[j]) 
+                gas22 = gas22 + instance.mwh_2[j,i].value*(instance.seg2[j]*instance.GasPrice['PGE_bay'].value + instance.var_om[j]) 
+                gas32 = gas32 + instance.mwh_3[j,i].value*(instance.seg3[j]*instance.GasPrice['PGE_bay'].value + instance.var_om[j]) 
+            for j in instance.Zone3Gas:
+                gas13 = gas13 + instance.mwh_1[j,i].value*(instance.seg1[j]*instance.GasPrice['SCE'].value + instance.var_om[j]) 
+                gas23 = gas23 + instance.mwh_2[j,i].value*(instance.seg2[j]*instance.GasPrice['SCE'].value + instance.var_om[j]) 
+                gas33 = gas33 + instance.mwh_3[j,i].value*(instance.seg3[j]*instance.GasPrice['SCE'].value + instance.var_om[j]) 
+            for j in instance.Zone4Gas:
+                gas14 = gas14 + instance.mwh_1[j,i].value*(instance.seg1[j]*instance.GasPrice['SDGE'].value + instance.var_om[j]) 
+                gas24 = gas24 + instance.mwh_2[j,i].value*(instance.seg2[j]*instance.GasPrice['SDGE'].value + instance.var_om[j]) 
+                gas34 = gas34 + instance.mwh_3[j,i].value*(instance.seg3[j]*instance.GasPrice['SDGE'].value + instance.var_om[j])                        
+            for j in instance.Oil:
+                oil = oil + instance.mwh_1[j,i].value*(instance.seg1[j]*20 + instance.var_om[j]) + instance.mwh_2[j,i].value*(instance.seg2[j]*20 + instance.var_om[j]) + instance.mwh_3[j,i].value*(instance.seg3[j]*20 + instance.var_om[j])  
+            for j in instance.PSH:
+                psh = psh + instance.mwh_1[j,i].value*(instance.seg1[j]*10 + instance.var_om[j]) + instance.mwh_2[j,i].value*(instance.seg2[j]*10 + instance.var_om[j]) + instance.mwh_3[j,i].value*(instance.seg3[j]*10 + instance.var_om[j])  
+            for j in instance.Slack:
+                slack = slack + instance.mwh_1[j,i].value*(instance.seg1[j]*2000 + instance.var_om[j]) + instance.mwh_2[j,i].value*(instance.seg2[j]*2000 + instance.var_om[j]) + instance.mwh_3[j,i].value*(instance.seg3[j]*2000 + instance.var_om[j])  
+            for j in instance.Zone1Gas:
+                f_gas1 = f_gas1 + instance.no_load[j]*instance.on[j,i].value*2
+            for j in instance.Zone2Gas:
+                f_gas2 = f_gas2 + instance.no_load[j]*instance.on[j,i].value*2
+            for j in instance.Zone3Gas:
+                f_gas3 = f_gas3 + instance.no_load[j]*instance.on[j,i].value*2
+            for j in instance.Coal:
+                f_coal = f_coal + instance.no_load[j]*instance.on[j,i].value*2
+            for j in instance.Oil:
+                f_oil = f_oil + instance.no_load[j]*instance.on[j,i].value*2
+            for j in instance.Generators:
+                st = st + instance.st_cost[j]*instance.switch[j,i].value
+            for j in instance.WECCImportsSDGE:
+                sdgei =sdgei + instance.mwh_1[j,i].value*(14.5 + 2.76*instance.GasPrice['SDGE'].value) + instance.mwh_2[j,i].value*(14.5 + 2.76*instance.GasPrice['SDGE'].value) + instance.mwh_3[j,i].value*(14.5 + 2.76*instance.GasPrice['SDGE'].value)
+            for j in instance.WECCImportsSCE:
+                scei =scei + instance.mwh_1[j,i].value*(14.5 + 2.76*instance.GasPrice['SCE'].value) + instance.mwh_2[j,i].value*(14.5 + 2.76*instance.GasPrice['SCE'].value) + instance.mwh_3[j,i].value*(14.5 + 2.76*instance.GasPrice['SCE'].value)
+            for j in instance.WECCImportsPGEV:
+                pgei =pgei + instance.mwh_1[j,i].value*5 + instance.mwh_2[j,i].value*5 + instance.mwh_3[j,i].value*5
+            for s in instance.sources:
+                for k in instance.sinks:
+                    f = f + instance.flow[s,k,i].value*instance.hurdle[s,k] 
+
+        S = f + oil + coal + slack + psh + st + sdgei + scei + pgei + f_gas1 + f_gas2 + f_gas3 + f_oil + gas11 + gas21 + gas31 + gas12 + gas22 + gas32 + gas13 + gas23 + gas33 + gas14 + gas24 + gas34 
+        System_cost.append(S)
+
 
         for z in instance2.zones:
 
@@ -124,6 +203,7 @@ def sim(days):
             instance2.HorizonPath61_minflow[i] = instance2.SimPath61_imports_minflow[(day-1)*24+i]
             instance2.HorizonPGE_valley_hydro_minflow[i] = instance2.SimPGE_valley_hydro_minflow[(day-1)*24+i]
             instance2.HorizonSCE_hydro_minflow[i] = instance2.SimSCE_hydro_minflow[(day-1)*24+i]
+     
         for j in instance.Generators:
             for t in K:
                 if instance.on[j,t] == 1:
@@ -141,10 +221,9 @@ def sim(days):
                     instance2.switch[j,t] = 0
                     instance2.switch[j,t] = 0
                     instance2.switch[j,t].fixed = True
-        results = opt.solve(instance2)
+                    
+        results = opt.solve(instance2,tee=True,symbolic_solver_labels=True)
         instance2.solutions.load_from(results)
-
-
 
         print ("Duals")
 
@@ -154,8 +233,10 @@ def sim(days):
             if str(c) in ['Bal1Constraint','Bal2Constraint','Bal3Constraint','Bal4Constraint']:
                 for index in cobject:
                      if int(index>0 and index<25):
-    #                print ("   Constraint",c)
-                         Duals.append((str(c),index+((day-1)*24), instance2.dual[cobject[index]]))
+                         try:
+                             Duals.append((str(c),index+((day-1)*24), instance2.dual[cobject[index]]))
+                         except KeyError:
+                             Duals.append((str(c),index+((day-1)*24),-999))
     #            print ("      ", index, instance2.dual[cobject[index]])
         #The following section is for storing and sorting results
         for v in instance.component_objects(Var, active=True):
@@ -593,51 +674,51 @@ def sim(days):
 
 
             for j in instance.Generators:
-                if instance.on[j,H] == 1:
+                if instance.on[j,24] == 1:
                     instance.on[j,0] = 1
                 else:
                     instance.on[j,0] = 0
                 instance.on[j,0].fixed = True
 
-                if instance.mwh_1[j,H].value <=0 and instance.mwh_1[j,H].value>= -0.0001:
+                if instance.mwh_1[j,24].value <=0 and instance.mwh_1[j,24].value>= -0.0001:
                     newval_1=0
                 else:
-                    newval_1=instance.mwh_1[j,H].value
+                    newval_1=instance.mwh_1[j,24].value
                 instance.mwh_1[j,0] = newval_1
                 instance.mwh_1[j,0].fixed = True
 
-                if instance.mwh_2[j,H].value <=0 and instance.mwh_2[j,H].value>= -0.0001:
+                if instance.mwh_2[j,24].value <=0 and instance.mwh_2[j,24].value>= -0.0001:
                     newval=0
                 else:
-                    newval=instance.mwh_2[j,H].value
+                    newval=instance.mwh_2[j,24].value
 
-                if instance.mwh_3[j,H].value <=0 and instance.mwh_3[j,H].value>= -0.0001:
+                if instance.mwh_3[j,24].value <=0 and instance.mwh_3[j,24].value>= -0.0001:
                     newval2=0
                 else:
-                    newval2=instance.mwh_3[j,H].value
+                    newval2=instance.mwh_3[j,24].value
 
 
                 instance.mwh_2[j,0] = newval
                 instance.mwh_2[j,0].fixed = True
                 instance.mwh_3[j,0] = newval2
                 instance.mwh_3[j,0].fixed = True
-                if instance.switch[j,H] == 1:
+                if instance.switch[j,24] == 1:
                     instance.switch[j,0] = 1
                 else:
                     instance.switch[j,0] = 0
                 instance.switch[j,0].fixed = True
 
-                if instance.srsv[j,H].value <=0 and instance.srsv[j,H].value>= -0.0001:
+                if instance.srsv[j,24].value <=0 and instance.srsv[j,24].value>= -0.0001:
                     newval_srsv=0
                 else:
-                    newval_srsv=instance.srsv[j,H].value
+                    newval_srsv=instance.srsv[j,24].value
                 instance.srsv[j,0] = newval_srsv
                 instance.srsv[j,0].fixed = True
 
-                if instance.nrsv[j,H].value <=0 and instance.nrsv[j,H].value>= -0.0001:
+                if instance.nrsv[j,24].value <=0 and instance.nrsv[j,24].value>= -0.0001:
                     newval_nrsv=0
                 else:
-                    newval_nrsv=instance.nrsv[j,H].value
+                    newval_nrsv=instance.nrsv[j,24].value
                 instance.nrsv[j,0] = newval_nrsv
                 instance.nrsv[j,0].fixed = True
 
@@ -654,6 +735,8 @@ def sim(days):
     wind_pd=pd.DataFrame(wind,columns=('Zone','Time','Value'))
     flow_pd=pd.DataFrame(flow,columns=('Source','Sink','Time','Value'))
     shadow_price=pd.DataFrame(Duals,columns=('Constraint','Time','Value'))
+    objective = pd.DataFrame(System_cost)
+
 
     flow_pd.to_csv('flow.csv')
     mwh_1_pd.to_csv('mwh_1.csv')
@@ -665,6 +748,7 @@ def sim(days):
     nrsv_pd.to_csv('nrsv.csv')
     solar_pd.to_csv('solar_out.csv')
     wind_pd.to_csv('wind_out.csv')
-    shadow_price.to_csv('shadow_price.csv')
+    shadow_price.to_csv('shadow_price.csv')    
+    objective.to_csv('obj_function.csv')
 
     return None

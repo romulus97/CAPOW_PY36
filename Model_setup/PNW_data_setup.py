@@ -89,13 +89,11 @@ def setup(year):
     dispatchLP_file='../UCED/PNW_dispatchLP.py'
     wrapper_file='../UCED/PNW_wrapper.py'
     simulation_file='../UCED/PNW_simulation.py'
-    price_cal_file='../UCED/PNW_price_calculation.py'
 
 
     copy(dispatch_file,path)
     copy(wrapper_file,path)
     copy(simulation_file,path)
-    copy(price_cal_file,path)
     copy(dispatchLP_file,path)
     copy(generators_file,path)
 

@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def exchange(year):
-
+    
     df_data = pd.read_csv('../Stochastic_engine/Synthetic_demand_pathflows/Load_Path_Sim.csv',header=0)
     c = ['Path66_sim','Path46_sim','Path61_sim','Path42_sim','Path24_sim','Path45_sim']
     df_data = df_data[c]
@@ -20,7 +20,7 @@ def exchange(year):
     
     # select dispatchable imports (positve flow days)
     imports = df_data
-    imports = imports.reset_index()
+    imports = imports.reset_index(drop=True)
     
     for p in paths:
         for i in range(0,len(imports)):     
@@ -84,7 +84,7 @@ def exchange(year):
     df_data.columns = [paths]
     
     df_data = df_data.loc[year*365:year*365+364,:]
-    df_data = df_data.reset_index()
+    df_data = df_data.reset_index(drop=True)
     
     e = np.zeros((8760,4))
     
@@ -135,16 +135,17 @@ def exchange(year):
     
     # convert to minimum flow time series and dispatchable (daily)
     
-    df_data = pd.read_excel('../Stochastic_engine/CA_hydropower/CA_hydro_daily.xlsx',header=0)
+    df_data = pd.read_excel('../Stochastic_engine/CA_hydropower/CA_hydro_daily.xlsx',header=0,index_col=0)
     hydro = df_data.loc[year*365:year*365+364,:]
-    hydro = hydro.reset_index()
+    hydro = hydro.reset_index(drop=True)
     hydro=hydro.values
-    PGE_ALL=hydro[:,1]/0.837
-    SCE_all=hydro[:,2]/0.8016
+    PGE_ALL=hydro[:,0]/0.837
+    SCE_all=hydro[:,1]/0.8016
     hydro=pd.DataFrame()
     hydro['PGE_valley']=PGE_ALL
     hydro['SCE']=SCE_all
     zones = ['PGE_valley','SCE']
+    
     df_mins = pd.read_excel('Hydro_setup/Minimum_hydro_profiles.xlsx',header=0)
     
     for i in range(0,len(hydro)):
@@ -163,11 +164,12 @@ def exchange(year):
     # hourly minimum flow for hydro
     hourly = np.zeros((8760,len(zones)))
     
-    df_data = pd.read_excel('../Stochastic_engine/CA_hydropower/CA_hydro_daily.xlsx',header=0)
+    df_data = pd.read_excel('../Stochastic_engine/CA_hydropower/CA_hydro_daily.xlsx',header=0,index_col=0)
     hydro = df_data.loc[year*365:year*365+364,:]
-    hydro = hydro.reset_index()
-    PGE_ALL=hydro[:,1]/0.837
-    SCE_all=hydro[:,2]/0.8016
+    hydro = hydro.reset_index(drop=True)
+    hydro=hydro.values
+    PGE_ALL=hydro[:,0]/0.837
+    SCE_all=hydro[:,1]/0.8016
     hydro=pd.DataFrame()
     hydro['PGE_valley']=PGE_ALL
     hydro['SCE']=SCE_all

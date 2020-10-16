@@ -31,8 +31,8 @@ def wind_sim(sim_years, PNW_cap, CAISO_cap):
     # First do analysis of historical wind power production data
     
     #load historical renewable energy production data
-    df_BPA = pd.read_excel('Synthetic_wind_power/renewables_2011_2017.xlsx',sheetname='BPA',header=0)
-    df_CAISO = pd.read_excel('Synthetic_wind_power/renewables_2011_2017.xlsx',sheetname='CAISO',header=0)
+    df_BPA = pd.read_excel('Synthetic_wind_power/renewables_2011_2017.xlsx',sheet_name='BPA',header=0)
+    df_CAISO = pd.read_excel('Synthetic_wind_power/renewables_2011_2017.xlsx',sheet_name='CAISO',header=0)
     
     BPA = df_BPA.values
     CAISO = df_CAISO.loc[:,'wind'].values
@@ -45,7 +45,7 @@ def wind_sim(sim_years, PNW_cap, CAISO_cap):
     df_data.columns = ['Month','Day','Year','Hour','BPA','CAISO']
     
     #convert hourly data to capacity factor by dividing by installed capacity
-    df_cap = pd.read_excel('Synthetic_wind_power/cap_by_month.xlsx',sheetname='wind',header=0)
+    df_cap = pd.read_excel('Synthetic_wind_power/cap_by_month.xlsx',sheet_name='wind',header=0)
     cf = np.zeros((len(df_data),2))
     
     for i in range(0,len(df_data)):
@@ -89,7 +89,7 @@ def wind_sim(sim_years, PNW_cap, CAISO_cap):
     # load records of daily summed capacity factors (max daily value is 24, min is 0)
     # alongside contemporaneous records of average daily wind speeds at selected
     # meteorological stations
-    df_data = pd.read_excel('Synthetic_wind_power/power_speed_daily.xlsx',sheetname='Sheet1',header=0)
+    df_data = pd.read_excel('Synthetic_wind_power/power_speed_daily.xlsx',sheet_name='Sheet1',header=0)
     
     # separate data by month
     jan2 = df_data.loc[df_data['Month'] == 1,:]

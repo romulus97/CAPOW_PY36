@@ -604,14 +604,26 @@ def PSHC(model,j,i):
 model.PumpTime = Constraint(model.PSH,model.hh_periods,rule=PSHC)
 
 #Ramp Rate Constraints
-def Ramp1(model,j,i):
+def Ramp1a(model,j,i):
     a = model.mwh_1[j,i] + model.mwh_2[j,i] + model.mwh_3[j,i]
     b = model.mwh_1[j,i-1] + model.mwh_2[j,i-1] + model.mwh_3[j,i-1]
     return a - b <= model.ramp[j]
-model.RampCon1 = Constraint(model.Ramping,model.ramp1_periods,rule=Ramp1)
+model.RampCon1a = Constraint(model.Ramping,model.ramp1_periods,rule=Ramp1a)
 
-def Ramp2(model,j,i):
+def Ramp2a(model,j,i):
+    a = model.mwh_1[j,i] + model.mwh_2[j,i] + model.mwh_3[j,i]
+    b = model.mwh_1[j,i-1] + model.mwh_2[j,i-1] + model.mwh_3[j,i-1]
+    return a - b <= model.ramp[j]
+model.RampCon2a = Constraint(model.Ramping,model.ramp2_periods,rule=Ramp2a)
+
+def Ramp1b(model,j,i):
     a = model.mwh_1[j,i] + model.mwh_2[j,i] + model.mwh_3[j,i]
     b = model.mwh_1[j,i-1] + model.mwh_2[j,i-1] + model.mwh_3[j,i-1]
     return b - a <= model.ramp[j]
-model.RampCon2 = Constraint(model.Ramping,model.ramp2_periods,rule=Ramp2)
+model.RampCon1b = Constraint(model.Ramping,model.ramp1_periods,rule=Ramp1b)
+
+def Ramp2b(model,j,i):
+    a = model.mwh_1[j,i] + model.mwh_2[j,i] + model.mwh_3[j,i]
+    b = model.mwh_1[j,i-1] + model.mwh_2[j,i-1] + model.mwh_3[j,i-1]
+    return b - a <= model.ramp[j]
+model.RampCon2b = Constraint(model.Ramping,model.ramp2_periods,rule=Ramp2b)
