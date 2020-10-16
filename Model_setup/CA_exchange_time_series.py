@@ -6,7 +6,6 @@ Created on Mon May 14 17:29:16 2018
 """
 from __future__ import division
 import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
 
 def exchange(year):
@@ -186,3 +185,4 @@ def exchange(year):
     H.to_csv('Hydro_setup/CA_hydro_mins.csv')
 
     return None
+
