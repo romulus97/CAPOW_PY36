@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<emps>
+ <emp empno="1111">
+  <ename lastname="¿Ë">½Ü¿Ë</ename>
+  <age>33</age>
+ </emp>
+</emps>

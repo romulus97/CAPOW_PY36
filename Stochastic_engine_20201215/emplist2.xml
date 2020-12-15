@@ -1,0 +1,492 @@
+<?xml version="1.0" ?>
+<root>
+ <settings type="dict">
+  <data_inputs type="dict">
+   <path type="dict">
+    <key name="@path" type="str">Willamette/</key>
+   </path>
+   <filenames type="dict">
+    <key name="@inflow_data_filename" type="str">Synthetic_streamflows/synthetic_streamflows_Willamette_2005-2034_6.csv</key>
+    <key name="@hist_cp_filename" type="str">Data/model_initialization/CP_hist_cyclo_discharge.xls</key>
+    <key name="@hist_res_filename" type="str">Data/model_initialization/RES_hist_cyclo_rel_vol.xls</key>
+   </filenames>
+  </data_inputs>
+  <data_outputs type="dict">
+   <filenames type="dict">
+    <key name="@hydropower_filename" type="str">Output/WillametteDAMS_hydropower.xlsx</key>
+    <key name="@cpDischarge_filename" type="str">Output/Willamette_simulation_cpDischarge.xlsx</key>
+    <key name="@summary_filename" type="str">Output/Willamette_simulation_summary.xlsx</key>
+   </filenames>
+  </data_outputs>
+  <controlPoints type="dict">
+   <controlPoint type="list">
+    <item type="dict">
+     <key name="@id" type="str">1</key>
+     <key name="@name" type="str">Salem</key>
+     <key name="@reservoirs" type="str">10,12</key>
+     <key name="@location" type="str">23791083</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">2</key>
+     <key name="@name" type="str">Albany</key>
+     <key name="@reservoirs" type="str"/>
+     <key name="@location" type="str">23762845</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">3</key>
+     <key name="@name" type="str">Jefferson</key>
+     <key name="@reservoirs" type="str">10,12</key>
+     <key name="@location" type="str">23780423</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">4</key>
+     <key name="@name" type="str">Mehama</key>
+     <key name="@reservoirs" type="str">12</key>
+     <key name="@location" type="str">23780481</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">5</key>
+     <key name="@name" type="str">Harrisburg</key>
+     <key name="@reservoirs" type="str">1,2,4,5,6,8,9</key>
+     <key name="@location" type="str">23763337</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">6</key>
+     <key name="@name" type="str">Vida</key>
+     <key name="@reservoirs" type="str">8,9</key>
+     <key name="@location" type="str">23772903</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">7</key>
+     <key name="@name" type="str">Jasper</key>
+     <key name="@reservoirs" type="str">1,2,4</key>
+     <key name="@location" type="str">23751778</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">8</key>
+     <key name="@name" type="str">Goshen</key>
+     <key name="@reservoirs" type="str">5,6</key>
+     <key name="@location" type="str">23759228</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">9</key>
+     <key name="@name" type="str">Waterloo</key>
+     <key name="@reservoirs" type="str">10</key>
+     <key name="@location" type="str">23785687</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">10</key>
+     <key name="@name" type="str">Monroe</key>
+     <key name="@reservoirs" type="str">7</key>
+     <key name="@location" type="str">23763073</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">11</key>
+     <key name="@name" type="str">Foster_out</key>
+     <key name="@reservoirs" type="str">10</key>
+     <key name="@location" type="str">23785773</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">12</key>
+     <key name="@name" type="str">Foster_in</key>
+     <key name="@reservoirs" type="str">10</key>
+     <key name="@location" type="str">23787257</key>
+    </item>
+   </controlPoint>
+  </controlPoints>
+  <reservoirs type="dict">
+   <reservoir type="list">
+    <item type="dict">
+     <key name="@id" type="str">1</key>
+     <key name="@name" type="str">Hills Creek Reservoir (USACE)</key>
+     <key name="@path" type="str">Reservoirs/</key>
+     <key name="@area_vol_curve" type="str">Hills_Creek_area_capacity.csv</key>
+     <key name="@av_dir" type="str">Area_Capacity_Curves/</key>
+     <key name="@minOutflow" type="str">11</key>
+     <key name="@rule_curve" type="str">Hills_creek_rule_curve.csv</key>
+     <key name="@rc_dir" type="str">Rule_Curves{ScenarioName}</key>
+     <key name="@maxVolume" type="str">461075511</key>
+     <key name="@composite_rc" type="str">HC_composite_rc.csv</key>
+     <key name="@re_dir" type="str">Rel_Cap/</key>
+     <key name="@maxPowerFlow" type="str">101.8</key>
+     <key name="@RO_rc" type="str">HC_RO_capacity.csv</key>
+     <key name="@spillway_rc" type="str">HC_spillway_capacity.csv</key>
+     <key name="@cp_dir" type="str">ControlPoints{ScenarioName}</key>
+     <key name="@rule_priorities" type="str">hills_creek_rule_priorities.csv</key>
+     <key name="@rp_dir" type="str">Rules_HC/</key>
+     <key name="@tailwater_elev" type="str">374.0</key>
+     <key name="@turbine_efficiency" type="str">0.9</key>
+     <key name="@td_elev" type="str">472.0</key>
+     <key name="@fc1_elev" type="str">470.0</key>
+     <key name="@fc2_elev" type="str">nan</key>
+     <key name="@filename_dataIN" type="str">HCR5A</key>
+     <key name="@fc3_elev" type="str">nan</key>
+     <key name="@max_hydro_production" type="str">30</key>
+     <key name="@buffer_zone" type="str">HC_buffer.csv</key>
+     <key name="@ressim_output_f" type="str">HC_ressim_flow_1935_2008.csv</key>
+     <key name="@ressim_output_r" type="str">HC_ressim_rule_1935_2008.csv</key>
+     <key name="@inactive_elev" type="str">441.046</key>
+     <key name="@reservoir_type" type="str">Storage_HP</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">2</key>
+     <key name="@name" type="str">Lookout Point Reservoir (USACE)</key>
+     <key name="@path" type="str">Reservoirs/</key>
+     <key name="@area_vol_curve" type="str">Lookout_Point_area_capacity.csv</key>
+     <key name="@av_dir" type="str">Area_Capacity_Curves/</key>
+     <key name="@minOutflow" type="str">34</key>
+     <key name="@rule_curve" type="str">lookout_point_rule_curve.csv</key>
+     <key name="@rc_dir" type="str">Rule_Curves{ScenarioName}</key>
+     <key name="@maxVolume" type="str">622295321</key>
+     <key name="@composite_rc" type="str">LO_composite_rc.csv</key>
+     <key name="@re_dir" type="str">Rel_Cap/</key>
+     <key name="@maxPowerFlow" type="str">222.4</key>
+     <key name="@RO_rc" type="str">LO_composite_rc.csv</key>
+     <key name="@spillway_rc" type="str">LO_spillway_capacity.csv</key>
+     <key name="@cp_dir" type="str">ControlPoints{ScenarioName}</key>
+     <key name="@rule_priorities" type="str">lookout_rule_priorities.csv</key>
+     <key name="@rp_dir" type="str">Rules_Lookout/</key>
+     <key name="@tailwater_elev" type="str">210.31</key>
+     <key name="@turbine_efficiency" type="str">0.9</key>
+     <key name="@td_elev" type="str">287.0</key>
+     <key name="@fc1_elev" type="str">285.0</key>
+     <key name="@fc3_elev" type="str">283.0</key>
+     <key name="@fc2_elev" type="str">261.0</key>
+     <key name="@buffer_zone" type="str">LO_buffer.csv</key>
+     <key name="@max_hydro_production" type="str">120</key>
+     <key name="@filename_dataIN" type="str">LOP_loc</key>
+     <key name="@ressim_output_f" type="str">LO_ressim_flow_1935_2008.csv</key>
+     <key name="@ressim_output_r" type="str">LO_ressim_rule_1935_2008.csv</key>
+     <key name="@inactive_elev" type="str">251.46</key>
+     <key name="@reservoir_type" type="str">Storage_HP</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">3</key>
+     <key name="@name" type="str">Dexter Reservoir (USACE - re-regulating)</key>
+     <key name="@path" type="str">Reservoirs/</key>
+     <key name="@area_vol_curve" type="str">dexter_area_capacity.csv</key>
+     <key name="@av_dir" type="str">Area_Capacity_Curves/</key>
+     <key name="@minOutflow" type="str">34</key>
+     <key name="@composite_rc" type="str">Dexter_composite_rc.csv</key>
+     <key name="@re_dir" type="str">Rel_Cap/</key>
+     <key name="@maxPowerFlow" type="str">118.9</key>
+     <key name="@RO_rc" type="str">Dexter_RO_capacity.csv</key>
+     <key name="@spillway_rc" type="str">Dexter_Spillway_capacity.csv</key>
+     <key name="@tailwater_elev" type="str">194.46</key>
+     <key name="@max_hydro_production" type="str">15</key>
+     <key name="@filename_dataIN" type="str">DEX_loc</key>
+     <key name="@turbine_efficiency" type="str">0.9</key>
+     <key name="@inactive_elev" type="str">194.24</key>
+     <key name="@reservoir_type" type="str">RunOfRiver</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">4</key>
+     <key name="@name" type="str">Fall Creek Reservoir (USACE)</key>
+     <key name="@path" type="str">Reservoirs/</key>
+     <key name="@area_vol_curve" type="str">Fall_Creek_area_capacity.csv</key>
+     <key name="@av_dir" type="str">Area_Capacity_Curves/</key>
+     <key name="@minOutflow" type="str">1</key>
+     <key name="@rule_curve" type="str">Fall_Creek_rule_curve.csv</key>
+     <key name="@rc_dir" type="str">Rule_Curves{ScenarioName}</key>
+     <key name="@maxVolume" type="str">168741328</key>
+     <key name="@composite_rc" type="str">FC_composite_rc.csv</key>
+     <key name="@re_dir" type="str">Rel_Cap/</key>
+     <key name="@maxPowerFlow" type="str">nan</key>
+     <key name="@RO_rc" type="str">FC_RO_capacity.csv</key>
+     <key name="@spillway_rc" type="str">FC_spillway_capacity.csv</key>
+     <key name="@cp_dir" type="str">ControlPoints{ScenarioName}</key>
+     <key name="@rule_priorities" type="str">fall_creek_rule_priorities.csv</key>
+     <key name="@rp_dir" type="str">Rules_FC/</key>
+     <key name="@td_elev" type="str">256.0</key>
+     <key name="@tailwater_elev" type="str">nan</key>
+     <key name="@fc1_elev" type="str">254.0</key>
+     <key name="@fc2_elev" type="str">243.0</key>
+     <key name="@fc3_elev" type="str">nan</key>
+     <key name="@buffer_zone" type="str">FC_buffer.csv</key>
+     <key name="@ressim_output_f" type="str">FC_ressim_flow_1935_2008.csv</key>
+     <key name="@max_hydro_production" type="str">nan</key>
+     <key name="@filename_dataIN" type="str">FAL5A</key>
+     <key name="@ressim_output_r" type="str">FC_ressim_rule_1935_2008.csv</key>
+     <key name="@inactive_elev" type="str">217.32</key>
+     <key name="@reservoir_type" type="str">Storage_flood</key>
+     <key name="@turbine_efficiency" type="str">nan</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">5</key>
+     <key name="@name" type="str">Dorena Reservoir (USACE)</key>
+     <key name="@path" type="str">Reservoirs/</key>
+     <key name="@area_vol_curve" type="str">Dorena_area_capacity.csv</key>
+     <key name="@av_dir" type="str">Area_Capacity_Curves/</key>
+     <key name="@minOutflow" type="str">2.8</key>
+     <key name="@rule_curve" type="str">dorena_rule_curve.csv</key>
+     <key name="@rc_dir" type="str">Rule_Curves{ScenarioName}</key>
+     <key name="@maxVolume" type="str">178855940</key>
+     <key name="@composite_rc" type="str">Dorena_composite_rc.csv</key>
+     <key name="@re_dir" type="str">Rel_Cap/</key>
+     <key name="@maxPowerFlow" type="str">nan</key>
+     <key name="@RO_rc" type="str">Dorena_RO_capacity.csv</key>
+     <key name="@spillway_rc" type="str">Dorena_spillway_capacity.csv</key>
+     <key name="@cp_dir" type="str">ControlPoints{ScenarioName}</key>
+     <key name="@rule_priorities" type="str">dorena_rule_priorities.csv</key>
+     <key name="@rp_dir" type="str">Rules_Dorena/</key>
+     <key name="@td_elev" type="str">264.0</key>
+     <key name="@fc1_elev" type="str">255.0</key>
+     <key name="@fc2_elev" type="str">247.0</key>
+     <key name="@buffer_zone" type="str">Dorena_buffer.csv</key>
+     <key name="@ressim_output_f" type="str">Dorena_ressim_flow_1935_2008.csv</key>
+     <key name="@ressim_output_r" type="str">Dorena_ressim_rule_1935_2008.csv</key>
+     <key name="@inactive_elev" type="str">235.0</key>
+     <key name="@max_hydro_production" type="str">nan</key>
+     <key name="@filename_dataIN" type="str">DOR5A</key>
+     <key name="@reservoir_type" type="str">Storage_flood</key>
+     <key name="@fc3_elev" type="str">nan</key>
+     <key name="@turbine_efficiency" type="str">nan</key>
+     <key name="@tailwater_elev" type="str">nan</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">6</key>
+     <key name="@name" type="str">Cottage Grove Reservoir (USACE)</key>
+     <key name="@path" type="str">Reservoirs/</key>
+     <key name="@area_vol_curve" type="str">Cottage_Grove_area_capacity.csv</key>
+     <key name="@av_dir" type="str">Area_Capacity_Curves/</key>
+     <key name="@minOutflow" type="str">1.4</key>
+     <key name="@rule_curve" type="str">Cottage_Grove_rule_curve.csv</key>
+     <key name="@rc_dir" type="str">Rule_Curves{ScenarioName}</key>
+     <key name="@maxVolume" type="str">68014597</key>
+     <key name="@composite_rc" type="str">CG_composite_rc.csv</key>
+     <key name="@re_dir" type="str">Rel_Cap/</key>
+     <key name="@maxPowerFlow" type="str">nan</key>
+     <key name="@RO_rc" type="str">CG_RO_capacity.csv</key>
+     <key name="@spillway_rc" type="str">CG_spillway_capacity.csv</key>
+     <key name="@cp_dir" type="str">ControlPoints{ScenarioName}</key>
+     <key name="@rule_priorities" type="str">Cottage_Grove_rule_priorities.csv</key>
+     <key name="@rp_dir" type="str">Rules_CG/</key>
+     <key name="@td_elev" type="str">246.0</key>
+     <key name="@fc1_elev" type="str">241.0</key>
+     <key name="@fc2_elev" type="str">237.0</key>
+     <key name="@buffer_zone" type="str">CG_buffer.csv</key>
+     <key name="@ressim_output_f" type="str">CG_ressim_flow_1935_2008.csv</key>
+     <key name="@ressim_output_r" type="str">CG_ressim_rule_1935_2008.csv</key>
+     <key name="@inactive_elev" type="str">228.6</key>
+     <key name="@max_hydro_production" type="str">nan</key>
+     <key name="@filename_dataIN" type="str">COT5A</key>
+     <key name="@reservoir_type" type="str">Storage_flood</key>
+     <key name="@fc3_elev" type="str">nan</key>
+     <key name="@turbine_efficiency" type="str">nan</key>
+     <key name="@tailwater_elev" type="str">nan</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">7</key>
+     <key name="@name" type="str">Fern Ridge Reservoir (USACE)</key>
+     <key name="@path" type="str">Reservoirs/</key>
+     <key name="@area_vol_curve" type="str">Fern_Ridge_area_capacity.csv</key>
+     <key name="@av_dir" type="str">Area_Capacity_Curves/</key>
+     <key name="@minOutflow" type="str">1</key>
+     <key name="@rule_curve" type="str">Fern_Ridge_rule_curve.csv</key>
+     <key name="@rc_dir" type="str">Rule_Curves{ScenarioName}</key>
+     <key name="@maxVolume" type="str">211850506</key>
+     <key name="@composite_rc" type="str">FR_composite_rc.csv</key>
+     <key name="@re_dir" type="str">Rel_Cap/</key>
+     <key name="@maxPowerFlow" type="str">nan</key>
+     <key name="@RO_rc" type="str">FR_RO_capacity.csv</key>
+     <key name="@spillway_rc" type="str">FR_spillway_capacity.csv</key>
+     <key name="@cp_dir" type="str">ControlPoints{ScenarioName}</key>
+     <key name="@rule_priorities" type="str">fern_ridge_rule_priorities.csv</key>
+     <key name="@rp_dir" type="str">Rules_FR/</key>
+     <key name="@td_elev" type="str">116.0</key>
+     <key name="@fc1_elev" type="str">114.0</key>
+     <key name="@fc2_elev" type="str">nan</key>
+     <key name="@max_hydro_production" type="str">nan</key>
+     <key name="@fc3_elev" type="str">nan</key>
+     <key name="@buffer_zone" type="str">FR_buffer.csv</key>
+     <key name="@ressim_output_f" type="str">FR_ressim_flow_1935_2008.csv</key>
+     <key name="@ressim_output_r" type="str">FR_ressim_rule_1935_2008.csv</key>
+     <key name="@inactive_elev" type="str">107.60</key>
+     <key name="@reservoir_type" type="str">Storage_flood</key>
+     <key name="@turbine_efficiency" type="str">nan</key>
+     <key name="@tailwater_elev" type="str">nan</key>
+     <key name="@filename_dataIN" type="str">FRN5M</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">8</key>
+     <key name="@name" type="str">Cougar Reservoir (USACE)</key>
+     <key name="@path" type="str">Reservoirs/</key>
+     <key name="@area_vol_curve" type="str">Cougar_area_capacity.csv</key>
+     <key name="@av_dir" type="str">Area_Capacity_Curves/</key>
+     <key name="@minOutflow" type="str">11</key>
+     <key name="@rule_curve" type="str">Cougar_rule_curve.csv</key>
+     <key name="@rc_dir" type="str">Rule_Curves{ScenarioName}</key>
+     <key name="@maxVolume" type="str">246696368</key>
+     <key name="@composite_rc" type="str">Cougar_composite_rc.csv</key>
+     <key name="@re_dir" type="str">Rel_Cap/</key>
+     <key name="@maxPowerFlow" type="str">36.5</key>
+     <key name="@RO_rc" type="str">Cougar_RO_capacity.csv</key>
+     <key name="@spillway_rc" type="str">Cougar_spillway_capacity.csv</key>
+     <key name="@cp_dir" type="str">ControlPoints{ScenarioName}</key>
+     <key name="@rule_priorities" type="str">Cougar_rule_priorities.csv</key>
+     <key name="@rp_dir" type="str">Rules_Cougar/</key>
+     <key name="@tailwater_elev" type="str">382.10</key>
+     <key name="@turbine_efficiency" type="str">0.9</key>
+     <key name="@td_elev" type="str">520.0</key>
+     <key name="@fc1_elev" type="str">518.0</key>
+     <key name="@fc2_elev" type="str">nan</key>
+     <key name="@fc3_elev" type="str">nan</key>
+     <key name="@max_hydro_production" type="str">25</key>
+     <key name="@buffer_zone" type="str">Cougar_buffer.csv</key>
+     <key name="@ressim_output_f" type="str">Cougar_ressim_flow_1935_2008.csv</key>
+     <key name="@ressim_output_r" type="str">Cougar_ressim_rule_1935_2008.csv</key>
+     <key name="@inactive_elev" type="str">466.65</key>
+     <key name="@reservoir_type" type="str">Storage_HP</key>
+     <key name="@filename_dataIN" type="str">CGR5A</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">9</key>
+     <key name="@name" type="str">Blue River Reservoir (USACE)</key>
+     <key name="@path" type="str">Reservoirs/</key>
+     <key name="@area_vol_curve" type="str">Blue_River_area_capacity.csv</key>
+     <key name="@av_dir" type="str">Area_Capacity_Curves/</key>
+     <key name="@minOutflow" type="str">1.417</key>
+     <key name="@rule_curve" type="str">Blue_River_rule_curve.csv</key>
+     <key name="@rc_dir" type="str">Rule_Curves{ScenarioName}</key>
+     <key name="@maxVolume" type="str">168123574</key>
+     <key name="@composite_rc" type="str">BR_composite_rc.csv</key>
+     <key name="@re_dir" type="str">Rel_Cap/</key>
+     <key name="@maxPowerFlow" type="str">nan</key>
+     <key name="@RO_rc" type="str">BR_RO_capacity.csv</key>
+     <key name="@spillway_rc" type="str">BR_spillway_capacity.csv</key>
+     <key name="@cp_dir" type="str">ControlPoints{ScenarioName}</key>
+     <key name="@rule_priorities" type="str">Blue_River_rule_priorities.csv</key>
+     <key name="@rp_dir" type="str">Rules_BR/</key>
+     <key name="@td_elev" type="str">415.0</key>
+     <key name="@fc1_elev" type="str">414.0</key>
+     <key name="@fc2_elev" type="str">nan</key>
+     <key name="@fc3_elev" type="str">nan</key>
+     <key name="@buffer_zone" type="str">BR_buffer.csv</key>
+     <key name="@ressim_output_f" type="str">BR_ressim_flow_1935_2008.csv</key>
+     <key name="@max_hydro_production" type="str">nan</key>
+     <key name="@ressim_output_r" type="str">BR_ressim_rule_1935_2008.csv</key>
+     <key name="@inactive_elev" type="str">359.66</key>
+     <key name="@reservoir_type" type="str">Storage_flood</key>
+     <key name="@turbine_efficiency" type="str">nan</key>
+     <key name="@tailwater_elev" type="str">nan</key>
+     <key name="@filename_dataIN" type="str">BLU5A</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">10</key>
+     <key name="@name" type="str">Green Peter Reservoir (USACE)</key>
+     <key name="@path" type="str">Reservoirs/</key>
+     <key name="@area_vol_curve" type="str">Green_peter_area_capacity.csv</key>
+     <key name="@av_dir" type="str">Area_Capacity_Curves/</key>
+     <key name="@minOutflow" type="str">22.6</key>
+     <key name="@rule_curve" type="str">green_peter_rule_curve.csv</key>
+     <key name="@rc_dir" type="str">Rule_Curves{ScenarioName}</key>
+     <key name="@maxVolume" type="str">551246341</key>
+     <key name="@composite_rc" type="str">GP_composite_rc.csv</key>
+     <key name="@re_dir" type="str">Rel_Cap/</key>
+     <key name="@maxPowerFlow" type="str">125.1</key>
+     <key name="@RO_rc" type="str">GP_RO_capacity.csv</key>
+     <key name="@spillway_rc" type="str">GP_spillway_capacity.csv</key>
+     <key name="@cp_dir" type="str">ControlPoints{ScenarioName}</key>
+     <key name="@rule_priorities" type="str">green_peter_rule_priorities_NEW.csv</key>
+     <key name="@rp_dir" type="str">Rules_GP/</key>
+     <key name="@tailwater_elev" type="str">213.36</key>
+     <key name="@turbine_efficiency" type="str">0.9</key>
+     <key name="@td_elev" type="str">311.0</key>
+     <key name="@fc1_elev" type="str">309.0</key>
+     <key name="@fc2_elev" type="str">289.6</key>
+     <key name="@fc3_elev" type="str">301.8</key>
+     <key name="@max_hydro_production" type="str">80</key>
+     <key name="@buffer_zone" type="str">GP_buffer.csv</key>
+     <key name="@ressim_output_f" type="str">GP_ressim_flow_1935_2008.csv</key>
+     <key name="@ressim_output_r" type="str">GP_ressim_rule_1935_2008.csv</key>
+     <key name="@inactive_elev" type="str">281.03</key>
+     <key name="@reservoir_type" type="str">Storage_HP</key>
+     <key name="@filename_dataIN" type="str">GPR5A</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">11</key>
+     <key name="@name" type="str">Foster Reservoir (USACE)</key>
+     <key name="@path" type="str">Reservoirs/</key>
+     <key name="@area_vol_curve" type="str">Foster_area_capacity.csv</key>
+     <key name="@av_dir" type="str">Area_Capacity_Curves/</key>
+     <key name="@minOutflow" type="str">22.6</key>
+     <key name="@rule_curve" type="str">Foster_rule_curve.csv</key>
+     <key name="@rc_dir" type="str">Rule_Curves{ScenarioName}</key>
+     <key name="@maxVolume" type="str">90167522</key>
+     <key name="@composite_rc" type="str">Foster_composite_rc.csv</key>
+     <key name="@re_dir" type="str">Rel_Cap/</key>
+     <key name="@maxPowerFlow" type="str">96.8</key>
+     <key name="@RO_rc" type="str">Foster_RO_capacity.csv</key>
+     <key name="@spillway_rc" type="str">Foster_spillway_capacity.csv</key>
+     <key name="@cp_dir" type="str">ControlPoints{ScenarioName}</key>
+     <key name="@rule_priorities" type="str">foster_rule_priorities.csv</key>
+     <key name="@rp_dir" type="str">Rules_Foster/</key>
+     <key name="@tailwater_elev" type="str">159.87</key>
+     <key name="@turbine_efficiency" type="str">0.9</key>
+     <key name="@td_elev" type="str">197.0</key>
+     <key name="@fc1_elev" type="str">195.0</key>
+     <key name="@fc2_elev" type="str">nan</key>
+     <key name="@fc3_elev" type="str">nan</key>
+     <key name="@max_hydro_production" type="str">20</key>
+     <key name="@buffer_zone" type="str">Foster_buffer.csv</key>
+     <key name="@ressim_output_f" type="str">Foster_ressim_flow_1935_2008.csv</key>
+     <key name="@ressim_output_r" type="str">Foster_ressim_rule_1935_2008.csv</key>
+     <key name="@inactive_elev" type="str">186.84</key>
+     <key name="@reservoir_type" type="str">Storage_HP</key>
+     <key name="@filename_dataIN" type="str">FOS_loc</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">12</key>
+     <key name="@name" type="str">Detroit Reservoir (USACE)</key>
+     <key name="@path" type="str">Reservoirs/</key>
+     <key name="@area_vol_curve" type="str">Detroit_area_capacity.csv</key>
+     <key name="@av_dir" type="str">Area_Capacity_Curves/</key>
+     <key name="@minOutflow" type="str">34</key>
+     <key name="@rule_curve" type="str">Detroit_Rule_Curve.csv</key>
+     <key name="@rc_dir" type="str">Rule_Curves{ScenarioName}</key>
+     <key name="@maxVolume" type="str">606873064</key>
+     <key name="@composite_rc" type="str">Detroit_composite_rc.csv</key>
+     <key name="@re_dir" type="str">Rel_Cap/</key>
+     <key name="@maxPowerFlow" type="str">140.4</key>
+     <key name="@RO_rc" type="str">Detroit_RO_capacity.csv</key>
+     <key name="@spillway_rc" type="str">Detroit_Spillway_capacity.csv</key>
+     <key name="@cp_dir" type="str">ControlPoints{ScenarioName}</key>
+     <key name="@rule_priorities" type="str">detroit_rule_priorities.csv</key>
+     <key name="@rp_dir" type="str">Rules_Detroit/</key>
+     <key name="@tailwater_elev" type="str">365.15</key>
+     <key name="@turbine_efficiency" type="str">0.9</key>
+     <key name="@td_elev" type="str">481.0</key>
+     <key name="@fc1_elev" type="str">480.0</key>
+     <key name="@fc2_elev" type="str">nan</key>
+     <key name="@fc3_elev" type="str">nan</key>
+     <key name="@max_hydro_production" type="str">100</key>
+     <key name="@buffer_zone" type="str">Detroit_buffer.csv</key>
+     <key name="@ressim_output_f" type="str">DET_ressim_flow_1935_2008.csv</key>
+     <key name="@ressim_output_r" type="str">DET_ressim_rule_1935_2008.csv</key>
+     <key name="@inactive_elev" type="str">441.96</key>
+     <key name="@reservoir_type" type="str">Storage_HP</key>
+     <key name="@filename_dataIN" type="str">DET5A</key>
+    </item>
+    <item type="dict">
+     <key name="@id" type="str">13</key>
+     <key name="@name" type="str">Big Cliff Reservoir (USACE - re-regulating)</key>
+     <key name="@path" type="str">Reservoirs/</key>
+     <key name="@area_vol_curve" type="str">Big_Cliff_area_capacity.csv</key>
+     <key name="@av_dir" type="str">Area_Capacity_Curves/</key>
+     <key name="@minOutflow" type="str">34</key>
+     <key name="@composite_rc" type="str">BC_composite_rc.csv</key>
+     <key name="@re_dir" type="str">Rel_Cap/</key>
+     <key name="@maxPowerFlow" type="str">90.6</key>
+     <key name="@RO_rc" type="str">BC_RO_capacity.csv</key>
+     <key name="@spillway_rc" type="str">BC_spillway_capacity.csv</key>
+     <key name="@tailwater_elev" type="str">338.02</key>
+     <key name="@max_hydro_production" type="str">18</key>
+     <key name="@filename_dataIN" type="str">BCL_loc</key>
+     <key name="@turbine_efficiency" type="str">0.9</key>
+     <key name="@inactive_elev" type="str">353.99</key>
+     <key name="@reservoir_type" type="str">RunOfRiver</key>
+    </item>
+   </reservoir>
+  </reservoirs>
+ </settings>
+</root>
