@@ -28,3 +28,5 @@ The file structure presented on Github is meant to be downloaded as a single com
 Note that before running, it's likely that users will need to separately install the **pyomo** mathematical programming package (https://anaconda.org/conda-forge/pyomo) as well as the **CPLEX solver** (https://developer.ibm.com/docloud/blog/2016/11/24/cos-12-7-ai/) and the **xmltodict** package (https://anaconda.org/conda-forge/xmltodict). 
 
 As publications become available that demonstrate the application the CAPOW model in different contexts, those papers, as well as additional code and data, will also be made available here. 
+
+A stable release of CAPOW is also available through Zenodo: https://zenodo.org/badge/latestdoi/198260906
