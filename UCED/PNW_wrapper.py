@@ -177,6 +177,24 @@ def sim(days):
             instance2.HorizonPath65_minflow[i] = instance2.SimPath65_imports_minflow[(day-1)*24+i]  
             instance2.HorizonPath66_minflow[i] = instance2.SimPath66_imports_minflow[(day-1)*24+i]  
             instance2.HorizonPNW_hydro_minflow[i] = instance2.SimPNW_hydro_minflow[(day-1)*24+i]
+            
+        for j in instance.Generators:
+            for t in K:
+                if instance.on[j,t] == 1:
+                    instance2.on[j,t] = 1
+                    instance2.on[j,t].fixed = True
+                else:
+                    instance.on[j,t] = 0
+                    instance2.on[j,t] = 0
+                    instance2.on[j,t].fixed = True
+
+                if instance.switch[j,t] == 1:
+                    instance2.switch[j,t] = 1
+                    instance2.switch[j,t].fixed = True
+                else:
+                    instance2.switch[j,t] = 0
+                    instance2.switch[j,t] = 0
+                    instance2.switch[j,t].fixed = True
     #            
         results = opt.solve(instance2)
         instance2.solutions.load_from(results)   
